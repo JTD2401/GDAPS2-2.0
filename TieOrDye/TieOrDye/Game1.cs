@@ -22,19 +22,11 @@ namespace TieOrDye
 
         //P1's sprite (Temporary)
         Texture2D p1TempImg;
-        //P1's location attributes
-        float p1PosX;
-        float p1PosY;
-        Vector2 p1Pos;
         //Player 1 object
         Player p1;
 
         //P2's sprite (Temporary)
         Texture2D p2TempImg;
-        //P2's location attributes
-        float p2PosX;
-        float p2PosY;
-        Vector2 p2Pos;
         //Player 2 object
         Player p2;
 
@@ -61,20 +53,12 @@ namespace TieOrDye
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-
-            //P1's initial location
-            p1PosX = 0;
-            p1PosY = 0;
-
-            //P2's initial location
-            p2PosX = 900;
-            p2PosY = 0;
-
-            //P1 Object
+            //P1 Object initialized at 0,0
             p1 = new Player(true);
 
-            //P2 Object
+            //P2 Object initialized at 900,0
             p2 = new Player(false);
+
 
             base.Initialize();
         }
@@ -120,18 +104,9 @@ namespace TieOrDye
 
             // TODO: Add your update logic here
 
-            //Checks input per update
-            CheckInput();
-
-            //Update p1 location
-            p1Pos = new Vector2(p1PosX, p1PosY);
-            //Send p1 location to player class
-            p1.GetPos(p1PosX, p1PosY);
-
-            //Update p2 location
-            p2Pos = new Vector2(p2PosX, p2PosY);
-            //Send p2 location to player class
-            p2.GetPos(p2PosX, p2PosY);
+            //Checks input once per update, done with player1 object because it doesn't matter 
+            p1.CheckInput();
+            p2.CheckInput();
 
             base.Update(gameTime);
         }
@@ -149,65 +124,14 @@ namespace TieOrDye
             //Start spritebatch
             spriteBatch.Begin();
             //Draw p1 at their current position
-            spriteBatch.Draw(p1TempImg, p1Pos, Color.White);
-            spriteBatch.Draw(p2TempImg, p2Pos, Color.White);
+            spriteBatch.Draw(p1TempImg, p1.GetPos, Color.White);
+            spriteBatch.Draw(p2TempImg, p2.GetPos, Color.White);
             spriteBatch.End();
 
             base.Draw(gameTime);
         }
 
-        //Check for player input
-        public void CheckInput()
-        {
-            //Keyboard object
-            KeyboardState kbState = Keyboard.GetState();
-
-            //WASD - P1 Movement
-            //Currently changes float by 1, can replace the 1 with a movement increment variable
-            //P1 Up
-            if (kbState.IsKeyDown(Keys.W))
-            {
-                p1PosY--; //simplified some of this code which you don't even need to do this vector has a set x and y property which you could use to change the Vector
-            }
-            //P1 Left
-            if (kbState.IsKeyDown(Keys.A))
-            {
-                p1PosX--;
-            }
-            //P1 Down
-            if (kbState.IsKeyDown(Keys.S))
-            {
-                p1PosY++;
-            }
-            //P1 Right
-            if (kbState.IsKeyDown(Keys.D))
-            {
-                p1PosX++;
-            }
-
-            //Arrow Keys - P2 Movement
-            //P2 Up
-            if (kbState.IsKeyDown(Keys.Up))
-            {
-                p2PosY--;
-            }
-            //P2 Left
-            if (kbState.IsKeyDown(Keys.Left))
-            {
-                p2PosX--;
-            }
-            //P2 Down
-            if (kbState.IsKeyDown(Keys.Down))
-            {
-                p2PosY++;
-            }
-            //P2 Right
-            if (kbState.IsKeyDown(Keys.Right))
-            {
-                p2PosX++;
-            }
-
-        }
+        
 
     }
 }
