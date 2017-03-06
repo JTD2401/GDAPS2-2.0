@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 /*
 TieOrDye Player Class
@@ -12,40 +14,33 @@ TieOrDye Player Class
 
 namespace TieOrDye
 {
-    class Player : Game1
+    class Player : GameObject
     {
         //Game1 object
         Game1 gm1 = new Game1();
 
         //Attributes
-        float posX;
-        float posY;
-        //Immunity boolean
-        bool immune;
+        int currentStones; //int for stones that are the current player's color
+        Vector2 playerPos; //player position
+        Rectangle playerRect; //player rectangle       
+        bool immune; //Immunity boolean
+        int pWidth; //Player width
+        int pHeight; //Player height
 
         //player constructor
-        public Player()
+        public Player(Texture2D t2D, Vector2 v2, int pw, int ph) :base(t2D, v2)
         {
+            pWidth = pw;
+            pHeight = ph;
+            playerRect = new Rectangle((int) playerPos.X, (int) playerPos.Y, pWidth, pHeight);
         }
 
-        //Player property for x position
-        public float PosX
-        {
-            get { return posX; }
-            set { posX = value; }
-        }
-
-        //Player property for y position
-        public float PosY
-        {
-            get { return posY; }
-            set { posY = value; }
-        }
+        
 
         //Player property for position vector
-        public Vector2 GetPos
+        public Rectangle PlayerRect
         {
-            get { return new Vector2(PosX, PosY); }
+            get { return new Rectangle(); }
         }
 
         //Get player's current position

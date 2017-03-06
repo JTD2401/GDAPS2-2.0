@@ -24,11 +24,24 @@ namespace TieOrDye
             get { return pos.X; }
             set { pos.X = value; }
         }
-
         public float Y
         {
             get { return pos.Y; }
             set { pos.Y = value; }
+        }
+
+        //Constructor for game object
+        public GameObject(Texture2D t2D, Vector2 v2)
+        {
+            tex = t2D;
+            pos = v2;
+        }
+
+        public void Draw(SpriteBatch sb)
+        {
+            /*
+            sb.Draw(tex, pos, Color.White);
+            */
         }
     }
 }

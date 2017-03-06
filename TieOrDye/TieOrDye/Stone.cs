@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 /*
 TieOrDye Stone Class
@@ -10,7 +12,7 @@ TieOrDye Stone Class
 
 namespace TieOrDye
 {
-    class Stone : Game1
+    class Stone : GameObject
     {
     }
 }

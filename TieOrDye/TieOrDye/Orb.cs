@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 
 /*
@@ -11,15 +13,14 @@ TieOrDye Orb Class
 
 namespace TieOrDye
 {
-    class Orb : Player
+    class Orb : GameObject
     {
         //attributes
         bool color;
 
-        public Orb(bool pl) : base(pl)
+        public Orb() : base()
         {
 
-            color = pl;
         }
     }
 }
