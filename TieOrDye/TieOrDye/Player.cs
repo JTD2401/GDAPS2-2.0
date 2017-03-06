@@ -20,25 +20,12 @@ namespace TieOrDye
         //Attributes
         float posX;
         float posY;
-        //True if player is p1, false if p2
-        bool playerIsOne;
         //Immunity boolean
         bool immune;
 
         //player constructor
-        public Player(bool pl)
+        public Player()
         {
-            playerIsOne = pl;
-            if (playerIsOne == true)
-            {
-                PosX = 0;
-                PosY = 0;
-            }
-            else if (playerIsOne == false)
-            {
-                PosX = 900;
-                PosY = 0;
-            }
         }
 
         //Player property for x position
