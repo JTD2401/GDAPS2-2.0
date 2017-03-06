@@ -1,52 +1,71 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Media;
-using Microsoft.Xna.Framework.Audio;
-using MonoGame.Utilities.Png;
 
-/*
-TieOrDye GameBoard Class
-Made by: Zen Lin
+/* GameBoard Class
+ * made by Zen Lin
+ * This class will be a class that stores the texture and a rectangle that contains
+ * it's location when it's being used in the Game1 class.
+ * 
+ * The class DO NOT inherit from the Game1 class because that will create
+ * infinite loop and thus not work when game itself is running
 */
 
 namespace TieOrDye
 {
-    class GameBoard : Game1
+    class GameBoard
     {
         //attributes
-        bool started;
-
-        //For getting the device/computer's current resolution, each property returns an int
-        int userDisplayWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
-        int userDisplayHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
-
-        //For getting the game window's resolution NEED HELP FROM THE TA
-        int userGameWindowWidth = 0;
-        int userGameWindowHeight = 0;
-        
-        //For getting the content image board's dimension
-        
+        Texture2D gameBoardImage;
+        Rectangle gameBoardPosition;
 
         //Gameboard constructor
-        public GameBoard()
+        //The constructor will get input of X and Y position of desired
+        //and the image that we want the map to be. I chose to use rectangle
+        //for the position and the width and height is that image will be made to fit
+        //inside the rectangle so we can also distort the image if needed later on
+        public GameBoard(int inputX, int inputY, Texture2D inputImage, GraphicsDevice inputGraphicDevice)
         {
-            //Game is not started by default
-            started = false;
-
+            gameBoardImage = inputImage;
+            gameBoardPosition = new Rectangle(inputX, inputY, inputGraphicDevice.Viewport.Width, inputGraphicDevice.Viewport.Height);
         }
 
-        //Run to start the game
-        public void PlayGame()
+        //Method to draw the gameboard when needed, it takes in the Spritebatch which
+        //we will get from the Game1 class
+        public void drawItself(SpriteBatch inputSpriteBatch)
         {
-            //Starts game
-            started = true;
+            inputSpriteBatch.Draw(gameBoardImage, gameBoardPosition, Color.White);
+        }
+
+        //Property method to access or assign the Texture image for the gameboard
+        public Texture2D GameBoardImage
+        {
+            get
+            {
+                return gameBoardImage;
+            }
+            set
+            {
+                gameBoardImage = value;
+            }
+        }
+
+        //Property method to access or assign the Rectangle with position and distorted size rectangle
+        public Rectangle GameBoardPosition
+        {
+            get
+            {
+                return gameBoardPosition;
+            }
+            set
+            {
+                gameBoardPosition = value;
+            }
         }
     }
 }
