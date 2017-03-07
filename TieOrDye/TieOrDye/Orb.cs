@@ -18,7 +18,7 @@ namespace TieOrDye
         //attributes
         bool color;
 
-        public Orb() : base()
+        public Orb(Texture2D t2, int x, int y, int radius) : base(t2, x, y)
         {
 
         }

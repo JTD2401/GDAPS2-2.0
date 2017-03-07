@@ -29,12 +29,14 @@ namespace TieOrDye
             get { return pos.Y; }
             set { pos.Y = value; }
         }
+        
 
-        //Constructor for game object
-        public GameObject(Texture2D t2D, Vector2 v2)
+       //Constructor for GameObject
+        public GameObject(Texture2D t2, int x, int y)
         {
-            tex = t2D;
-            pos = v2;
+            tex = t2;
+            pos.X = x;
+            pos.Y = y;
         }
 
         public void Draw(SpriteBatch sb)

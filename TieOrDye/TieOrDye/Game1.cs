@@ -16,22 +16,16 @@ namespace TieOrDye
     public class Game1 : Game
     {
         GraphicsDeviceManager graphics;
-        SpriteBatch spriteBatch;
-        //Keyboard State Object
-        KeyboardState kbState;
+        SpriteBatch spriteBatch; 
+        Texture2D p1Tex; //P1's Sprite
+        Player p1; //P1's object
+        Texture2D p2Tex; //P2's sprite
+        Player p2; //P2's object
+        Texture2D gameBoard; //GameBoard Image
+        KeyboardState currKbState; //Current keyboard state
 
-        //P1's sprite (Temporary)
-        Texture2D p1TempImg;
-        //Player 1 object
-        Player p1;
-
-        //P2's sprite (Temporary)
-        Texture2D p2TempImg;
-        //Player 2 object
-        Player p2;
-
-        //Game Board Image
-        Texture2D gameBoard;
+        enum GameStates { Menu, Options, InGame, GameOver}; //Enum for game states
+        GameStates currentGameState; //Attribute for current game state
 
         public Game1()
         {
@@ -53,11 +47,12 @@ namespace TieOrDye
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+
             //P1 Object initialized at 0,0
-            p1 = new Player(true);
+            p1 = new Player(p1Tex, 0, 0, 80, 120);
 
             //P2 Object initialized at 900,0
-            p2 = new Player(false);
+            p2 = new Player(p2Tex, 900, 0, 80, 120);
 
 
             base.Initialize();
@@ -73,9 +68,9 @@ namespace TieOrDye
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             //Load temporary p1 image
-            p1TempImg = Content.Load<Texture2D>("p1Temp");
+            p1Tex = Content.Load<Texture2D>("Player1");
             //Load temporary p2 image
-            p2TempImg = Content.Load<Texture2D>("p2Temp");
+            p2Tex = Content.Load<Texture2D>("Player2");
             //Load gameboard image
             gameBoard = Content.Load<Texture2D>("GameBoard");
 
@@ -103,10 +98,53 @@ namespace TieOrDye
                 Exit();
 
             // TODO: Add your update logic here
+            
+            //Keyboard object
+            currKbState = Keyboard.GetState();
 
-            //Checks input once per update, done with player1 object because it doesn't matter 
-            p1.CheckInput();
-            p2.CheckInput();
+            //WASD - P1 Movement
+            //Currently changes float by 1, can replace the 1 with a movement increment variable
+            //P1 Up
+            if (currKbState.IsKeyDown(Keys.W))
+            {
+                p1.Y--; //simplified some of this code which you don't even need to do this vector has a set x and y property which you could use to change the Vector
+            }
+            //P1 Left
+            if (currKbState.IsKeyDown(Keys.A))
+            {
+                p1.X--;
+            }
+            //P1 Down
+            if (currKbState.IsKeyDown(Keys.S))
+            {
+                p1.Y++;
+            }
+            //P1 Right
+            if (currKbState.IsKeyDown(Keys.D))
+            {
+                p1.X++;
+            }
+            //Arrow Keys - P2 Movement
+            //P2 Up
+            if (currKbState.IsKeyDown(Keys.Up))
+            {
+                p2.Y--;
+            }
+            //P2 Left
+            if (currKbState.IsKeyDown(Keys.Left))
+            {
+                p2.X--;
+            }
+            //P2 Down
+            if (currKbState.IsKeyDown(Keys.Down))
+            {
+                p2.Y++;
+            }
+            //P2 Right
+            if (currKbState.IsKeyDown(Keys.Right))
+            {
+                p2.X++;
+            }
 
             base.Update(gameTime);
         }
@@ -124,8 +162,8 @@ namespace TieOrDye
             //Start spritebatch
             spriteBatch.Begin();
             //Draw p1 at their current position
-            spriteBatch.Draw(p1TempImg, p1.GetPos, Color.White);
-            spriteBatch.Draw(p2TempImg, p2.GetPos, Color.White);
+            spriteBatch.Draw(p1Tex, p1.PlayerRect, Color.White);
+            spriteBatch.Draw(p2Tex, p2.PlayerRect, Color.White);
             spriteBatch.End();
 
             base.Draw(gameTime);

@@ -14,5 +14,9 @@ namespace TieOrDye
 {
     class Stone : GameObject
     {
+        public Stone(Texture2D t2, int x, int y, int radius) : base(t2, x, y)
+        {
+
+        }
     }
 }
