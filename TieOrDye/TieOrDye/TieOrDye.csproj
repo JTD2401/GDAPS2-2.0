@@ -41,6 +41,7 @@
     <Compile Include="Animation.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="GameBoard.cs" />
+    <Compile Include="GameObject.cs" />
     <Compile Include="GameScores.cs" />
     <Compile Include="Menu.cs" />
     <Compile Include="Orb.cs" />
@@ -64,13 +65,23 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Icon.ico" />
-    <Content Include="Content\GameBoard.png">
+    <Content Include="Content\ActiveStartButton.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\p1Temp.png">
+    <Content Include="Content\Cursor.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\p2Temp.png">
+    <Content Include="Content\InactiveStartButton.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Player1.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Player2.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\StartScreen.png" />
+    <Content Include="Content\StartScreenNoButton.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="OpenTK.dll.config">
