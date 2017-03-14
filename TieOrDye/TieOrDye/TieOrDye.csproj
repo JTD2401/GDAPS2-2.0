@@ -83,9 +83,7 @@
     </Content>
     <Content Include="Content\Resume Button Pause Menu.png" />
     <Content Include="Content\StartScreen.png" />
-    <Content Include="Content\StartScreenNoButton.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <Content Include="Content\StartScreenNoButtons.png" />
     <Content Include="OpenTK.dll.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

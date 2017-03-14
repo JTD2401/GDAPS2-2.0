@@ -89,7 +89,7 @@ namespace TieOrDye
             //Load mouse cursor
             cursorTex = Content.Load<Texture2D>("Cursor");
             //Load gameboard image
-            gameBoard = Content.Load<Texture2D>("StartScreenNoButton");
+            gameBoard = Content.Load<Texture2D>("StartScreenNoButtons");
             //Load gameboard buttons
             //Inactive Start button
             inactiveStartButtonTex = Content.Load<Texture2D>("InactiveStartButton");

@@ -16,7 +16,6 @@ C:\Users\Elliot\Desktop\Proj\TieOrDye\TieOrDye\bin\DesktopGL\x86\Debug\Content\C
 C:\Users\Elliot\Desktop\Proj\TieOrDye\TieOrDye\bin\DesktopGL\x86\Debug\Content\InactiveStartButton.png
 C:\Users\Elliot\Desktop\Proj\TieOrDye\TieOrDye\bin\DesktopGL\x86\Debug\Content\Player1.png
 C:\Users\Elliot\Desktop\Proj\TieOrDye\TieOrDye\bin\DesktopGL\x86\Debug\Content\Player2.png
-C:\Users\Elliot\Desktop\Proj\TieOrDye\TieOrDye\bin\DesktopGL\x86\Debug\Content\StartScreenNoButton.png
 C:\Users\Elliot\Desktop\Proj\TieOrDye\TieOrDye\bin\DesktopGL\x86\Debug\OpenTK.dll.config
 C:\Users\Elliot\Desktop\Proj\TieOrDye\TieOrDye\bin\DesktopGL\x86\Debug\TieOrDye.exe
 C:\Users\Elliot\Desktop\Proj\TieOrDye\TieOrDye\bin\DesktopGL\x86\Debug\TieOrDye.pdb
@@ -26,3 +25,4 @@ C:\Users\Elliot\Desktop\Proj\TieOrDye\TieOrDye\bin\DesktopGL\x86\Debug\OpenTK.dl
 C:\Users\Elliot\Desktop\Proj\TieOrDye\TieOrDye\obj\x86\Debug\TieOrDye.csprojResolveAssemblyReference.cache
 C:\Users\Elliot\Desktop\Proj\TieOrDye\TieOrDye\bin\DesktopGL\x86\Debug\Content\Pause Screen No Buttons.xnb
 C:\Users\Elliot\Desktop\Proj\TieOrDye\TieOrDye\bin\DesktopGL\x86\Debug\Content\Resume Button Pause Menu.xnb
+C:\Users\Elliot\Desktop\Proj\TieOrDye\TieOrDye\bin\DesktopGL\x86\Debug\Content\StartScreenNoButtons.xnb
