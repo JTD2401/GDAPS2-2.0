@@ -9,3 +9,20 @@ E:\2nd Semester\GDAPS2\Fixed GDAPS Project\TieOrDye\TieOrDye\obj\x86\Debug\TieOr
 E:\2nd Semester\GDAPS2\Fixed GDAPS Project\TieOrDye\TieOrDye\bin\DesktopGL\x86\Debug\Content\p1Temp.png
 E:\2nd Semester\GDAPS2\Fixed GDAPS Project\TieOrDye\TieOrDye\bin\DesktopGL\x86\Debug\Content\p2Temp.png
 E:\2nd Semester\GDAPS2\Fixed GDAPS Project\TieOrDye\TieOrDye\bin\DesktopGL\x86\Debug\Content\GameBoard.png
+C:\Users\Elliot\Desktop\Proj\TieOrDye\TieOrDye\obj\x86\Debug\TieOrDye.exe
+C:\Users\Elliot\Desktop\Proj\TieOrDye\TieOrDye\obj\x86\Debug\TieOrDye.pdb
+C:\Users\Elliot\Desktop\Proj\TieOrDye\TieOrDye\bin\DesktopGL\x86\Debug\Content\ActiveStartButton.png
+C:\Users\Elliot\Desktop\Proj\TieOrDye\TieOrDye\bin\DesktopGL\x86\Debug\Content\Cursor.png
+C:\Users\Elliot\Desktop\Proj\TieOrDye\TieOrDye\bin\DesktopGL\x86\Debug\Content\InactiveStartButton.png
+C:\Users\Elliot\Desktop\Proj\TieOrDye\TieOrDye\bin\DesktopGL\x86\Debug\Content\Player1.png
+C:\Users\Elliot\Desktop\Proj\TieOrDye\TieOrDye\bin\DesktopGL\x86\Debug\Content\Player2.png
+C:\Users\Elliot\Desktop\Proj\TieOrDye\TieOrDye\bin\DesktopGL\x86\Debug\Content\StartScreenNoButton.png
+C:\Users\Elliot\Desktop\Proj\TieOrDye\TieOrDye\bin\DesktopGL\x86\Debug\OpenTK.dll.config
+C:\Users\Elliot\Desktop\Proj\TieOrDye\TieOrDye\bin\DesktopGL\x86\Debug\TieOrDye.exe
+C:\Users\Elliot\Desktop\Proj\TieOrDye\TieOrDye\bin\DesktopGL\x86\Debug\TieOrDye.pdb
+C:\Users\Elliot\Desktop\Proj\TieOrDye\TieOrDye\bin\DesktopGL\x86\Debug\MonoGame.Framework.dll
+C:\Users\Elliot\Desktop\Proj\TieOrDye\TieOrDye\bin\DesktopGL\x86\Debug\NVorbis.dll
+C:\Users\Elliot\Desktop\Proj\TieOrDye\TieOrDye\bin\DesktopGL\x86\Debug\OpenTK.dll
+C:\Users\Elliot\Desktop\Proj\TieOrDye\TieOrDye\obj\x86\Debug\TieOrDye.csprojResolveAssemblyReference.cache
+C:\Users\Elliot\Desktop\Proj\TieOrDye\TieOrDye\bin\DesktopGL\x86\Debug\Content\Pause Screen No Buttons.xnb
+C:\Users\Elliot\Desktop\Proj\TieOrDye\TieOrDye\bin\DesktopGL\x86\Debug\Content\Resume Button Pause Menu.xnb
