@@ -323,7 +323,7 @@ namespace TieOrDye
                 case GameStates.Options:  // draws pause screen
                     
                     spriteBatch.Draw(pauseScreen, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);
-                    if(cursorRect.Intersects(new Rectangle(327, 100, 308, 100)))
+                    if(cursorRect.Intersects(new Rectangle(346, 100, 308, 100)))
                     {
                         spriteBatch.Draw(resumeButton, new Rectangle(346, 100, 308, 100), Color.Red);
                         if(currMState.LeftButton == ButtonState.Pressed)
