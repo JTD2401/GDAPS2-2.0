@@ -71,9 +71,12 @@
     <Content Include="Content\Cursor.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Exit Button Pause Menu.png" />
     <Content Include="Content\InactiveStartButton.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Main Menu Button Pause Menu.png" />
+    <Content Include="Content\Options Button Pause Menu.png" />
     <Content Include="Content\Pause Screen No Buttons.png" />
     <Content Include="Content\Player1.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

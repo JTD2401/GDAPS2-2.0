@@ -32,6 +32,9 @@ namespace TieOrDye
         KeyboardState currKbState, prevKbState; //Current and previous keyboard state
         Texture2D pauseScreen;  // base pause screen
         Texture2D resumeButton;  // base resume button
+        Texture2D options;  // base options button
+        Texture2D mainMenu; // Main Menu button
+        Texture2D exit;  // exit button
 
         enum GameStates { Menu, Options, InGame, GameOver}; //Enum for game states
         GameStates currentGameState; //Attribute for current game state
@@ -99,6 +102,12 @@ namespace TieOrDye
             pauseScreen = Content.Load<Texture2D>("Pause Screen No Buttons");
             // loads resume button
             resumeButton = Content.Load<Texture2D>("Resume Button Pause Menu");
+            // loads options button
+            options = Content.Load<Texture2D>("Options Button Pause Menu");
+            // loads Main Menu button
+            mainMenu = Content.Load<Texture2D>("Main Menu Button Pause Menu");
+            // loads exit button
+            exit = Content.Load<Texture2D>("Exit Button Pause Menu");
 
             // TODO: use this.Content to load your game content here
         }
@@ -129,8 +138,7 @@ namespace TieOrDye
             //Keyboard object
             currKbState = Keyboard.GetState();
 
-            //TEMPORARY GAME STATE SET UNTIL MENU IS WORKING
-            //currentGameState = GameStates.InGame;
+            
 
 
 
@@ -157,6 +165,33 @@ namespace TieOrDye
                     }
                     break;
                 case GameStates.Options:  // options menu state
+
+                    // determines if game state is changed to InGame when player clicks on the Resume rectangle
+                    if (cursorRect.Intersects(new Rectangle(346, 100, 308, 100)))
+                    {
+                        if (currMState.LeftButton == ButtonState.Pressed)
+                        {
+                            currentGameState = GameStates.InGame;
+                        }
+                    }
+
+                    // determines if game state is changed to Menu when player clicks on the Main Menu rectangle 
+                    if (cursorRect.Intersects(new Rectangle(346, 400, 308, 100)))
+                    {
+                        if(currMState.LeftButton == ButtonState.Pressed)
+                        {
+                            currentGameState = GameStates.Menu;
+                        }
+                    }
+
+                    // determines if game is exited when player clicks on the Exit rectangle
+                    if (cursorRect.Intersects(new Rectangle(346, 550, 308, 100)))
+                    {
+                        if(currMState.LeftButton == ButtonState.Pressed)
+                        {
+                            this.Exit();
+                        }
+                    }
                     break;
                 case GameStates.InGame:  // gameplay state
                     // movement of first player using WASD keys
@@ -188,94 +223,7 @@ namespace TieOrDye
             //Previous Keyboard state object
             prevKbState = currKbState;
 
-            /*
-            
-            //Menu State
-            if (currentGameState == GameStates.Menu)
-            {
-                //Place cursor at mouse location
-
-                //If mouse hovers over button of size 392x103(Default button size) at 40,40
-                if(cursorRect.Intersects(new Rectangle(40, 40, activeStartButtonTex.Width, activeStartButtonTex.Height)))
-                {
-                    //Make the button active
-                    startActive = true;
-                    //Check for clicking button
-                    if(currMState.LeftButton == ButtonState.Pressed)
-                    {
-                        //Start game
-                        currentGameState = GameStates.InGame;
-                    }
-                }
-                else  //When the mouse is no longer hovering over the button
-                {
-                    //Make the button inactive
-                    startActive = false;
-                }
-            }
-            //Options State
-            if (currentGameState == GameStates.Options)
-            {
-
-            }
-            //In Game State
-            if (currentGameState == GameStates.InGame)
-            {
-                //WASD - P1 Movement
-                //Currently changes float by 1, can replace the 1 with a movement increment variable
-                //P1 Up
-                if (currKbState.IsKeyDown(Keys.W))
-                {
-                    p1.Y--; //simplified some of this code which you don't even need to do this vector has a set x and y property which you could use to change the Vector
-                }
-                //P1 Left
-                if (currKbState.IsKeyDown(Keys.A))
-                {
-                    p1.X--;
-                }
-                //P1 Down
-                if (currKbState.IsKeyDown(Keys.S))
-                {
-                    p1.Y++;
-                }
-                //P1 Right
-                if (currKbState.IsKeyDown(Keys.D))
-                {
-                    p1.X++;
-                }
-                //Arrow Keys - P2 Movement
-                //P2 Up
-                if (currKbState.IsKeyDown(Keys.Up))
-                {
-                    p2.Y--;
-                }
-                //P2 Left
-                if (currKbState.IsKeyDown(Keys.Left))
-                {
-                    p2.X--;
-                }
-                //P2 Down
-                if (currKbState.IsKeyDown(Keys.Down))
-                {
-                    p2.Y++;
-                }
-                //P2 Right
-                if (currKbState.IsKeyDown(Keys.Right))
-                {
-                    p2.X++;
-                }
-                //Prevent player objects from exiting screen
-                ScreenBorder(p1);
-                ScreenBorder(p2);
-                
-            }
-            //Game Over State
-            if (currentGameState == GameStates.GameOver)
-            {
-
-            }
-
-            */
+         
 
             base.Update(gameTime);
         }
@@ -322,22 +270,41 @@ namespace TieOrDye
                     break;
                 case GameStates.Options:  // draws pause screen
                     
-                    spriteBatch.Draw(pauseScreen, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);
-                    if(cursorRect.Intersects(new Rectangle(346, 100, 308, 100)))
+                    spriteBatch.Draw(pauseScreen, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);  // draws pause screen
+
+                    // draws resume button and checks if the mouse is over it
+                    spriteBatch.Draw(resumeButton, new Rectangle(346, 100, 308, 100), Color.White);
+                    if (cursorRect.Intersects(new Rectangle(346, 100, 308, 100)))
                     {
-                        spriteBatch.Draw(resumeButton, new Rectangle(346, 100, 308, 100), Color.Red);
-                        if(currMState.LeftButton == ButtonState.Pressed)
-                        {
-                            currentGameState = GameStates.InGame;
-                        }
+                        spriteBatch.Draw(resumeButton, new Rectangle(346, 100, 308, 100), Color.Red);  // if mouse is over button, changes color
                     }
-                    else
+
+                    // draws options button and checks if the mouse is over it
+                    spriteBatch.Draw(options, new Rectangle(346, 250, 308, 100), Color.White);
+                    if(cursorRect.Intersects(new Rectangle(346, 250, 308, 100)))
                     {
-                        spriteBatch.Draw(resumeButton, new Rectangle(346, 100, 308, 100), Color.White);
+                        spriteBatch.Draw(options, new Rectangle(346, 250, 308, 100), Color.Red);  // if mouse is over button, changes color
                     }
+
+                    // draws Main Menu button and checks if the mouse is over it
+                    spriteBatch.Draw(mainMenu, new Rectangle(346, 400, 308, 100), Color.White);
+                    if(cursorRect.Intersects(new Rectangle(346, 400, 308, 100)))
+                    {
+                        spriteBatch.Draw(mainMenu, new Rectangle(346, 400, 308, 100), Color.Red);  // if mouse is over button, changes color
+                    }
+
+                    // draws Exit button and checks if the mouse is over it
+                    spriteBatch.Draw(exit, new Rectangle(346, 550, 308, 100), Color.White);
+                    if(cursorRect.Intersects(new Rectangle(346, 550, 308, 100)))
+                    {
+                        spriteBatch.Draw(exit, new Rectangle(346, 550, 308, 100), Color.Red);  // if mouse is over button, changes color
+                    }
+
+                    // draws player models on either side of screen
                     spriteBatch.Draw(p1Tex, new Rectangle(0, 170, 250, 400), Color.White);
                     spriteBatch.Draw(p2Tex, new Rectangle(750, 170, 250, 400), Color.White);
-                    spriteBatch.Draw(cursorTex, cursorRect, Color.White);
+
+                    spriteBatch.Draw(cursorTex, cursorRect, Color.White);  // draws cursor
                     break;
                 case GameStates.GameOver:
                     break;
@@ -345,45 +312,7 @@ namespace TieOrDye
 
 
 
-
-            //Menu State
-            if (currentGameState == GameStates.Menu)
-            {
-                //Draw gameboard
-                spriteBatch.Draw(gameBoard, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);
-                //Set cursor rectangle
-                cursorRect = new Rectangle(currMState.Position.X, currMState.Position.Y, 5, 5);
-                if (startActive == true)
-                {
-                    //Draw active start button at (40, 40) of size 392x103(Sprite's Default Size)
-                    spriteBatch.Draw(activeStartButtonTex, new Rectangle(40, 40, activeStartButtonTex.Width, activeStartButtonTex.Height), Color.White);
-                }
-                else if (startActive == false)
-                {
-                    //Draw inactive start button at (40, 40) of size 392x103(Sprite's Default Size)
-                    spriteBatch.Draw(inactiveStartButtonTex, new Rectangle(40, 40, activeStartButtonTex.Width, activeStartButtonTex.Height), Color.White);
-                }
-                //Draw cursor
-                spriteBatch.Draw(cursorTex, cursorRect, Color.White);
-            }
-            //Options State
-            if (currentGameState == GameStates.Options)
-            {
-
-            }
-            //InGame State
-            if (currentGameState == GameStates.InGame)
-            {
-                //Draw p1 at their current position
-                spriteBatch.Draw(p1Tex, p1.PlayerRect, Color.White);
-                spriteBatch.Draw(p2Tex, p2.PlayerRect, Color.White);
-            }
-            //Game Over State
-            if (currentGameState == GameStates.GameOver)
-            {
-
-            }
-            
+           
             //End spritebatch
             spriteBatch.End();
 
