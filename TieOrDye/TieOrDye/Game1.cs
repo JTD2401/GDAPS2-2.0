@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Audio;
+using System.IO;
 
 /*
 TieOrDye Game Class
@@ -35,6 +36,9 @@ namespace TieOrDye
         Texture2D options;  // base options button
         Texture2D mainMenu; // Main Menu button
         Texture2D exit;  // exit button
+        BinaryReader read;
+        double playerSpeed1;
+        double playerSpeed2;
 
         enum GameStates { Menu, Options, InGame, GameOver}; //Enum for game states
         GameStates currentGameState; //Attribute for current game state
@@ -66,11 +70,21 @@ namespace TieOrDye
             //Buttons are inactive by default
             startActive = false;
 
+            string filepath = @"" + Directory.GetCurrentDirectory();
+
+            filepath += @"\Content\player.dat";
+
+            read = new BinaryReader(File.OpenRead(filepath));
+
+            playerSpeed1 = read.ReadDouble();
+
             //P1 Object initialized at 0,0
-            p1 = new Player(p1Tex, 0, 0, 80, 120);
+            p1 = new Player(p1Tex, read.ReadInt32(), read.ReadInt32(), read.ReadInt32(), read.ReadInt32());
+
+            playerSpeed2 = read.ReadDouble();
              
             //P2 Object initialized at 900,0
-            p2 = new Player(p2Tex, 900, 0, 80, 120);
+            p2 = new Player(p2Tex, read.ReadInt32(), read.ReadInt32(), read.ReadInt32(), read.ReadInt32());
 
 
             base.Initialize();
