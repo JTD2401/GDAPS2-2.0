@@ -209,16 +209,16 @@ namespace TieOrDye
                     break;
                 case GameStates.InGame:  // gameplay state
                     // movement of first player using WASD keys
-                    if (currKbState.IsKeyDown(Keys.W)) { p1.Y--; }
-                    if (currKbState.IsKeyDown(Keys.A)) { p1.X--; }
-                    if (currKbState.IsKeyDown(Keys.S)) { p1.Y++; }
-                    if (currKbState.IsKeyDown(Keys.D)) { p1.X++; }
+                    if (currKbState.IsKeyDown(Keys.W)) { p1.Y = (int)(p1.Y - playerSpeed1); }
+                    if (currKbState.IsKeyDown(Keys.A)) { p1.X = (int)(p1.X - playerSpeed1); }
+                    if (currKbState.IsKeyDown(Keys.S)) { p1.Y = (int)(p1.Y + playerSpeed1); }
+                    if (currKbState.IsKeyDown(Keys.D)) { p1.X = (int)(p1.X + playerSpeed1); }
 
                     // movement of second player using UP DOWN LEFT RIGHT keys
-                    if (currKbState.IsKeyDown(Keys.Up)) { p2.Y--; }
-                    if (currKbState.IsKeyDown(Keys.Left)) { p2.X--; }
-                    if (currKbState.IsKeyDown(Keys.Down)) { p2.Y++; }
-                    if (currKbState.IsKeyDown(Keys.Right)) { p2.X++; }
+                    if (currKbState.IsKeyDown(Keys.Up)) { p2.Y = (int)(p2.Y - playerSpeed2); }
+                    if (currKbState.IsKeyDown(Keys.Left)) { p2.X = (int)(p2.X - playerSpeed2); }
+                    if (currKbState.IsKeyDown(Keys.Down)) { p2.Y = (int)(p2.Y + playerSpeed2); }
+                    if (currKbState.IsKeyDown(Keys.Right)) { p2.X = (int)(p2.X + playerSpeed2); }
 
                     // prevents players from passing beyond the boarder
                     ScreenBorder(p1);
