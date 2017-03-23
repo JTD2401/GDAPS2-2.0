@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Audio;
 using System.IO;
+using System.Diagnostics;
 
 /*
 TieOrDye Game Class
@@ -17,6 +18,7 @@ namespace TieOrDye
     public class Game1 : Game
     {
         GraphicsDeviceManager graphics;
+        GameWindow viewport;
         SpriteBatch spriteBatch; 
         Texture2D p1Tex; //P1's Sprite
         Player p1; //P1's object
@@ -49,9 +51,9 @@ namespace TieOrDye
             Content.RootDirectory = "Content";
 
             //Changes resolution - Default resolution is 800x480 -- This code changes it to 1000x800
-            graphics.PreferredBackBufferWidth = 1000;
-            graphics.PreferredBackBufferHeight = 800;
-            graphics.ApplyChanges();
+            
+            //graphics.IsFullScreen = true;
+            //this.IsMouseVisible = true;
         }
 
         /// <summary>
@@ -63,10 +65,14 @@ namespace TieOrDye
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-
+            graphics.PreferredBackBufferWidth = GraphicsDevice.DisplayMode.Width;
+            graphics.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height;
+            graphics.IsFullScreen = true;
+            graphics.ApplyChanges();
             //Set initial state to menu
             currentGameState = GameStates.Menu;
 
+            Mouse.WindowHandle = this.Window.Handle;
             //Buttons are inactive by default
             startActive = false;
 
@@ -86,7 +92,7 @@ namespace TieOrDye
             //P2 Object initialized at 900,0
             p2 = new Player(p2Tex, read.ReadInt32(), read.ReadInt32(), read.ReadInt32(), read.ReadInt32());
 
-
+            //this.IsMouseVisible = true;
             base.Initialize();
         }
 
@@ -144,11 +150,11 @@ namespace TieOrDye
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-
+ 
             // TODO: Add your update logic here
             //Current mouse state
             currMState = Mouse.GetState();
-            
+
             //Keyboard object
             currKbState = Keyboard.GetState();
 
@@ -255,15 +261,17 @@ namespace TieOrDye
             //Start spritebatch
             spriteBatch.Begin();
 
-            //Set cursor rectangle
-            cursorRect = new Rectangle(currMState.Position.X, currMState.Position.Y, 5, 5);
+            var mouse = OpenTK.Input.Mouse.GetCursorState();
+
+
+            cursorRect = new Rectangle(mouse.X, mouse.Y, 5, 5);
 
             switch (currentGameState)
             {
                 case GameStates.Menu:
                     //Draw gameboard
                     spriteBatch.Draw(gameBoard, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);
-                    
+                    Debug.WriteLine(cursorRect);
                     if (startActive == true)
                     {
                         //Draw active start button at (40, 40) of size 392x103(Sprite's Default Size)
@@ -275,7 +283,7 @@ namespace TieOrDye
                         spriteBatch.Draw(inactiveStartButtonTex, new Rectangle(40, 40, activeStartButtonTex.Width, activeStartButtonTex.Height), Color.White);
                     }
                     //Draw cursor
-                    spriteBatch.Draw(cursorTex, cursorRect, Color.White);
+                    spriteBatch.Draw(cursorTex, cursorRect, Color.White);  // draws cursor
                     break;
                 case GameStates.InGame:
                     //Draw p1 at their current position
@@ -318,7 +326,7 @@ namespace TieOrDye
                     spriteBatch.Draw(p1Tex, new Rectangle(0, 170, 250, 400), Color.White);
                     spriteBatch.Draw(p2Tex, new Rectangle(750, 170, 250, 400), Color.White);
 
-                    spriteBatch.Draw(cursorTex, cursorRect, Color.White);  // draws cursor
+                    spriteBatch.Draw(cursorTex, cursorRect, Color.White);
                     break;
                 case GameStates.GameOver:
                     break;
@@ -358,6 +366,5 @@ namespace TieOrDye
                 pl.Y = 0;
             }
         }
-
     }
 }
