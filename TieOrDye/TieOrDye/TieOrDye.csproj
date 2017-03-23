@@ -75,15 +75,18 @@
     <Content Include="Content\Exit Button Pause Menu.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Exit Button.png" />
     <Content Include="Content\InactiveStartButton.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Main Menu Button Pause Menu.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Main Menu Button.png" />
     <Content Include="Content\Options Button Pause Menu.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Options Button.png" />
     <Content Include="Content\Pause Screen No Buttons.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -96,6 +99,8 @@
     <Content Include="Content\Resume Button Pause Menu.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Resume Button.png" />
+    <Content Include="Content\Start Button.png" />
     <Content Include="Content\StartScreen.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

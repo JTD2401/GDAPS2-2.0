@@ -38,6 +38,7 @@ namespace TieOrDye
         Texture2D options;  // base options button
         Texture2D mainMenu; // Main Menu button
         Texture2D exit;  // exit button
+        Texture2D start;  // start button
         BinaryReader read;
         double playerSpeed1;
         double playerSpeed2;
@@ -120,15 +121,16 @@ namespace TieOrDye
             activeStartButtonTex = Content.Load<Texture2D>("ActiveStartButton");
             // loads texture into pauseScreen attribute
             pauseScreen = Content.Load<Texture2D>("Pause Screen No Buttons");
-            // loads resume button
-            resumeButton = Content.Load<Texture2D>("Resume Button Pause Menu");
-            // loads options button
-            options = Content.Load<Texture2D>("Options Button Pause Menu");
-            // loads Main Menu button
-            mainMenu = Content.Load<Texture2D>("Main Menu Button Pause Menu");
-            // loads exit button
-            exit = Content.Load<Texture2D>("Exit Button Pause Menu");
-
+            // loads resume button texture
+            resumeButton = Content.Load<Texture2D>("Resume Button");
+            // loads options button texture
+            options = Content.Load<Texture2D>("Options Button");
+            // loads Main Menu button texture
+            mainMenu = Content.Load<Texture2D>("Main Menu Button");
+            // loads exit button texture
+            exit = Content.Load<Texture2D>("Exit Button");
+            // loads start button texture
+            start = Content.Load<Texture2D>("Start Button");
             // TODO: use this.Content to load your game content here
         }
 
@@ -283,15 +285,15 @@ namespace TieOrDye
                     //Draw gameboard
                     spriteBatch.Draw(gameBoard, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);
                     Debug.WriteLine(cursorRect);
-                    if (startActive == true)
+                    
+
+                    if(cursorRect.Intersects(new Rectangle(190, 150, start.Width, start.Height)))
                     {
-                        //Draw active start button at (40, 40) of size 392x103(Sprite's Default Size)
-                        spriteBatch.Draw(activeStartButtonTex, new Rectangle(190, 150, activeStartButtonTex.Width, activeStartButtonTex.Height), Color.White);
+                        spriteBatch.Draw(start, new Rectangle(200, 150, start.Width, start.Height), Color.Violet);
                     }
-                    else if (startActive == false)
+                    else
                     {
-                        //Draw inactive start button at (40, 40) of size 392x103(Sprite's Default Size)
-                        spriteBatch.Draw(inactiveStartButtonTex, new Rectangle(190, 150, activeStartButtonTex.Width, activeStartButtonTex.Height), Color.White);
+                        spriteBatch.Draw(start, new Rectangle(190, 150, start.Width, start.Height), Color.White);
                     }
 
                     if(cursorRect.Intersects(new Rectangle(190, 450, options.Width, options.Height)))
@@ -322,6 +324,8 @@ namespace TieOrDye
                 case GameStates.Pause:  // draws pause screen
                     
                     spriteBatch.Draw(pauseScreen, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);  // draws pause screen
+
+                    
 
                     // draws resume button and checks if the mouse is over it
                     spriteBatch.Draw(resumeButton, new Rectangle(GraphicsDevice.Viewport.Width/3,  100, GraphicsDevice.Viewport.Width / 3, GraphicsDevice.Viewport.Height / 10), Color.White);
