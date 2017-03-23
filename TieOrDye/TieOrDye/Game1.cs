@@ -42,7 +42,7 @@ namespace TieOrDye
         double playerSpeed1;
         double playerSpeed2;
 
-        enum GameStates { Menu, Options, InGame, GameOver}; //Enum for game states
+        enum GameStates { Menu, Pause, Options, InGame, GameOver}; //Enum for game states
         GameStates currentGameState; //Attribute for current game state
 
         public Game1()
@@ -167,7 +167,7 @@ namespace TieOrDye
             switch (currentGameState)
             {
                 case GameStates.Menu:  // start menu state
-                    if (cursorRect.Intersects(new Rectangle(40, 40, activeStartButtonTex.Width, activeStartButtonTex.Height)))
+                    if (cursorRect.Intersects(new Rectangle(190, 150, activeStartButtonTex.Width, activeStartButtonTex.Height)))
                     {
                         //Make the button active
                         startActive = true;
@@ -183,11 +183,20 @@ namespace TieOrDye
                         //Make the button inactive
                         startActive = false;
                     }
+
+                    if(cursorRect.Intersects(new Rectangle(190, 750, exit.Width, exit.Height)))
+                    {
+                        if(currMState.LeftButton == ButtonState.Pressed)
+                        {
+                            this.Exit();
+                        }
+                    }
+
                     break;
-                case GameStates.Options:  // options menu state
+                case GameStates.Pause:  // options menu state
 
                     // determines if game state is changed to InGame when player clicks on the Resume rectangle
-                    if (cursorRect.Intersects(new Rectangle(346, 100, 308, 100)))
+                    if (cursorRect.Intersects(new Rectangle(GraphicsDevice.Viewport.Width / 3, 100, GraphicsDevice.Viewport.Width / 3, GraphicsDevice.Viewport.Height / 10)))
                     {
                         if (currMState.LeftButton == ButtonState.Pressed)
                         {
@@ -196,7 +205,7 @@ namespace TieOrDye
                     }
 
                     // determines if game state is changed to Menu when player clicks on the Main Menu rectangle 
-                    if (cursorRect.Intersects(new Rectangle(346, 400, 308, 100)))
+                    if (cursorRect.Intersects(new Rectangle(GraphicsDevice.Viewport.Width / 3, 400, GraphicsDevice.Viewport.Width / 3, GraphicsDevice.Viewport.Height / 10)))
                     {
                         if(currMState.LeftButton == ButtonState.Pressed)
                         {
@@ -205,7 +214,7 @@ namespace TieOrDye
                     }
 
                     // determines if game is exited when player clicks on the Exit rectangle
-                    if (cursorRect.Intersects(new Rectangle(346, 550, 308, 100)))
+                    if (cursorRect.Intersects(new Rectangle(GraphicsDevice.Viewport.Width / 3, 550, GraphicsDevice.Viewport.Width / 3, GraphicsDevice.Viewport.Height / 10)))
                     {
                         if(currMState.LeftButton == ButtonState.Pressed)
                         {
@@ -230,7 +239,9 @@ namespace TieOrDye
                     ScreenBorder(p1);
                     ScreenBorder(p2);
 
-                    if (currKbState.IsKeyDown(Keys.P)) { currentGameState = GameStates.Options; }
+                    if (currKbState.IsKeyDown(Keys.P)) { currentGameState = GameStates.Pause; }
+                    break;
+                case GameStates.Options:
                     break;
                 case GameStates.GameOver:  // end of game state
                     break;
@@ -275,12 +286,30 @@ namespace TieOrDye
                     if (startActive == true)
                     {
                         //Draw active start button at (40, 40) of size 392x103(Sprite's Default Size)
-                        spriteBatch.Draw(activeStartButtonTex, new Rectangle(40, 40, activeStartButtonTex.Width, activeStartButtonTex.Height), Color.White);
+                        spriteBatch.Draw(activeStartButtonTex, new Rectangle(190, 150, activeStartButtonTex.Width, activeStartButtonTex.Height), Color.White);
                     }
                     else if (startActive == false)
                     {
                         //Draw inactive start button at (40, 40) of size 392x103(Sprite's Default Size)
-                        spriteBatch.Draw(inactiveStartButtonTex, new Rectangle(40, 40, activeStartButtonTex.Width, activeStartButtonTex.Height), Color.White);
+                        spriteBatch.Draw(inactiveStartButtonTex, new Rectangle(190, 150, activeStartButtonTex.Width, activeStartButtonTex.Height), Color.White);
+                    }
+
+                    if(cursorRect.Intersects(new Rectangle(190, 450, options.Width, options.Height)))
+                    {
+                        spriteBatch.Draw(options, new Rectangle(200, 450, options.Width, options.Height), Color.Violet);
+                    }
+                    else
+                    {
+                        spriteBatch.Draw(options, new Rectangle(190, 450, options.Width, options.Height), Color.White);
+                    }
+
+                    if(cursorRect.Intersects(new Rectangle(190, 750, exit.Width, exit.Height)))
+                    {
+                        spriteBatch.Draw(exit, new Rectangle(200, 750, exit.Width, exit.Height), Color.Violet);
+                    }
+                    else
+                    {
+                        spriteBatch.Draw(exit, new Rectangle(190, 750, exit.Width, exit.Height), Color.White);
                     }
                     //Draw cursor
                     spriteBatch.Draw(cursorTex, cursorRect, Color.White);  // draws cursor
@@ -290,43 +319,45 @@ namespace TieOrDye
                     spriteBatch.Draw(p1Tex, p1.PlayerRect, Color.White);
                     spriteBatch.Draw(p2Tex, p2.PlayerRect, Color.White);
                     break;
-                case GameStates.Options:  // draws pause screen
+                case GameStates.Pause:  // draws pause screen
                     
                     spriteBatch.Draw(pauseScreen, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);  // draws pause screen
 
                     // draws resume button and checks if the mouse is over it
-                    spriteBatch.Draw(resumeButton, new Rectangle(346, 100, 308, 100), Color.White);
-                    if (cursorRect.Intersects(new Rectangle(346, 100, 308, 100)))
+                    spriteBatch.Draw(resumeButton, new Rectangle(GraphicsDevice.Viewport.Width/3,  100, GraphicsDevice.Viewport.Width / 3, GraphicsDevice.Viewport.Height / 10), Color.White);
+                    if (cursorRect.Intersects(new Rectangle(GraphicsDevice.Viewport.Width / 3, 100, GraphicsDevice.Viewport.Width / 3, GraphicsDevice.Viewport.Height / 10)))
                     {
-                        spriteBatch.Draw(resumeButton, new Rectangle(346, 100, 308, 100), Color.Red);  // if mouse is over button, changes color
+                        spriteBatch.Draw(resumeButton, new Rectangle(GraphicsDevice.Viewport.Width / 3, 100, GraphicsDevice.Viewport.Width / 3, GraphicsDevice.Viewport.Height / 10), Color.Violet);  // if mouse is over button, changes color
                     }
 
                     // draws options button and checks if the mouse is over it
-                    spriteBatch.Draw(options, new Rectangle(346, 250, 308, 100), Color.White);
-                    if(cursorRect.Intersects(new Rectangle(346, 250, 308, 100)))
+                    spriteBatch.Draw(options, new Rectangle(GraphicsDevice.Viewport.Width / 3, 250, GraphicsDevice.Viewport.Width / 3, GraphicsDevice.Viewport.Height / 10), Color.White);
+                    if(cursorRect.Intersects(new Rectangle(GraphicsDevice.Viewport.Width / 3, 250, GraphicsDevice.Viewport.Width / 3, GraphicsDevice.Viewport.Height / 10)))
                     {
-                        spriteBatch.Draw(options, new Rectangle(346, 250, 308, 100), Color.Red);  // if mouse is over button, changes color
+                        spriteBatch.Draw(options, new Rectangle(GraphicsDevice.Viewport.Width / 3, 250, GraphicsDevice.Viewport.Width / 3, GraphicsDevice.Viewport.Height / 10), Color.Violet);  // if mouse is over button, changes color
                     }
 
                     // draws Main Menu button and checks if the mouse is over it
-                    spriteBatch.Draw(mainMenu, new Rectangle(346, 400, 308, 100), Color.White);
-                    if(cursorRect.Intersects(new Rectangle(346, 400, 308, 100)))
+                    spriteBatch.Draw(mainMenu, new Rectangle(GraphicsDevice.Viewport.Width / 3, 400, GraphicsDevice.Viewport.Width / 3, GraphicsDevice.Viewport.Height / 10), Color.White);
+                    if(cursorRect.Intersects(new Rectangle(GraphicsDevice.Viewport.Width / 3, 400, GraphicsDevice.Viewport.Width / 3, GraphicsDevice.Viewport.Height / 10)))
                     {
-                        spriteBatch.Draw(mainMenu, new Rectangle(346, 400, 308, 100), Color.Red);  // if mouse is over button, changes color
+                        spriteBatch.Draw(mainMenu, new Rectangle(GraphicsDevice.Viewport.Width / 3, 400, GraphicsDevice.Viewport.Width / 3, GraphicsDevice.Viewport.Height / 10), Color.Violet);  // if mouse is over button, changes color
                     }
 
                     // draws Exit button and checks if the mouse is over it
-                    spriteBatch.Draw(exit, new Rectangle(346, 550, 308, 100), Color.White);
-                    if(cursorRect.Intersects(new Rectangle(346, 550, 308, 100)))
+                    spriteBatch.Draw(exit, new Rectangle(GraphicsDevice.Viewport.Width / 3, 550, GraphicsDevice.Viewport.Width / 3, GraphicsDevice.Viewport.Height / 10), Color.White);
+                    if(cursorRect.Intersects(new Rectangle(GraphicsDevice.Viewport.Width / 3, 550, GraphicsDevice.Viewport.Width / 3, GraphicsDevice.Viewport.Height / 10)))
                     {
-                        spriteBatch.Draw(exit, new Rectangle(346, 550, 308, 100), Color.Red);  // if mouse is over button, changes color
+                        spriteBatch.Draw(exit, new Rectangle(GraphicsDevice.Viewport.Width / 3, 550, GraphicsDevice.Viewport.Width / 3, GraphicsDevice.Viewport.Height / 10), Color.Violet);  // if mouse is over button, changes color
                     }
 
                     // draws player models on either side of screen
-                    spriteBatch.Draw(p1Tex, new Rectangle(0, 170, 250, 400), Color.White);
-                    spriteBatch.Draw(p2Tex, new Rectangle(750, 170, 250, 400), Color.White);
+                    spriteBatch.Draw(p1Tex, new Rectangle(0, 300, 450, 600), Color.White);
+                    spriteBatch.Draw(p2Tex, new Rectangle(1400, 300, 500, 600), Color.White);
 
                     spriteBatch.Draw(cursorTex, cursorRect, Color.White);
+                    break;
+                case GameStates.Options:
                     break;
                 case GameStates.GameOver:
                     break;

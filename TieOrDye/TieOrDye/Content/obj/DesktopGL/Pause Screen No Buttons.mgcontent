@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <SourceFile>C:/Users/Elliot/Desktop/Project/TieOrDye/TieOrDye/Content/Pause Screen No Buttons.png</SourceFile>
-  <SourceTime>2017-03-21T10:57:54.0230157-04:00</SourceTime>
-  <DestFile>C:/Users/Elliot/Desktop/Project/TieOrDye/TieOrDye/Content/bin/DesktopGL/Pause Screen No Buttons.xnb</DestFile>
-  <DestTime>2017-03-21T11:04:05.3203984-04:00</DestTime>
+  <SourceFile>C:/Users/Elliot/Desktop/Proj/TieOrDye/TieOrDye/Content/Pause Screen No Buttons.png</SourceFile>
+  <SourceTime>2017-03-22T20:39:23.3354888-04:00</SourceTime>
+  <DestFile>C:/Users/Elliot/Desktop/Proj/TieOrDye/TieOrDye/Content/bin/DesktopGL/Pause Screen No Buttons.xnb</DestFile>
+  <DestTime>2017-03-23T01:32:55.9721781-04:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2016-03-30T02:36:08-04:00</ImporterTime>
   <Processor>TextureProcessor</Processor>
