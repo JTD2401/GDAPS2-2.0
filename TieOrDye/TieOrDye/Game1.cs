@@ -5,6 +5,8 @@ using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Audio;
 using System.IO;
 using System.Diagnostics;
+using System;
+using System.Collections.Generic;
 
 /*
 TieOrDye Game Class
@@ -42,6 +44,15 @@ namespace TieOrDye
         BinaryReader read;
         double playerSpeed1;
         double playerSpeed2;
+
+        //List that will contain different direction sprite for players
+        List<Texture2D> player1Sprites;
+        List<Texture2D> player2Sprites;
+
+        //Animation object to animate the player's movement based on direction key
+        Animation player1Animation;
+        Animation player2Animation;
+        Texture2D tempSprite;
 
         enum GameStates { Menu, Pause, Options, InGame, GameOver}; //Enum for game states
         GameStates currentGameState; //Attribute for current game state
@@ -93,6 +104,16 @@ namespace TieOrDye
             //P2 Object initialized at 900,0
             p2 = new Player(p2Tex, read.ReadInt32(), read.ReadInt32(), read.ReadInt32(), read.ReadInt32());
 
+
+            //List of Texture2D that contains different directional sprites for players
+            player1Sprites = new List<Texture2D>();
+            player2Sprites = new List<Texture2D>();
+
+            //Animation object initialization
+            player1Animation = new Animation(player1Sprites, playerSpeed1);
+            player2Animation = new Animation(player2Sprites, playerSpeed2);
+
+
             //this.IsMouseVisible = true;
             base.Initialize();
         }
@@ -132,6 +153,48 @@ namespace TieOrDye
             // loads start button texture
             start = Content.Load<Texture2D>("Start Button");
             // TODO: use this.Content to load your game content here
+
+            //Following will be loading the sprite for golems in
+            //Blue golem will be player1, Orange golem will be player2
+
+
+            //Order of the direction for sprites will be (Up, Down, Left, Right, UpLeft, UpRight, DownLeft, Downright)
+
+            //This portion is for Player1 (Blue Golem)
+            tempSprite = Content.Load<Texture2D>("GolemBackBlue");
+            player1Sprites.Add(tempSprite);
+            tempSprite = Content.Load<Texture2D>("GolemFrontBlue");
+            player1Sprites.Add(tempSprite);
+            tempSprite = Content.Load<Texture2D>("GolemSideLeftBlue");
+            player1Sprites.Add(tempSprite);
+            tempSprite = Content.Load<Texture2D>("GolemSideRightBlue");
+            player1Sprites.Add(tempSprite);
+            tempSprite = Content.Load<Texture2D>("GolemAngleUpLeftBlue");
+            player1Sprites.Add(tempSprite);
+            tempSprite = Content.Load<Texture2D>("GolemAngleUpRightBlue");
+            player1Sprites.Add(tempSprite);
+            tempSprite = Content.Load<Texture2D>("GolemAngleDownBlue");
+            player1Sprites.Add(tempSprite);
+            tempSprite = Content.Load<Texture2D>("GolemAngleDownRightBlue");
+            player1Sprites.Add(tempSprite);
+
+            //This portion is for Player2 (Orange Golem)
+            tempSprite = Content.Load<Texture2D>("GolemBackOrange");
+            player2Sprites.Add(tempSprite);
+            tempSprite = Content.Load<Texture2D>("GolemFrontOrange");
+            player2Sprites.Add(tempSprite);
+            tempSprite = Content.Load<Texture2D>("GolemSideLeftOrange");
+            player2Sprites.Add(tempSprite);
+            tempSprite = Content.Load<Texture2D>("GolemSideRightOrange");
+            player2Sprites.Add(tempSprite);
+            tempSprite = Content.Load<Texture2D>("GolemAngleUpOrange");
+            player2Sprites.Add(tempSprite);
+            tempSprite = Content.Load<Texture2D>("GolemAngleUpRightOrange");
+            player2Sprites.Add(tempSprite);
+            tempSprite = Content.Load<Texture2D>("GolemAngleDownOrange");
+            player2Sprites.Add(tempSprite);
+            tempSprite = Content.Load<Texture2D>("GolemAngleDownRightOrange");
+            player2Sprites.Add(tempSprite);
         }
 
         /// <summary>
@@ -226,7 +289,7 @@ namespace TieOrDye
                     break;
                 case GameStates.InGame:  // gameplay state
                     // movement of first player using WASD keys
-                    if (currKbState.IsKeyDown(Keys.W)) { p1.Y = (int)(p1.Y - playerSpeed1); }
+                    /*if (currKbState.IsKeyDown(Keys.W)) { p1.Y = (int)(p1.Y - playerSpeed1); }
                     if (currKbState.IsKeyDown(Keys.A)) { p1.X = (int)(p1.X - playerSpeed1); }
                     if (currKbState.IsKeyDown(Keys.S)) { p1.Y = (int)(p1.Y + playerSpeed1); }
                     if (currKbState.IsKeyDown(Keys.D)) { p1.X = (int)(p1.X + playerSpeed1); }
@@ -236,12 +299,19 @@ namespace TieOrDye
                     if (currKbState.IsKeyDown(Keys.Left)) { p2.X = (int)(p2.X - playerSpeed2); }
                     if (currKbState.IsKeyDown(Keys.Down)) { p2.Y = (int)(p2.Y + playerSpeed2); }
                     if (currKbState.IsKeyDown(Keys.Right)) { p2.X = (int)(p2.X + playerSpeed2); }
+                    */
+
+                    //Uses the animation class to process the input from keyboard as well as updating the rectangle's position according to direction pressed
+                    player1Animation.processInput(currKbState, p1, Keys.W, Keys.A, Keys.S, Keys.D);
+                    p1.PlayerRect = player1Animation.PlayerPositionRectangle;
+                    player2Animation.processInput(currKbState, p2, Keys.Up, Keys.Left, Keys.Down, Keys.Right);
+                    p2.PlayerRect = player2Animation.PlayerPositionRectangle;
 
                     // prevents players from passing beyond the boarder
                     ScreenBorder(p1);
                     ScreenBorder(p2);
 
-                    if (currKbState.IsKeyDown(Keys.P)) { currentGameState = GameStates.Pause; }
+                    if (currKbState.IsKeyDown(Keys.P) || currKbState.IsKeyDown(Keys.Escape)) { currentGameState = GameStates.Pause; }
                     break;
                 case GameStates.Options:
                     break;
@@ -318,8 +388,11 @@ namespace TieOrDye
                     break;
                 case GameStates.InGame:
                     //Draw p1 at their current position
-                    spriteBatch.Draw(p1Tex, p1.PlayerRect, Color.White);
+                    /*spriteBatch.Draw(p1Tex, p1.PlayerRect, Color.White);
                     spriteBatch.Draw(p2Tex, p2.PlayerRect, Color.White);
+                    */
+                    player1Animation.drawAnimation(spriteBatch);
+                    player2Animation.drawAnimation(spriteBatch);
                     break;
                 case GameStates.Pause:  // draws pause screen
                     

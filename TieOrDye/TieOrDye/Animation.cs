@@ -17,20 +17,24 @@ namespace TieOrDye
     {
         KeyboardState kState;
         KeyboardState previousKState;
+
         Boolean[] wasd = { false, false, false, false };
         Boolean[] previousOfwasd = { false, false, false, false };
+
         List<Texture2D> playerSprites;
         Rectangle playerPositionRectangle;
+        double playerSpeed;
 
         enum PlayerState { Up, Down, Left, Right, UpLeft, UpRight, DownLeft, Downright };
         PlayerState look;
 
-        public Animation(List<Texture2D> inputListOfSprite)
+        public Animation(List<Texture2D> inputListOfSprite, double inputPlayerSpeed)
         {
             playerSprites = inputListOfSprite;
+            playerSpeed = inputPlayerSpeed;
         }
 
-        public void processInput(KeyboardState inputKeyboardState, Player inputPlayerObject)
+        public void processInput(KeyboardState inputKeyboardState, Player inputPlayerObject, Keys inputUp, Keys inputLeft, Keys inputDown, Keys inputRight)
         {
             playerPositionRectangle = inputPlayerObject.PlayerRect;
 
@@ -42,16 +46,16 @@ namespace TieOrDye
             kState = inputKeyboardState;
 
             //Check each key's pressed down or not and change the truth value
-            wasd[0] = kState.IsKeyDown(Keys.W);
-            wasd[1] = kState.IsKeyDown(Keys.A);
-            wasd[2] = kState.IsKeyDown(Keys.S);
-            wasd[3] = kState.IsKeyDown(Keys.D);
+            wasd[0] = kState.IsKeyDown(inputUp);
+            wasd[1] = kState.IsKeyDown(inputLeft);
+            wasd[2] = kState.IsKeyDown(inputDown);
+            wasd[3] = kState.IsKeyDown(inputRight);
 
             //previous keyboard state to store the previous keyboard state
-            previousOfwasd[0] = previousKState.IsKeyDown(Keys.W);
-            previousOfwasd[1] = previousKState.IsKeyDown(Keys.A);
-            previousOfwasd[2] = previousKState.IsKeyDown(Keys.S);
-            previousOfwasd[3] = previousKState.IsKeyDown(Keys.D);
+            previousOfwasd[0] = previousKState.IsKeyDown(inputUp);
+            previousOfwasd[1] = previousKState.IsKeyDown(inputLeft);
+            previousOfwasd[2] = previousKState.IsKeyDown(inputDown);
+            previousOfwasd[3] = previousKState.IsKeyDown(inputRight);
 
             // check which keys are pressed and change the position according to key
             if (previousOfwasd[0] == true && wasd[1] == true)
@@ -92,27 +96,39 @@ namespace TieOrDye
             {
                 case "W":
                     look = PlayerState.Up;
+                    playerPositionRectangle.Y -= (int)playerSpeed;
                     break;
                 case "A":
                     look = PlayerState.Left;
+                    playerPositionRectangle.X -= (int)playerSpeed;
                     break;
                 case "S":
                     look = PlayerState.Down;
+                    playerPositionRectangle.Y += (int)playerSpeed;
                     break;
                 case "D":
                     look = PlayerState.Right;
+                    playerPositionRectangle.X += (int)playerSpeed;
                     break;
                 case "WA":
                     look = PlayerState.UpLeft;
+                    playerPositionRectangle.Y -= (int)playerSpeed;
+                    playerPositionRectangle.X -= (int)playerSpeed;
                     break;
                 case "WD":
                     look = PlayerState.UpRight;
+                    playerPositionRectangle.Y -= (int)playerSpeed;
+                    playerPositionRectangle.X += (int)playerSpeed;
                     break;
                 case "SA":
                     look = PlayerState.DownLeft;
+                    playerPositionRectangle.Y += (int)playerSpeed;
+                    playerPositionRectangle.X -= (int)playerSpeed;
                     break;
                 case "SD":
                     look = PlayerState.Downright;
+                    playerPositionRectangle.Y += (int)playerSpeed;
+                    playerPositionRectangle.X += (int)playerSpeed;
                     break;
                 default:
                     return;
@@ -150,6 +166,14 @@ namespace TieOrDye
                 case PlayerState.Downright:
                     spriteBatch.Draw(playerSprites[7], playerPositionRectangle, Color.White);
                     break;
+            }
+        }
+
+        public Rectangle PlayerPositionRectangle
+        {
+            get
+            {
+                return playerPositionRectangle;
             }
         }
 
