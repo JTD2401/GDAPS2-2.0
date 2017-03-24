@@ -27,6 +27,8 @@ namespace TieOrDye
         Texture2D p2Tex; //P2's sprite
         Player p2; //P2's object
         Texture2D gameBoard; //GameBoard Image
+        Texture2D Level1;
+        Rectangle windowsize;
         //Buttons are 392 x 103
         Texture2D inactiveStartButtonTex; //GameBoard Inactive Start Button
         Texture2D activeStartButtonTex; //GameBoard Active Start Button
@@ -81,6 +83,9 @@ namespace TieOrDye
             graphics.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height;
             graphics.IsFullScreen = true;
             graphics.ApplyChanges();
+
+            windowsize = new Rectangle(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
+
             //Set initial state to menu
             currentGameState = GameStates.Menu;
 
@@ -152,6 +157,8 @@ namespace TieOrDye
             exit = Content.Load<Texture2D>("Exit Button");
             // loads start button texture
             start = Content.Load<Texture2D>("Start Button");
+            //loads level1 image
+            Level1 = Content.Load<Texture2D>("GameBoard2");
             // TODO: use this.Content to load your game content here
 
             //Following will be loading the sprite for golems in
@@ -347,7 +354,7 @@ namespace TieOrDye
             var mouse = OpenTK.Input.Mouse.GetCursorState();
 
 
-            cursorRect = new Rectangle(mouse.X, mouse.Y, 5, 5);
+            cursorRect = new Rectangle(mouse.X, mouse.Y, 20, 20);
 
             switch (currentGameState)
             {
@@ -391,6 +398,7 @@ namespace TieOrDye
                     /*spriteBatch.Draw(p1Tex, p1.PlayerRect, Color.White);
                     spriteBatch.Draw(p2Tex, p2.PlayerRect, Color.White);
                     */
+                    spriteBatch.Draw(Level1, windowsize, Color.White);
                     player1Animation.drawAnimation(spriteBatch);
                     player2Animation.drawAnimation(spriteBatch);
                     break;

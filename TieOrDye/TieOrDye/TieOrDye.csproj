@@ -76,6 +76,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Exit Button.png" />
+    <Content Include="Content\GameBoard2.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\GolemAngleDownBlue.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
