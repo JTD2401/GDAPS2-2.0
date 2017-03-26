@@ -69,6 +69,9 @@
     <Content Include="Content\ActiveStartButton.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\BlueStone.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Cursor.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -138,6 +141,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Options Button.png" />
+    <Content Include="Content\OrangeStone.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Pause Screen No Buttons.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -156,6 +162,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\StartScreenNoButtons.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Stone.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="OpenTK.dll.config">

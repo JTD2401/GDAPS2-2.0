@@ -22,9 +22,9 @@ namespace TieOrDye
         GraphicsDeviceManager graphics;
         GameWindow viewport;
         SpriteBatch spriteBatch; 
-        Texture2D p1Tex; //P1's Sprite
+        Texture2D p1Tex; //P1's Front-Facing Sprite
         Player p1; //P1's object
-        Texture2D p2Tex; //P2's sprite
+        Texture2D p2Tex; //P2's Front-Facing Sprite
         Player p2; //P2's object
         Texture2D gameBoard; //GameBoard Image
         Texture2D Level1;
@@ -46,6 +46,12 @@ namespace TieOrDye
         BinaryReader read;
         double playerSpeed1;
         double playerSpeed2;
+        Random rand; //Random object
+        List<Stone> stonesList; //list of stones
+        Texture2D stoneTex; //gray stone texture
+
+        const int NUMBER_OF_STONES = 25;
+        const int WIDTH_OF_STONES = 60;
 
         //List that will contain different direction sprite for players
         List<Texture2D> player1Sprites;
@@ -118,7 +124,6 @@ namespace TieOrDye
             player1Animation = new Animation(player1Sprites, playerSpeed1);
             player2Animation = new Animation(player2Sprites, playerSpeed2);
 
-
             //this.IsMouseVisible = true;
             base.Initialize();
         }
@@ -132,10 +137,10 @@ namespace TieOrDye
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            //Load temporary p1 image
-            p1Tex = Content.Load<Texture2D>("Player1");
-            //Load temporary p2 image
-            p2Tex = Content.Load<Texture2D>("Player2");
+            //Load player one front image
+            p1Tex = Content.Load<Texture2D>("GolemFrontBlue");
+            //Load player two front image
+            p2Tex = Content.Load<Texture2D>("GolemFrontOrange");
             //Load mouse cursor
             cursorTex = Content.Load<Texture2D>("Cursor");
             //Load gameboard image
@@ -159,6 +164,8 @@ namespace TieOrDye
             start = Content.Load<Texture2D>("Start Button");
             //loads level1 image
             Level1 = Content.Load<Texture2D>("GameBoard2");
+            //Stone image
+            stoneTex = Content.Load<Texture2D>("Stone");
             // TODO: use this.Content to load your game content here
 
             //Following will be loading the sprite for golems in
@@ -246,6 +253,8 @@ namespace TieOrDye
                         //Check for clicking button
                         if (currMState.LeftButton == ButtonState.Pressed)
                         {
+                            //Create stone objects
+                            CreateStones(NUMBER_OF_STONES, WIDTH_OF_STONES);
                             //Start game
                             currentGameState = GameStates.InGame;
                         }
@@ -295,19 +304,6 @@ namespace TieOrDye
                     }
                     break;
                 case GameStates.InGame:  // gameplay state
-                    // movement of first player using WASD keys
-                    /*if (currKbState.IsKeyDown(Keys.W)) { p1.Y = (int)(p1.Y - playerSpeed1); }
-                    if (currKbState.IsKeyDown(Keys.A)) { p1.X = (int)(p1.X - playerSpeed1); }
-                    if (currKbState.IsKeyDown(Keys.S)) { p1.Y = (int)(p1.Y + playerSpeed1); }
-                    if (currKbState.IsKeyDown(Keys.D)) { p1.X = (int)(p1.X + playerSpeed1); }
-
-                    // movement of second player using UP DOWN LEFT RIGHT keys
-                    if (currKbState.IsKeyDown(Keys.Up)) { p2.Y = (int)(p2.Y - playerSpeed2); }
-                    if (currKbState.IsKeyDown(Keys.Left)) { p2.X = (int)(p2.X - playerSpeed2); }
-                    if (currKbState.IsKeyDown(Keys.Down)) { p2.Y = (int)(p2.Y + playerSpeed2); }
-                    if (currKbState.IsKeyDown(Keys.Right)) { p2.X = (int)(p2.X + playerSpeed2); }
-                    */
-
                     //Uses the animation class to process the input from keyboard as well as updating the rectangle's position according to direction pressed
                     player1Animation.processInput(currKbState, p1, Keys.W, Keys.A, Keys.S, Keys.D);
                     p1.PlayerRect = player1Animation.PlayerPositionRectangle;
@@ -394,19 +390,14 @@ namespace TieOrDye
                     spriteBatch.Draw(cursorTex, cursorRect, Color.White);  // draws cursor
                     break;
                 case GameStates.InGame:
-                    //Draw p1 at their current position
-                    /*spriteBatch.Draw(p1Tex, p1.PlayerRect, Color.White);
-                    spriteBatch.Draw(p2Tex, p2.PlayerRect, Color.White);
-                    */
                     spriteBatch.Draw(Level1, windowsize, Color.White);
+                    DrawStones(stonesList);
                     player1Animation.drawAnimation(spriteBatch);
                     player2Animation.drawAnimation(spriteBatch);
                     break;
                 case GameStates.Pause:  // draws pause screen
                     
                     spriteBatch.Draw(pauseScreen, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);  // draws pause screen
-
-                    
 
                     // draws resume button and checks if the mouse is over it
                     spriteBatch.Draw(resumeButton, new Rectangle(GraphicsDevice.Viewport.Width/3,  100, GraphicsDevice.Viewport.Width / 3, GraphicsDevice.Viewport.Height / 10), Color.White);
@@ -439,6 +430,8 @@ namespace TieOrDye
                     // draws player models on either side of screen
                     spriteBatch.Draw(p1Tex, new Rectangle(0, 300, 450, 600), Color.White);
                     spriteBatch.Draw(p2Tex, new Rectangle(1400, 300, 500, 600), Color.White);
+                    
+                   
 
                     spriteBatch.Draw(cursorTex, cursorRect, Color.White);
                     break;
@@ -480,6 +473,54 @@ namespace TieOrDye
             if (pl.PlayerRect.Y < 0)
             {
                 pl.Y = 0;
+            }
+        }
+
+        //Method to create all stones in the game
+        void CreateStones(int numOfStones, int stoneWidth)
+        {
+            //Random object
+            rand = new Random();
+            //Create an empty list to hold stone objects
+            stonesList = new List<Stone>();
+            for (int i = 0; i < numOfStones; i++)
+            {
+                //Can create stone by default
+                bool canCreate = true;
+                //Generate random int for stone x location
+                int stoneX = rand.Next(0, GraphicsDevice.Viewport.Width - stoneWidth + 1);
+                //Generate random int for stone y location
+                int stoneY = rand.Next(0, GraphicsDevice.Viewport.Height - stoneWidth + 1);
+                //Check if a stone is already drawn in that location
+                for (int j = 0; j < stonesList.Count; j++)   //For each stone in list
+                {
+                    if((stoneX >= stonesList[j].X && stoneX <= stonesList[j].X + stoneWidth) && (stoneY >= stonesList[j].Y && stoneY <= stonesList[j].Y + stoneWidth)) //if potential stone's x  and y collides with the stone's x and y coordinates
+                    {
+                        canCreate = false; //prevent the stone from being created
+                    }
+                }
+                if(canCreate)//If the stone can be created
+                {
+                    //Create stone object
+                    Stone s = new Stone(stoneTex, stoneX, stoneY, stoneWidth);
+                    //Add stone object to stone list
+                    stonesList.Add(s); 
+                }
+                else //If current stone can't be created, try again
+                {
+                    //Send list of stones back one
+                    i--;
+                }
+            }
+        }
+
+        //Method to draw all stones after they have been created using the CreateStones method - Needs to be added to significantly when orbs are introduced
+        //Make sure to use this method inside a spritebatch
+        void DrawStones(List<Stone> sl) 
+        {
+            for (int i = 0; i < sl.Count; i++)  //For each stone in the stone list
+            {
+                spriteBatch.Draw(stoneTex, new Rectangle(sl[i].XPos, sl[i].YPos, WIDTH_OF_STONES, WIDTH_OF_STONES), Color.White); //draw it
             }
         }
     }
