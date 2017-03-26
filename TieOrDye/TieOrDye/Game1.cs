@@ -268,7 +268,7 @@ namespace TieOrDye
                 case GameStates.Pause:  // options menu state
 
                     // determines if game state is changed to InGame when player clicks on the Resume rectangle
-                    if (cursorRect.Intersects(new Rectangle(GraphicsDevice.Viewport.Width / 3, 100, GraphicsDevice.Viewport.Width / 3, GraphicsDevice.Viewport.Height / 10)))
+                    if (cursorRect.Intersects(new Rectangle(GraphicsDevice.Viewport.Width / 3, 150, GraphicsDevice.Viewport.Width / 3, 150)))
                     {
                         if (currMState.LeftButton == ButtonState.Pressed)
                         {
@@ -277,7 +277,7 @@ namespace TieOrDye
                     }
 
                     // determines if game state is changed to Menu when player clicks on the Main Menu rectangle 
-                    if (cursorRect.Intersects(new Rectangle(GraphicsDevice.Viewport.Width / 3, 400, GraphicsDevice.Viewport.Width / 3, GraphicsDevice.Viewport.Height / 10)))
+                    if (cursorRect.Intersects(new Rectangle(GraphicsDevice.Viewport.Width / 3, 550, GraphicsDevice.Viewport.Width / 3, 150)))
                     {
                         if(currMState.LeftButton == ButtonState.Pressed)
                         {
@@ -286,7 +286,7 @@ namespace TieOrDye
                     }
 
                     // determines if game is exited when player clicks on the Exit rectangle
-                    if (cursorRect.Intersects(new Rectangle(GraphicsDevice.Viewport.Width / 3, 550, GraphicsDevice.Viewport.Width / 3, GraphicsDevice.Viewport.Height / 10)))
+                    if (cursorRect.Intersects(new Rectangle(GraphicsDevice.Viewport.Width / 3, 750, GraphicsDevice.Viewport.Width / 3, 150)))
                     {
                         if(currMState.LeftButton == ButtonState.Pressed)
                         {
@@ -364,31 +364,31 @@ namespace TieOrDye
                     Debug.WriteLine(cursorRect);
                     
 
-                    if(cursorRect.Intersects(new Rectangle(190, 150, start.Width, start.Height)))
+                    if(cursorRect.Intersects(new Rectangle(190, 150, 392, 103)))
                     {
-                        spriteBatch.Draw(start, new Rectangle(200, 150, start.Width, start.Height), Color.Violet);
+                        spriteBatch.Draw(start, new Rectangle(200, 150, 392, 103), Color.Violet);
                     }
                     else
                     {
-                        spriteBatch.Draw(start, new Rectangle(190, 150, start.Width, start.Height), Color.White);
+                        spriteBatch.Draw(start, new Rectangle(190, 150, 392, 103), Color.White);
                     }
 
-                    if(cursorRect.Intersects(new Rectangle(190, 450, options.Width, options.Height)))
+                    if(cursorRect.Intersects(new Rectangle(190, 450, 392, 103)))
                     {
-                        spriteBatch.Draw(options, new Rectangle(200, 450, options.Width, options.Height), Color.Violet);
+                        spriteBatch.Draw(options, new Rectangle(200, 450, 392, 103), Color.Violet);
                     }
                     else
                     {
-                        spriteBatch.Draw(options, new Rectangle(190, 450, options.Width, options.Height), Color.White);
+                        spriteBatch.Draw(options, new Rectangle(190, 450, 392, 103), Color.White);
                     }
 
-                    if(cursorRect.Intersects(new Rectangle(190, 750, exit.Width, exit.Height)))
+                    if(cursorRect.Intersects(new Rectangle(190, 750, 392, 103)))
                     {
-                        spriteBatch.Draw(exit, new Rectangle(200, 750, exit.Width, exit.Height), Color.Violet);
+                        spriteBatch.Draw(exit, new Rectangle(200, 750, 392, 103), Color.Violet);
                     }
                     else
                     {
-                        spriteBatch.Draw(exit, new Rectangle(190, 750, exit.Width, exit.Height), Color.White);
+                        spriteBatch.Draw(exit, new Rectangle(190, 750, 392, 103), Color.White);
                     }
                     //Draw cursor
                     spriteBatch.Draw(cursorTex, cursorRect, Color.White);  // draws cursor
@@ -409,31 +409,31 @@ namespace TieOrDye
                     
 
                     // draws resume button and checks if the mouse is over it
-                    spriteBatch.Draw(resumeButton, new Rectangle(GraphicsDevice.Viewport.Width/3,  100, GraphicsDevice.Viewport.Width / 3, GraphicsDevice.Viewport.Height / 10), Color.White);
-                    if (cursorRect.Intersects(new Rectangle(GraphicsDevice.Viewport.Width / 3, 100, GraphicsDevice.Viewport.Width / 3, GraphicsDevice.Viewport.Height / 10)))
+                    spriteBatch.Draw(resumeButton, new Rectangle(GraphicsDevice.Viewport.Width/3,  150, GraphicsDevice.Viewport.Width / 3, 150), Color.White);
+                    if (cursorRect.Intersects(new Rectangle(GraphicsDevice.Viewport.Width / 3, 150, GraphicsDevice.Viewport.Width / 3, 150)))
                     {
-                        spriteBatch.Draw(resumeButton, new Rectangle(GraphicsDevice.Viewport.Width / 3, 100, GraphicsDevice.Viewport.Width / 3, GraphicsDevice.Viewport.Height / 10), Color.Violet);  // if mouse is over button, changes color
+                        spriteBatch.Draw(resumeButton, new Rectangle(GraphicsDevice.Viewport.Width / 3, 150, GraphicsDevice.Viewport.Width / 3, 150), Color.Violet);  // if mouse is over button, changes color
                     }
 
                     // draws options button and checks if the mouse is over it
-                    spriteBatch.Draw(options, new Rectangle(GraphicsDevice.Viewport.Width / 3, 250, GraphicsDevice.Viewport.Width / 3, GraphicsDevice.Viewport.Height / 10), Color.White);
-                    if(cursorRect.Intersects(new Rectangle(GraphicsDevice.Viewport.Width / 3, 250, GraphicsDevice.Viewport.Width / 3, GraphicsDevice.Viewport.Height / 10)))
+                    spriteBatch.Draw(options, new Rectangle(GraphicsDevice.Viewport.Width / 3, 350, GraphicsDevice.Viewport.Width / 3, 150), Color.White);
+                    if(cursorRect.Intersects(new Rectangle(GraphicsDevice.Viewport.Width / 3, 350, GraphicsDevice.Viewport.Width / 3, 150)))
                     {
-                        spriteBatch.Draw(options, new Rectangle(GraphicsDevice.Viewport.Width / 3, 250, GraphicsDevice.Viewport.Width / 3, GraphicsDevice.Viewport.Height / 10), Color.Violet);  // if mouse is over button, changes color
+                        spriteBatch.Draw(options, new Rectangle(GraphicsDevice.Viewport.Width / 3, 350, GraphicsDevice.Viewport.Width / 3, 150), Color.Violet);  // if mouse is over button, changes color
                     }
 
                     // draws Main Menu button and checks if the mouse is over it
-                    spriteBatch.Draw(mainMenu, new Rectangle(GraphicsDevice.Viewport.Width / 3, 400, GraphicsDevice.Viewport.Width / 3, GraphicsDevice.Viewport.Height / 10), Color.White);
-                    if(cursorRect.Intersects(new Rectangle(GraphicsDevice.Viewport.Width / 3, 400, GraphicsDevice.Viewport.Width / 3, GraphicsDevice.Viewport.Height / 10)))
+                    spriteBatch.Draw(mainMenu, new Rectangle(GraphicsDevice.Viewport.Width / 3, 550, GraphicsDevice.Viewport.Width / 3, 150), Color.White);
+                    if(cursorRect.Intersects(new Rectangle(GraphicsDevice.Viewport.Width / 3, 550, GraphicsDevice.Viewport.Width / 3, 150)))
                     {
-                        spriteBatch.Draw(mainMenu, new Rectangle(GraphicsDevice.Viewport.Width / 3, 400, GraphicsDevice.Viewport.Width / 3, GraphicsDevice.Viewport.Height / 10), Color.Violet);  // if mouse is over button, changes color
+                        spriteBatch.Draw(mainMenu, new Rectangle(GraphicsDevice.Viewport.Width / 3, 550, GraphicsDevice.Viewport.Width / 3, 150), Color.Violet);  // if mouse is over button, changes color
                     }
 
                     // draws Exit button and checks if the mouse is over it
-                    spriteBatch.Draw(exit, new Rectangle(GraphicsDevice.Viewport.Width / 3, 550, GraphicsDevice.Viewport.Width / 3, GraphicsDevice.Viewport.Height / 10), Color.White);
-                    if(cursorRect.Intersects(new Rectangle(GraphicsDevice.Viewport.Width / 3, 550, GraphicsDevice.Viewport.Width / 3, GraphicsDevice.Viewport.Height / 10)))
+                    spriteBatch.Draw(exit, new Rectangle(GraphicsDevice.Viewport.Width / 3, 750, GraphicsDevice.Viewport.Width / 3, 150), Color.White);
+                    if(cursorRect.Intersects(new Rectangle(GraphicsDevice.Viewport.Width / 3, 750, GraphicsDevice.Viewport.Width / 3, 150)))
                     {
-                        spriteBatch.Draw(exit, new Rectangle(GraphicsDevice.Viewport.Width / 3, 550, GraphicsDevice.Viewport.Width / 3, GraphicsDevice.Viewport.Height / 10), Color.Violet);  // if mouse is over button, changes color
+                        spriteBatch.Draw(exit, new Rectangle(GraphicsDevice.Viewport.Width / 3, 750, GraphicsDevice.Viewport.Width / 3, 150), Color.Violet);  // if mouse is over button, changes color
                     }
 
                     // draws player models on either side of screen
