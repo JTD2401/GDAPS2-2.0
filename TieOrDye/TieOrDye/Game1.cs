@@ -51,7 +51,7 @@ namespace TieOrDye
         Texture2D stoneTex; //gray stone texture
 
         const int NUMBER_OF_STONES = 25;
-        const int WIDTH_OF_STONES = 60;
+        const int WIDTH_OF_STONES = 30;
 
         //List that will contain different direction sprite for players
         List<Texture2D> player1Sprites;
@@ -313,6 +313,7 @@ namespace TieOrDye
                     // prevents players from passing beyond the boarder
                     ScreenBorder(p1);
                     ScreenBorder(p2);
+                    MoveStones(stonesList);
 
                     if (currKbState.IsKeyDown(Keys.P) || currKbState.IsKeyDown(Keys.Escape)) { currentGameState = GameStates.Pause; }
                     break;
@@ -449,7 +450,16 @@ namespace TieOrDye
 
             base.Draw(gameTime);
         }
-        
+
+        private void MoveStones(List<Stone> stonesList)
+        {
+            for (int i = 0; i < stonesList.Count; i++)
+            {
+                stonesList[i].XPos += (int)stonesList[i].Direction.X;
+                stonesList[i].YPos += (int)stonesList[i].Direction.Y;
+            }
+        }
+
         //Screen wrapping method for the player objects
         void ScreenBorder(Player pl)
         {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -15,29 +16,44 @@ namespace TieOrDye
     class Stone : GameObject
     {
         //attributes
+        Random rng;
+        Vector2 direction;
         Texture2D stoneTex;
-        int xPos;
-        int yPos;
-        int stoneWidth; //Diameter of stone
+        Circle circle;
 
-        public Stone(Texture2D t2, int x, int y, int sw) : base(t2, x, y)
+        public Stone(Texture2D t2, int x, int y, int radius) : base(t2, x, y)
         {
-            stoneTex = t2; //Should always create stones with gray texture by default
-            xPos = x;
-            yPos = y;
-            stoneWidth = sw; 
+            circle = new Circle(x, y, radius);
+            Thread.Sleep(30);
+            rng = new Random();
+            var dir = rng.Next(1,5);
+            if(dir == 1)
+                direction = new Vector2(2, 0);
+            if (dir == 2)
+                direction = new Vector2(-2, 0);
+            if (dir == 3)
+                direction = new Vector2(0, 2);
+            if (dir == 4)
+                direction = new Vector2(0, -2);
+            stoneTex = t2;
         }
 
         public int XPos
         {
-            get { return xPos; }
-            set { xPos = value; }
+            get { return circle.X; }
+            set { circle.X = value; }
         }
 
         public int YPos
         {
-            get { return yPos; }
-            set { yPos = value; }
+            get { return circle.Y; }
+            set { circle.Y = value; }
         }
+
+        public Vector2 Direction
+        {
+            get { return direction; }
+        }
+        
     }
 }
