@@ -354,7 +354,7 @@ namespace TieOrDye
                     // prevents players from passing beyond the boarder
                     ScreenBorder(p1);
                     ScreenBorder(p2);
-                    //MoveStones(stonesList);
+                    MoveStones(stonesList);
 
                     for (int x = 0; x < stonesList.Count; x++)
                     {
