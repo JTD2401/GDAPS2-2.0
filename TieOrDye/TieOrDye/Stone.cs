@@ -38,6 +38,18 @@ namespace TieOrDye
             stoneTex = t2;
         }
 
+        public Circle Circle
+        {
+            get { return circle; }
+        }
+
+
+        public Texture2D StoneTex
+        {
+            get { return stoneTex; }
+            set { stoneTex = value; }
+        }
+
         public int XPos
         {
             get { return circle.X; }

@@ -55,6 +55,11 @@ namespace TieOrDye
         Texture2D stoneTex; //gray stone texture
         SpriteFont font;
         double time;
+        //Color stoneColor;
+        Texture2D blueStone;
+        Texture2D orangeStone;
+        int p1Count;
+        int p2Count;
 
         const int NUMBER_OF_STONES = 25;
         const int WIDTH_OF_STONES = 30;
@@ -98,6 +103,9 @@ namespace TieOrDye
 
             windowsize = new Rectangle(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
 
+            p1Count = 0;
+            p2Count = 0;
+
             //Set initial state to menu
             currentGameState = GameStates.Menu;
 
@@ -137,8 +145,7 @@ namespace TieOrDye
             player1Animation = new Animation(player1Sprites, playerSpeed1);
             player2Animation = new Animation(player2Sprites, playerSpeed2);
 
-            font = Content.Load<SpriteFont>("NewSpriteFont");
-
+            //stoneColor = Color.White;
             //this.IsMouseVisible = true;
             base.Initialize();
         }
@@ -181,6 +188,12 @@ namespace TieOrDye
             Level1 = Content.Load<Texture2D>("GameBoard2");
             //Stone image
             stoneTex = Content.Load<Texture2D>("Stone");
+
+            font = Content.Load<SpriteFont>("NewSpriteFont");
+
+            blueStone = Content.Load<Texture2D>("BlueStone");
+
+            orangeStone = Content.Load<Texture2D>("OrangeStone");
             // TODO: use this.Content to load your game content here
 
             //Following will be loading the sprite for golems in
@@ -274,6 +287,9 @@ namespace TieOrDye
                             p2.X = player2InitialX;
                             p2.Y = player2InitialY;
 
+                            p1Count = 0;
+                            p2Count = 0;
+
                             //Create stone objects
                             CreateStones(NUMBER_OF_STONES, WIDTH_OF_STONES);
                             //Start game
@@ -338,8 +354,31 @@ namespace TieOrDye
                     // prevents players from passing beyond the boarder
                     ScreenBorder(p1);
                     ScreenBorder(p2);
-                    MoveStones(stonesList);
+                    //MoveStones(stonesList);
 
+                    for (int x = 0; x < stonesList.Count; x++)
+                    {
+                        
+
+                        bool p1Inter = stonesList[x].Circle.Intersects(p1.PlayerRect);
+                        bool p2Inter = stonesList[x].Circle.Intersects(p2.PlayerRect);
+
+                        if(p1Inter && stonesList[x].StoneTex == stoneTex)
+                        {
+                            
+                            stonesList[x].StoneTex = blueStone;
+                            p1Count++;
+                        }
+
+                        if(p2Inter && stonesList[x].StoneTex == stoneTex)
+                        {
+                            
+                            stonesList[x].StoneTex = orangeStone;
+                            p2Count++;
+                        }
+                    }
+
+                    
                     time -= gameTime.ElapsedGameTime.TotalSeconds;
                     if (time <= 0)
                     {
@@ -432,8 +471,8 @@ namespace TieOrDye
                     player2Animation.drawAnimation(spriteBatch);
 
                     spriteBatch.DrawString(font, "TIME: " + (int)time, new Vector2(890, 45), Color.White);
-                    spriteBatch.DrawString(font, "P1 Score: ", new Vector2(120, 45), Color.White);
-                    spriteBatch.DrawString(font, "P2 Score: ", new Vector2(1650, 45), Color.White);
+                    spriteBatch.DrawString(font, "P1 Score: " + p1Count, new Vector2(120, 45), Color.White);
+                    spriteBatch.DrawString(font, "P2 Score: " + p2Count, new Vector2(1650, 45), Color.White);
                     break;
                 case GameStates.Pause:  // draws pause screen
 
@@ -570,7 +609,7 @@ namespace TieOrDye
         {
             for (int i = 0; i < sl.Count; i++)  //For each stone in the stone list
             {
-                spriteBatch.Draw(stoneTex, new Rectangle(sl[i].XPos, sl[i].YPos, WIDTH_OF_STONES, WIDTH_OF_STONES), Color.White); //draw it
+                spriteBatch.Draw(stonesList[i].StoneTex, new Rectangle(sl[i].XPos, sl[i].YPos, WIDTH_OF_STONES, WIDTH_OF_STONES), Color.White); //draw it
             }
         }
     }
