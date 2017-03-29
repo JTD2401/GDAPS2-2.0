@@ -4,16 +4,17 @@
   <Platform>DesktopGL</Platform>
   <Config />
   <SourceFiles>
-    <File>C:/Users/Elliot/Desktop/Project/TieOrDye/TieOrDye/Content/Pause Screen No Buttons.png</File>
-    <File>C:/Users/Elliot/Desktop/Project/TieOrDye/TieOrDye/Content/Resume Button Pause Menu.png</File>
-    <File>C:/Users/Elliot/Desktop/Project/TieOrDye/TieOrDye/Content/StartScreenNoButtons.png</File>
-    <File>C:/Users/Elliot/Desktop/Project/TieOrDye/TieOrDye/Content/Options Button Pause Menu.png</File>
-    <File>C:/Users/Elliot/Desktop/Project/TieOrDye/TieOrDye/Content/Main Menu Button Pause Menu.png</File>
-    <File>C:/Users/Elliot/Desktop/Project/TieOrDye/TieOrDye/Content/Exit Button Pause Menu.png</File>
-    <File>C:/Users/Elliot/Desktop/Project/TieOrDye/TieOrDye/Content/Exit Button.png</File>
-    <File>C:/Users/Elliot/Desktop/Project/TieOrDye/TieOrDye/Content/Main Menu Button.png</File>
-    <File>C:/Users/Elliot/Desktop/Project/TieOrDye/TieOrDye/Content/Options Button.png</File>
-    <File>C:/Users/Elliot/Desktop/Project/TieOrDye/TieOrDye/Content/Resume Button.png</File>
-    <File>C:/Users/Elliot/Desktop/Project/TieOrDye/TieOrDye/Content/Start Button.png</File>
+    <File>Z:/IGMProfile/Desktop/Project/TieOrDye/TieOrDye/Content/Pause Screen No Buttons.png</File>
+    <File>Z:/IGMProfile/Desktop/Project/TieOrDye/TieOrDye/Content/Resume Button Pause Menu.png</File>
+    <File>Z:/IGMProfile/Desktop/Project/TieOrDye/TieOrDye/Content/StartScreenNoButtons.png</File>
+    <File>Z:/IGMProfile/Desktop/Project/TieOrDye/TieOrDye/Content/Options Button Pause Menu.png</File>
+    <File>Z:/IGMProfile/Desktop/Project/TieOrDye/TieOrDye/Content/Main Menu Button Pause Menu.png</File>
+    <File>Z:/IGMProfile/Desktop/Project/TieOrDye/TieOrDye/Content/Exit Button Pause Menu.png</File>
+    <File>Z:/IGMProfile/Desktop/Project/TieOrDye/TieOrDye/Content/Exit Button.png</File>
+    <File>Z:/IGMProfile/Desktop/Project/TieOrDye/TieOrDye/Content/Main Menu Button.png</File>
+    <File>Z:/IGMProfile/Desktop/Project/TieOrDye/TieOrDye/Content/Options Button.png</File>
+    <File>Z:/IGMProfile/Desktop/Project/TieOrDye/TieOrDye/Content/Resume Button.png</File>
+    <File>Z:/IGMProfile/Desktop/Project/TieOrDye/TieOrDye/Content/Start Button.png</File>
+    <File>Z:/IGMProfile/Desktop/Project/TieOrDye/TieOrDye/Content/NewSpriteFont.spritefont</File>
   </SourceFiles>
 </SourceFileCollection>

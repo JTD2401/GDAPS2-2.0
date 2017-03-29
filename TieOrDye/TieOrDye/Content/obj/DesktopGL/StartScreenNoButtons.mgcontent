@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <SourceFile>C:/Users/Elliot/Desktop/Project/TieOrDye/TieOrDye/Content/StartScreenNoButtons.png</SourceFile>
-  <SourceTime>2017-03-25T16:26:51.0606631-04:00</SourceTime>
-  <DestFile>C:/Users/Elliot/Desktop/Project/TieOrDye/TieOrDye/Content/bin/DesktopGL/StartScreenNoButtons.xnb</DestFile>
-  <DestTime>2017-03-25T16:35:34.613687-04:00</DestTime>
+  <SourceFile>Z:/IGMProfile/Desktop/Project/TieOrDye/TieOrDye/Content/StartScreenNoButtons.png</SourceFile>
+  <SourceTime>2017-03-29T10:13:17.3149493-04:00</SourceTime>
+  <DestFile>Z:/IGMProfile/Desktop/Project/TieOrDye/TieOrDye/Content/bin/DesktopGL/StartScreenNoButtons.xnb</DestFile>
+  <DestTime>2017-03-29T10:18:00.5291252-04:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2016-03-30T02:36:08-04:00</ImporterTime>
   <Processor>TextureProcessor</Processor>

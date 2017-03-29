@@ -53,6 +53,8 @@ namespace TieOrDye
         Random rand; //Random object
         List<Stone> stonesList; //list of stones
         Texture2D stoneTex; //gray stone texture
+        SpriteFont font;
+        double time;
 
         const int NUMBER_OF_STONES = 25;
         const int WIDTH_OF_STONES = 30;
@@ -134,6 +136,8 @@ namespace TieOrDye
             //Animation object initialization
             player1Animation = new Animation(player1Sprites, playerSpeed1);
             player2Animation = new Animation(player2Sprites, playerSpeed2);
+
+            font = Content.Load<SpriteFont>("NewSpriteFont");
 
             //this.IsMouseVisible = true;
             base.Initialize();
@@ -264,6 +268,12 @@ namespace TieOrDye
                         //Check for clicking button
                         if (currMState.LeftButton == ButtonState.Pressed)
                         {
+                            p1.X = player1InitialX;
+                            p1.Y = player1InitialY;
+
+                            p2.X = player2InitialX;
+                            p2.Y = player2InitialY;
+
                             //Create stone objects
                             CreateStones(NUMBER_OF_STONES, WIDTH_OF_STONES);
                             //Start game
@@ -284,6 +294,9 @@ namespace TieOrDye
                         }
                     }
 
+                    time = 11;
+                    
+
                     break;
                 case GameStates.Pause:  // options menu state
 
@@ -301,11 +314,6 @@ namespace TieOrDye
                     {
                         if (currMState.LeftButton == ButtonState.Pressed)
                         {
-                            p1.X = player1InitialX;
-                            p1.Y = player1InitialY;
-
-                            p2.X = player2InitialX;
-                            p2.Y = player2InitialY;
 
                             currentGameState = GameStates.Menu;
                         }
@@ -332,11 +340,21 @@ namespace TieOrDye
                     ScreenBorder(p2);
                     MoveStones(stonesList);
 
+                    time -= gameTime.ElapsedGameTime.TotalSeconds;
+                    if (time <= 0)
+                    {
+                        currentGameState = GameStates.GameOver;
+                    }
+
                     if (currKbState.IsKeyDown(Keys.P) || currKbState.IsKeyDown(Keys.Escape)) { currentGameState = GameStates.Pause; }
                     break;
                 case GameStates.Options:
                     break;
                 case GameStates.GameOver:  // end of game state
+                    if (currKbState.IsKeyDown(Keys.Space))
+                    {
+                        currentGameState = GameStates.Menu;
+                    }
                     break;
 
 
@@ -412,6 +430,10 @@ namespace TieOrDye
                     DrawStones(stonesList);
                     player1Animation.drawAnimation(spriteBatch);
                     player2Animation.drawAnimation(spriteBatch);
+
+                    spriteBatch.DrawString(font, "TIME: " + (int)time, new Vector2(890, 45), Color.White);
+                    spriteBatch.DrawString(font, "P1 Score: ", new Vector2(120, 45), Color.White);
+                    spriteBatch.DrawString(font, "P2 Score: ", new Vector2(1650, 45), Color.White);
                     break;
                 case GameStates.Pause:  // draws pause screen
 
@@ -456,6 +478,7 @@ namespace TieOrDye
                 case GameStates.Options:
                     break;
                 case GameStates.GameOver:
+                    spriteBatch.DrawString(font, "Press Space to go to Menu", new Vector2(500, 400), Color.Black);
                     break;
             }
 
