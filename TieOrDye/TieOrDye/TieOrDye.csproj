@@ -79,7 +79,9 @@
     <Content Include="Content\Exit Button Pause Menu.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Exit Button.png" />
+    <Content Include="Content\Exit Button.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\GameBoard2.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -137,11 +139,15 @@
     <Content Include="Content\Main Menu Button Pause Menu.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Main Menu Button.png" />
+    <Content Include="Content\Main Menu Button.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Options Button Pause Menu.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Options Button.png" />
+    <Content Include="Content\Options Button.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\OrangeStone.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -157,8 +163,12 @@
     <Content Include="Content\Resume Button Pause Menu.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Resume Button.png" />
-    <Content Include="Content\Start Button.png" />
+    <Content Include="Content\Resume Button.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Start Button.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\StartScreen.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

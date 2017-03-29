@@ -21,7 +21,7 @@ namespace TieOrDye
     {
         GraphicsDeviceManager graphics;
         GameWindow viewport;
-        SpriteBatch spriteBatch; 
+        SpriteBatch spriteBatch;
         Texture2D p1Tex; //P1's Front-Facing Sprite
         Player p1; //P1's object
         Texture2D p2Tex; //P2's Front-Facing Sprite
@@ -46,6 +46,10 @@ namespace TieOrDye
         BinaryReader read;
         double playerSpeed1;
         double playerSpeed2;
+        int player1InitialX;
+        int player2InitialX;
+        int player1InitialY;
+        int player2InitialY;
         Random rand; //Random object
         List<Stone> stonesList; //list of stones
         Texture2D stoneTex; //gray stone texture
@@ -62,7 +66,7 @@ namespace TieOrDye
         Animation player2Animation;
         Texture2D tempSprite;
 
-        enum GameStates { Menu, Pause, Options, InGame, GameOver}; //Enum for game states
+        enum GameStates { Menu, Pause, Options, InGame, GameOver }; //Enum for game states
         GameStates currentGameState; //Attribute for current game state
 
         public Game1()
@@ -71,7 +75,7 @@ namespace TieOrDye
             Content.RootDirectory = "Content";
 
             //Changes resolution - Default resolution is 800x480 -- This code changes it to 1000x800
-            
+
             //graphics.IsFullScreen = true;
             //this.IsMouseVisible = true;
         }
@@ -107,13 +111,20 @@ namespace TieOrDye
 
             playerSpeed1 = read.ReadDouble();
 
+            player1InitialX = read.ReadInt32();
+            player1InitialY = read.ReadInt32();
+
             //P1 Object initialized at 0,0
-            p1 = new Player(p1Tex, read.ReadInt32(), read.ReadInt32(), read.ReadInt32(), read.ReadInt32());
+            p1 = new Player(p1Tex, player1InitialX, player1InitialY, read.ReadInt32(), read.ReadInt32());
+
 
             playerSpeed2 = read.ReadDouble();
-             
+
+            player2InitialX = read.ReadInt32();
+            player2InitialY = read.ReadInt32();
+
             //P2 Object initialized at 900,0
-            p2 = new Player(p2Tex, read.ReadInt32(), read.ReadInt32(), read.ReadInt32(), read.ReadInt32());
+            p2 = new Player(p2Tex, player2InitialX, player2InitialY, read.ReadInt32(), read.ReadInt32());
 
 
             //List of Texture2D that contains different directional sprites for players
@@ -229,7 +240,7 @@ namespace TieOrDye
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
- 
+
             // TODO: Add your update logic here
             //Current mouse state
             currMState = Mouse.GetState();
@@ -237,7 +248,7 @@ namespace TieOrDye
             //Keyboard object
             currKbState = Keyboard.GetState();
 
-            
+
 
 
 
@@ -265,9 +276,9 @@ namespace TieOrDye
                         startActive = false;
                     }
 
-                    if(cursorRect.Intersects(new Rectangle(190, 750, exit.Width, exit.Height)))
+                    if (cursorRect.Intersects(new Rectangle(190, 750, exit.Width, exit.Height)))
                     {
-                        if(currMState.LeftButton == ButtonState.Pressed)
+                        if (currMState.LeftButton == ButtonState.Pressed)
                         {
                             this.Exit();
                         }
@@ -288,8 +299,14 @@ namespace TieOrDye
                     // determines if game state is changed to Menu when player clicks on the Main Menu rectangle 
                     if (cursorRect.Intersects(new Rectangle(GraphicsDevice.Viewport.Width / 3, 550, GraphicsDevice.Viewport.Width / 3, 150)))
                     {
-                        if(currMState.LeftButton == ButtonState.Pressed)
+                        if (currMState.LeftButton == ButtonState.Pressed)
                         {
+                            p1.X = player1InitialX;
+                            p1.Y = player1InitialY;
+
+                            p2.X = player2InitialX;
+                            p2.Y = player2InitialY;
+
                             currentGameState = GameStates.Menu;
                         }
                     }
@@ -297,7 +314,7 @@ namespace TieOrDye
                     // determines if game is exited when player clicks on the Exit rectangle
                     if (cursorRect.Intersects(new Rectangle(GraphicsDevice.Viewport.Width / 3, 750, GraphicsDevice.Viewport.Width / 3, 150)))
                     {
-                        if(currMState.LeftButton == ButtonState.Pressed)
+                        if (currMState.LeftButton == ButtonState.Pressed)
                         {
                             this.Exit();
                         }
@@ -326,11 +343,11 @@ namespace TieOrDye
 
             }
 
-           
+
             //Previous Keyboard state object
             prevKbState = currKbState;
 
-         
+
 
             base.Update(gameTime);
         }
@@ -359,9 +376,9 @@ namespace TieOrDye
                     //Draw gameboard
                     spriteBatch.Draw(gameBoard, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);
                     Debug.WriteLine(cursorRect);
-                    
 
-                    if(cursorRect.Intersects(new Rectangle(190, 150, 392, 103)))
+
+                    if (cursorRect.Intersects(new Rectangle(190, 150, 392, 103)))
                     {
                         spriteBatch.Draw(start, new Rectangle(200, 150, 392, 103), Color.Violet);
                     }
@@ -370,7 +387,7 @@ namespace TieOrDye
                         spriteBatch.Draw(start, new Rectangle(190, 150, 392, 103), Color.White);
                     }
 
-                    if(cursorRect.Intersects(new Rectangle(190, 450, 392, 103)))
+                    if (cursorRect.Intersects(new Rectangle(190, 450, 392, 103)))
                     {
                         spriteBatch.Draw(options, new Rectangle(200, 450, 392, 103), Color.Violet);
                     }
@@ -379,7 +396,7 @@ namespace TieOrDye
                         spriteBatch.Draw(options, new Rectangle(190, 450, 392, 103), Color.White);
                     }
 
-                    if(cursorRect.Intersects(new Rectangle(190, 750, 392, 103)))
+                    if (cursorRect.Intersects(new Rectangle(190, 750, 392, 103)))
                     {
                         spriteBatch.Draw(exit, new Rectangle(200, 750, 392, 103), Color.Violet);
                     }
@@ -397,11 +414,11 @@ namespace TieOrDye
                     player2Animation.drawAnimation(spriteBatch);
                     break;
                 case GameStates.Pause:  // draws pause screen
-                    
+
                     spriteBatch.Draw(pauseScreen, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);  // draws pause screen
 
                     // draws resume button and checks if the mouse is over it
-                    spriteBatch.Draw(resumeButton, new Rectangle(GraphicsDevice.Viewport.Width/3,  150, GraphicsDevice.Viewport.Width / 3, 150), Color.White);
+                    spriteBatch.Draw(resumeButton, new Rectangle(GraphicsDevice.Viewport.Width / 3, 150, GraphicsDevice.Viewport.Width / 3, 150), Color.White);
                     if (cursorRect.Intersects(new Rectangle(GraphicsDevice.Viewport.Width / 3, 150, GraphicsDevice.Viewport.Width / 3, 150)))
                     {
                         spriteBatch.Draw(resumeButton, new Rectangle(GraphicsDevice.Viewport.Width / 3, 150, GraphicsDevice.Viewport.Width / 3, 150), Color.Violet);  // if mouse is over button, changes color
@@ -409,21 +426,21 @@ namespace TieOrDye
 
                     // draws options button and checks if the mouse is over it
                     spriteBatch.Draw(options, new Rectangle(GraphicsDevice.Viewport.Width / 3, 350, GraphicsDevice.Viewport.Width / 3, 150), Color.White);
-                    if(cursorRect.Intersects(new Rectangle(GraphicsDevice.Viewport.Width / 3, 350, GraphicsDevice.Viewport.Width / 3, 150)))
+                    if (cursorRect.Intersects(new Rectangle(GraphicsDevice.Viewport.Width / 3, 350, GraphicsDevice.Viewport.Width / 3, 150)))
                     {
                         spriteBatch.Draw(options, new Rectangle(GraphicsDevice.Viewport.Width / 3, 350, GraphicsDevice.Viewport.Width / 3, 150), Color.Violet);  // if mouse is over button, changes color
                     }
 
                     // draws Main Menu button and checks if the mouse is over it
                     spriteBatch.Draw(mainMenu, new Rectangle(GraphicsDevice.Viewport.Width / 3, 550, GraphicsDevice.Viewport.Width / 3, 150), Color.White);
-                    if(cursorRect.Intersects(new Rectangle(GraphicsDevice.Viewport.Width / 3, 550, GraphicsDevice.Viewport.Width / 3, 150)))
+                    if (cursorRect.Intersects(new Rectangle(GraphicsDevice.Viewport.Width / 3, 550, GraphicsDevice.Viewport.Width / 3, 150)))
                     {
                         spriteBatch.Draw(mainMenu, new Rectangle(GraphicsDevice.Viewport.Width / 3, 550, GraphicsDevice.Viewport.Width / 3, 150), Color.Violet);  // if mouse is over button, changes color
                     }
 
                     // draws Exit button and checks if the mouse is over it
                     spriteBatch.Draw(exit, new Rectangle(GraphicsDevice.Viewport.Width / 3, 750, GraphicsDevice.Viewport.Width / 3, 150), Color.White);
-                    if(cursorRect.Intersects(new Rectangle(GraphicsDevice.Viewport.Width / 3, 750, GraphicsDevice.Viewport.Width / 3, 150)))
+                    if (cursorRect.Intersects(new Rectangle(GraphicsDevice.Viewport.Width / 3, 750, GraphicsDevice.Viewport.Width / 3, 150)))
                     {
                         spriteBatch.Draw(exit, new Rectangle(GraphicsDevice.Viewport.Width / 3, 750, GraphicsDevice.Viewport.Width / 3, 150), Color.Violet);  // if mouse is over button, changes color
                     }
@@ -431,8 +448,8 @@ namespace TieOrDye
                     // draws player models on either side of screen
                     spriteBatch.Draw(p1Tex, new Rectangle(0, 300, 450, 600), Color.White);
                     spriteBatch.Draw(p2Tex, new Rectangle(1400, 300, 500, 600), Color.White);
-                    
-                   
+
+
 
                     spriteBatch.Draw(cursorTex, cursorRect, Color.White);
                     break;
@@ -444,7 +461,7 @@ namespace TieOrDye
 
 
 
-           
+
             //End spritebatch
             spriteBatch.End();
 
@@ -504,17 +521,17 @@ namespace TieOrDye
                 //Check if a stone is already drawn in that location
                 for (int j = 0; j < stonesList.Count; j++)   //For each stone in list
                 {
-                    if((stoneX >= stonesList[j].X && stoneX <= stonesList[j].X + stoneWidth) && (stoneY >= stonesList[j].Y && stoneY <= stonesList[j].Y + stoneWidth)) //if potential stone's x  and y collides with the stone's x and y coordinates
+                    if ((stoneX >= stonesList[j].X && stoneX <= stonesList[j].X + stoneWidth) && (stoneY >= stonesList[j].Y && stoneY <= stonesList[j].Y + stoneWidth)) //if potential stone's x  and y collides with the stone's x and y coordinates
                     {
                         canCreate = false; //prevent the stone from being created
                     }
                 }
-                if(canCreate)//If the stone can be created
+                if (canCreate)//If the stone can be created
                 {
                     //Create stone object
                     Stone s = new Stone(stoneTex, stoneX, stoneY, stoneWidth);
                     //Add stone object to stone list
-                    stonesList.Add(s); 
+                    stonesList.Add(s);
                 }
                 else //If current stone can't be created, try again
                 {
@@ -526,7 +543,7 @@ namespace TieOrDye
 
         //Method to draw all stones after they have been created using the CreateStones method - Needs to be added to significantly when orbs are introduced
         //Make sure to use this method inside a spritebatch
-        void DrawStones(List<Stone> sl) 
+        void DrawStones(List<Stone> sl)
         {
             for (int i = 0; i < sl.Count; i++)  //For each stone in the stone list
             {
