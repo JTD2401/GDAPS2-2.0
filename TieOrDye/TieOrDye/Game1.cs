@@ -510,7 +510,9 @@ namespace TieOrDye
                     spriteBatch.Draw(p1Tex, new Rectangle(0, 300, 450, 600), Color.White);
                     spriteBatch.Draw(p2Tex, new Rectangle(1400, 300, 500, 600), Color.White);
 
-
+                    spriteBatch.DrawString(font, ""+p1Count, new Vector2(275, 110), Color.White, 0f, Vector2.Zero, 2, SpriteEffects.None, 0);
+                    spriteBatch.DrawString(font, "" + p2Count, new Vector2(1650, 110), Color.White, 0f, Vector2.Zero, 2, SpriteEffects.None, 0);
+                    spriteBatch.DrawString(font, "TIME: " + (int)time, new Vector2(850, 110), Color.White, 0f, Vector2.Zero, 2, SpriteEffects.None, 0);
 
                     spriteBatch.Draw(cursorTex, cursorRect, Color.White);
                     break;
