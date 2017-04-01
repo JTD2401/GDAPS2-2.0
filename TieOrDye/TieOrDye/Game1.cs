@@ -19,45 +19,68 @@ namespace TieOrDye
     /// </summary>
     public class Game1 : Game
     {
+
         #region attributes
-        GraphicsDeviceManager graphics;
-        GameWindow viewport;
-        SpriteBatch spriteBatch;
-        Player p1; //P1's object
-        Player p2; //P2's object
-        Rectangle windowsize;
-        //Buttons are 392 x 103
-        Texture2D inactiveStartButtonTex; //GameBoard Inactive Start Button
-        Texture2D activeStartButtonTex; //GameBoard Active Start Button
-        bool startActive; //GameBoard Start Button Active boolean
-        MouseState currMState; //Current Mouse State
-        MouseState prevState;
-        Rectangle cursorRect; //Cursor rectangle
-        KeyboardState currKbState, prevKbState; //Current and previous keyboard state
-        Texture2D pauseScreen, resumeButton, options, mainMenu, exit , start, p1Tex, p2Tex, gameBoard, Level1, blueStone, orangeStone, cursorTex, optionsScreen, noTexture, arrowRight;  // base pause screen
-        BinaryReader read;
-        double playerSpeed1, playerSpeed2;
-        int player1InitialX, player1InitialY, player2InitialX, player2InitialY;
-        Random rand; //Random object
-        List<Stone> stonesList; //list of stones
-        Texture2D stoneTex; //gray stone texture
-        SpriteFont font;
-        double time;
-        int p1Count;
-        int p2Count;
-        //List of blue orbs
-        List<Orb> blueOrbs;
-        Texture2D bOrbTex;
-        //List of orange orbs
-        List<Orb> orangeOrbs;
-        Texture2D oOrbTex;
+        //Constants 
         const int NUMBER_OF_STONES = 25;
         const int WIDTH_OF_STONES = 30;
         const int ORB_WIDTH = 5;
         const int ORB_SPEED = 3;
+
+        //Variables to store the player speed and positions
+        double playerSpeed1, playerSpeed2;
+        int player1InitialX, player1InitialY, player2InitialX, player2InitialY;
+
+        //Timer of the game
+        double time;
+
+        //Attribute and enum for the game state
+        enum GameStates { Menu, Pause, Options, InGame, GameOver };
+        GameStates currentGameState;
+
+        //Random object
+        Random rand;
+
+        //Player Object
+        Player p1;
+        Player p2;
+
+        //Player count
+        int p1Count;
+        int p2Count;
+
+        //Game interface and draw variable
+        GraphicsDeviceManager graphics;
+        GameWindow viewport;
+        SpriteBatch spriteBatch;
+
+        //Reader for the tool
+        BinaryReader read;
+
+        //Rectangle that stores the window resolution of user
+        Rectangle windowsize;
+
+        //Font for the game
+        SpriteFont font;
+
         bool cameFromMenu = false;
         string[] resolution = new string[] { "1920x1080", "1600x900", "1366x768", "1280x720", "1920x1200", "1680x1050", "1440x900", "1280x800", "1920x1440", "1856x1392", "1600x1200", "1440x1080", "1280x960", "1024x768" };
         int location;
+
+        Texture2D pauseScreen, resumeButton, options, mainMenu, exit , start, p1Tex, p2Tex, gameBoard, Level1, blueStone, orangeStone, cursorTex, optionsScreen, noTexture, arrowRight;  // base pause screen
+
+        //List of blue orbs
+        List<Orb> blueOrbs;
+        Texture2D bOrbTex;
+
+        //List of orange orbs
+        List<Orb> orangeOrbs;
+        Texture2D oOrbTex;
+
+        //List and texture of the stones
+        List<Stone> stonesList; 
+        Texture2D stoneTex;
+
         //List that will contain different direction sprite for players
         List<Texture2D> player1Sprites;
         List<Texture2D> player2Sprites;
@@ -67,8 +90,20 @@ namespace TieOrDye
         Animation player2Animation;
         Texture2D tempSprite;
 
-        enum GameStates { Menu, Pause, Options, InGame, GameOver }; //Enum for game states
-        GameStates currentGameState; //Attribute for current game state
+        //Mouse state and rectangle to store cursor position
+        MouseState currMState;
+        MouseState prevState;
+        Rectangle cursorRect;
+
+        //Keyboard state
+        KeyboardState currKbState;
+        KeyboardState prevKbState;
+
+        //Buttons are 392 x 103
+        //Gameboard inactive and active start button, along with boolean if button is active
+        Texture2D inactiveStartButtonTex;
+        Texture2D activeStartButtonTex;
+        bool startActive;
 
         #endregion
 
