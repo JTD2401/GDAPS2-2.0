@@ -432,13 +432,13 @@ namespace TieOrDye
                     ///
                     for (int x = 0; x < stonesList.Count; x++)
                     {
-                        Circle c1 = new Circle((int)stonesList[x].X + (WIDTH_OF_STONES / 2), (int)stonesList[x].Y + (WIDTH_OF_STONES / 2), (WIDTH_OF_STONES / 2)); //Circle object for each stone to check for collisions
+                        Circle c1 = new Circle((int)stonesList[x].XPos + (WIDTH_OF_STONES / 2), (int)stonesList[x].YPos + (WIDTH_OF_STONES / 2), (WIDTH_OF_STONES / 2)); //Circle object for each stone to check for collisions
 
                         for (int i = 0; i < blueOrbs.Count; i++)
                         {
 
                             Circle c2 = new Circle((int)blueOrbs[i].X + (ORB_WIDTH / 2), (int)blueOrbs[i].Y + (ORB_WIDTH / 2), (ORB_WIDTH / 2)); //Circle object for orb
-                            if (stonesList[x].Circle.Intersects(c2))
+                            if (c1.Intersects(c2))
                             {
                                 stonesList[x].StoneTex = blueStone;
                                 blueOrbs.Remove(blueOrbs[i]);
@@ -448,7 +448,7 @@ namespace TieOrDye
                         for (int j = 0; j < orangeOrbs.Count; j++)
                         {
                             Circle c3 = new Circle((int)orangeOrbs[j].X + (ORB_WIDTH / 2), (int)orangeOrbs[j].Y + (ORB_WIDTH / 2), (ORB_WIDTH / 2));
-                            if (stonesList[x].Circle.Intersects(c3))
+                            if (c1.Intersects(c3))
                             {
                                 stonesList[x].StoneTex = orangeStone;
                                 orangeOrbs.Remove(orangeOrbs[j]);
