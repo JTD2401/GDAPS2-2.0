@@ -16,11 +16,116 @@ namespace TieOrDye
     class Orb : GameObject
     {
         //attributes
-        bool color;
+        Texture2D orbTex;
+        int orbSpeed;
+        int orbWidth;
+        enum orbDir { Up, Down, Left, Right, UpLeft, UpRight, DownLeft, Downright };
+        orbDir dir;
 
-        public Orb(Texture2D t2, int x, int y, int radius) : base(t2, x, y)
+        public Orb(Texture2D t2, int x, int y, Player p, Animation anim, int oWidth, int oSpeed) : base(t2, x, y)
         {
+            //Set texture
+            orbTex = t2;
+            //Default orb location if switch statement can't change location
+            int orbX = x;
+            int orbY = y;
+            orbWidth = oWidth;
+            orbSpeed = oSpeed;
+            //Place the orb in different locations depending on direction of player when shot
+            //Also sets orb direction 
+            switch (anim.Look)
+            {
+                case Animation.PlayerState.Up: //Place orb centered above player (-1 Pixel)
+                    orbX = p.X + (p.PlayerRect.Width / 2) - (orbWidth / 2);
+                    orbY = p.Y - orbWidth - 1;
+                    dir = orbDir.Up;
+                    break;
+                case Animation.PlayerState.Down: //Place orb centered beneath player (+ 1 Pixel)
+                    orbX = p.X + (p.PlayerRect.Width / 2) - (orbWidth / 2);
+                    orbY = p.Y + p.PlayerRect.Height + 1;
+                    dir = orbDir.Down;
+                    break;
+                case Animation.PlayerState.Left: //Place orb at center left of player (-1 Pixel)
+                    orbX = p.X - orbWidth - 1;
+                    orbY = p.Y + (p.PlayerRect.Height / 2) - (orbWidth / 2);
+                    dir = orbDir.Left;
+                    break;
+                case Animation.PlayerState.Right:    //Place orb at center right of player (+1 Pixel)
+                    orbX = p.X + p.PlayerRect.Width + 1;
+                    orbY = p.Y + (p.PlayerRect.Height / 2) - (orbWidth / 2);
+                    dir = orbDir.Right;
+                    break;
+                case Animation.PlayerState.UpLeft: //Place orb above top left corner of player
+                    orbX = p.X - orbWidth - 1;
+                    orbY = p.Y - orbWidth - 1;
+                    dir = orbDir.UpLeft;
+                    break;
+                case Animation.PlayerState.UpRight: //Place orb above top right corner of player
+                    orbX = p.X + p.PlayerRect.Width + 1;
+                    orbY = p.Y - orbWidth - 1;
+                    dir = orbDir.UpRight;
+                    break;
+                case Animation.PlayerState.DownLeft: //Place orb below bottom left corner of player
+                    orbX = p.X - orbWidth - 1;
+                    orbY = p.Y + p.PlayerRect.Height + 1;
+                    dir = orbDir.DownLeft;
+                    break;
+                case Animation.PlayerState.Downright: //Place orb below bottom right corner of player
+                    orbX = p.X + p.PlayerRect.Width + 1;
+                    orbY = p.Y + p.PlayerRect.Height + 1;
+                    dir = orbDir.Downright;
+                    break;
+                default:
+                    break;
+            }
+            //Set orb properties
+            X = orbX;
+            Y = orbY;
+        }
 
+        public void UpdateOrbs()
+        {
+            //Check for collision  and change direction
+            
+       
+            
+            //Update orb position
+            switch(dir)
+            {
+                case orbDir.Up:
+                    Y -= orbSpeed;
+                    break;
+                case orbDir.Down:
+                    Y += orbSpeed;
+                    break;
+                case orbDir.Left:
+                    X -= orbSpeed;
+                    break;
+                case orbDir.Right:
+                    X += orbSpeed;
+                    break;
+                case orbDir.UpLeft:
+                    X -= orbSpeed;
+                    Y -= orbSpeed;
+                    break;
+                case orbDir.UpRight:
+                    X += orbSpeed;
+                    Y -= orbSpeed;
+                    break;
+                case orbDir.DownLeft:
+                    X -= orbSpeed;
+                    Y += orbSpeed;
+                    break;
+                case orbDir.Downright:
+                    X += orbSpeed;
+                    Y += orbSpeed;
+                    break;
+            }
+        }
+
+        public void DrawOrbs(SpriteBatch sb)
+        {
+            sb.Draw(orbTex, new Rectangle((int)X, (int)Y, orbWidth, orbWidth), Color.White);
         }
     }
 }

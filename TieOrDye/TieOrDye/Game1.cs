@@ -60,9 +60,16 @@ namespace TieOrDye
         Texture2D orangeStone;
         int p1Count;
         int p2Count;
-
+        //List of blue orbs
+        List<Orb> blueOrbs;
+        Texture2D bOrbTex;
+        //List of orange orbs
+        List<Orb> orangeOrbs;
+        Texture2D oOrbTex;
         const int NUMBER_OF_STONES = 25;
         const int WIDTH_OF_STONES = 30;
+        const int ORB_WIDTH = 5;
+        const int ORB_SPEED = 3;
 
         //List that will contain different direction sprite for players
         List<Texture2D> player1Sprites;
@@ -145,6 +152,10 @@ namespace TieOrDye
             player1Animation = new Animation(player1Sprites, playerSpeed1);
             player2Animation = new Animation(player2Sprites, playerSpeed2);
 
+            //Empty lists for orbs
+            blueOrbs = new List<Orb>();
+            orangeOrbs = new List<Orb>();
+
             //stoneColor = Color.White;
             //this.IsMouseVisible = true;
             base.Initialize();
@@ -194,6 +205,10 @@ namespace TieOrDye
             blueStone = Content.Load<Texture2D>("BlueStone");
 
             orangeStone = Content.Load<Texture2D>("OrangeStone");
+
+            bOrbTex = Content.Load<Texture2D>("BlueOrb");
+
+            oOrbTex = Content.Load<Texture2D>("OrangeOrb");
             // TODO: use this.Content to load your game content here
 
             //Following will be loading the sprite for golems in
@@ -265,11 +280,6 @@ namespace TieOrDye
             //Keyboard object
             currKbState = Keyboard.GetState();
 
-
-
-
-
-
             // improved finite state machine
             switch (currentGameState)
             {
@@ -310,7 +320,8 @@ namespace TieOrDye
                         }
                     }
 
-                    time = 11;
+                    //Sets total game time
+                    time = 61;
                     
 
                     break;
@@ -351,10 +362,32 @@ namespace TieOrDye
                     player2Animation.processInput(currKbState, p2, Keys.Up, Keys.Left, Keys.Down, Keys.Right);
                     p2.PlayerRect = player2Animation.PlayerPositionRectangle;
 
-                    // prevents players from passing beyond the boarder
+                    // prevents players from passing beyond the border
                     ScreenBorder(p1);
                     ScreenBorder(p2);
                     MoveStones(stonesList);
+                    
+                    //Creates orbs - Cooldown is only 1 update loop currently
+                    if ((currKbState.IsKeyDown(Keys.Space) && (prevKbState.IsKeyDown(Keys.Space) == false))) //P1 Shoots
+                    {
+                        Orb o1 = new Orb(bOrbTex, 0, 0, p1, player1Animation, ORB_WIDTH, ORB_SPEED);
+                        blueOrbs.Add(o1);
+                    }
+                    if ((currKbState.IsKeyDown(Keys.RightShift) && (prevKbState.IsKeyDown(Keys.RightShift) == false))) //P2 Shoots
+                    {
+                        Orb o2 = new Orb(oOrbTex, 0, 0, p2, player2Animation, ORB_WIDTH, ORB_SPEED);
+                        blueOrbs.Add(o2);
+                    }
+
+                    //Update orb locations
+                    for (int i = 0; i < blueOrbs.Count; i++)
+                    {
+                        blueOrbs[i].UpdateOrbs();
+                    }
+                    for (int i = 0; i < orangeOrbs.Count; i++)
+                    {
+                        orangeOrbs[i].UpdateOrbs();
+                    }
 
                     for (int x = 0; x < stonesList.Count; x++)
                     {
@@ -386,6 +419,7 @@ namespace TieOrDye
                     }
 
                     if (currKbState.IsKeyDown(Keys.P) || currKbState.IsKeyDown(Keys.Escape)) { currentGameState = GameStates.Pause; }
+
                     break;
                 case GameStates.Options:
                     break;
@@ -469,6 +503,15 @@ namespace TieOrDye
                     DrawStones(stonesList);
                     player1Animation.drawAnimation(spriteBatch);
                     player2Animation.drawAnimation(spriteBatch);
+                    //Draw orbs
+                    for (int i = 0; i < blueOrbs.Count; i++)
+                    {
+                        blueOrbs[i].DrawOrbs(spriteBatch);
+                    }
+                    for (int i = 0; i < orangeOrbs.Count; i++)
+                    {
+                        orangeOrbs[i].DrawOrbs(spriteBatch);
+                    }
 
                     spriteBatch.DrawString(font, "TIME: " + (int)time, new Vector2(890, 45), Color.White);
                     spriteBatch.DrawString(font, "P1 Score: " + p1Count, new Vector2(120, 45), Color.White);

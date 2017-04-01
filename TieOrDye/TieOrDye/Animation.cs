@@ -25,8 +25,14 @@ namespace TieOrDye
         Rectangle playerPositionRectangle;
         double playerSpeed;
 
-        enum PlayerState { Up, Down, Left, Right, UpLeft, UpRight, DownLeft, Downright };
+        public enum PlayerState { Up, Down, Left, Right, UpLeft, UpRight, DownLeft, Downright };
         PlayerState look;
+
+        //property for playerState enum
+        public PlayerState Look
+        {
+            get { return look; }
+        }
 
         public Animation(List<Texture2D> inputListOfSprite, double inputPlayerSpeed)
         {
