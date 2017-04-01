@@ -24,7 +24,7 @@ namespace TieOrDye
         //Constants 
         const int NUMBER_OF_STONES = 25;
         const int WIDTH_OF_STONES = 30;
-        const int ORB_WIDTH = 5;
+        const int ORB_WIDTH = 10;
         const int ORB_SPEED = 3;
 
         //Variables to store the player speed and positions
@@ -400,8 +400,8 @@ namespace TieOrDye
                     // prevents players from passing beyond the border
                     ScreenBorder(p1);
                     ScreenBorder(p2);
-                    MoveStones(stonesList);
-                    
+                    //MoveStones(stonesList);
+
                     //Creates orbs - Cooldown is only 1 update loop currently
                     if ((currKbState.IsKeyDown(Keys.Space) && (prevKbState.IsKeyDown(Keys.Space) == false))) //P1 Shoots
                     {
@@ -411,32 +411,92 @@ namespace TieOrDye
                     if ((currKbState.IsKeyDown(Keys.RightShift) && (prevKbState.IsKeyDown(Keys.RightShift) == false))) //P2 Shoots
                     {
                         Orb o2 = new Orb(oOrbTex, 0, 0, p2, player2Animation, ORB_WIDTH, ORB_SPEED);
-                        blueOrbs.Add(o2);
+                        orangeOrbs.Add(o2);
                     }
 
                     //Update orb locations
                     for (int i = 0; i < blueOrbs.Count; i++)
+                    {
                         blueOrbs[i].UpdateOrbs();
+                    }
                     for (int i = 0; i < orangeOrbs.Count; i++)
+                    {
                         orangeOrbs[i].UpdateOrbs();
+                    }
 
+
+                    ///
+                    /// Orb colors  - Needs many changes
+                    /// For each stone: loops through all orbs, checks for collisions
+                    /// On collsion: changes stone texture, deletes orb and increments backwards in orb list
+                    ///
                     for (int x = 0; x < stonesList.Count; x++)
                     {
-                        bool p1Inter = stonesList[x].Circle.Intersects(p1.PlayerRect);
-                        bool p2Inter = stonesList[x].Circle.Intersects(p2.PlayerRect);
+                        Circle c1 = new Circle((int)stonesList[x].X + (WIDTH_OF_STONES / 2), (int)stonesList[x].Y + (WIDTH_OF_STONES / 2), (WIDTH_OF_STONES / 2)); //Circle object for each stone to check for collisions
 
-                        if(p1Inter && stonesList[x].StoneTex == stoneTex)
+                        for (int i = 0; i < blueOrbs.Count; i++)
                         {
+
+                            Circle c2 = new Circle((int)blueOrbs[i].X + (ORB_WIDTH / 2), (int)blueOrbs[i].Y + (ORB_WIDTH / 2), (ORB_WIDTH / 2)); //Circle object for orb
+                            if (stonesList[x].Circle.Intersects(c2))
+                            {
+                                stonesList[x].StoneTex = blueStone;
+                                blueOrbs.Remove(blueOrbs[i]);
+                                i--;
+                            }
+                        }
+                        for (int j = 0; j < orangeOrbs.Count; j++)
+                        {
+                            Circle c3 = new Circle((int)orangeOrbs[j].X + (ORB_WIDTH / 2), (int)orangeOrbs[j].Y + (ORB_WIDTH / 2), (ORB_WIDTH / 2));
+                            if (stonesList[x].Circle.Intersects(c3))
+                            {
+                                stonesList[x].StoneTex = orangeStone;
+                                orangeOrbs.Remove(orangeOrbs[j]);
+                                j--;
+                            }
+                        }
+
+                        //Update Score
+                        p1Count = 0;
+                        p2Count = 0;
+                        for (int k = 0; k < stonesList.Count; k++)
+                        {
+                            if (stonesList[k].StoneTex == blueStone)
+                            {
+                                p1Count++;
+                            }
+                            if (stonesList[k].StoneTex == orangeStone)
+                            {
+                                p2Count++;
+                            }
+                        }
+
+
+                        /*
+                        bool p1Inter = false;
+                        bool p2Inter = false;
+                        if (stonesList[x].Circle.Intersects(p1.PlayerRect))
+                        p1Inter = true;
+                        if(stonesList[x].Circle.Intersects(p2.PlayerRect))
+                        p2Inter = true;
+
+                        if(p1Inter && stonesList[x].StoneTex == stoneTex)  //if the current stone intersects the blue player rectangle and is gray, change its color to blue
+                        {
+                            
                             stonesList[x].StoneTex = blueStone;
                             p1Count++;
                         }
 
                         if(p2Inter && stonesList[x].StoneTex == stoneTex)
-                        {       
+                        {
+                            
                             stonesList[x].StoneTex = orangeStone;
                             p2Count++;
                         }
+                        */
                     }
+
+                    
                     time -= gameTime.ElapsedGameTime.TotalSeconds;
                     if (time <= 0)
                         currentGameState = GameStates.GameOver;
