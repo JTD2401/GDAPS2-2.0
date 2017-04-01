@@ -686,6 +686,14 @@ namespace TieOrDye
                     spriteBatch.Draw(arrowRight, new Rectangle((x + x + 10 + GraphicsDevice.Viewport.Width / 6) - 80, 175, 80, 100), Color.White);
                     spriteBatch.Draw(arrowRight, null, new Rectangle((x + x + 10), 175, 80, 100), null, null, 0, null, Color.White, SpriteEffects.FlipHorizontally, 0 );
                     spriteBatch.DrawString(font, resolution[location], bounds, Color.White, 0, origin, 1, SpriteEffects.None, 0);
+                    rectangle = new Rectangle(x, 295, x, 100);
+                    size = font.MeasureString("Volume");
+                    bounds = Center(rectangle);
+                    origin = size * 0.5f;
+                    spriteBatch.Draw(noTexture, rectangle, Color.White);
+                    spriteBatch.DrawString(font, "Volume", bounds, Color.White, 0, origin, 1, SpriteEffects.None, 0);
+                    spriteBatch.Draw(noTexture, new Rectangle(x + x + 10, 295, GraphicsDevice.Viewport.Width / 6, 100), Color.White);
+                    //spriteBatch.Draw();
                     spriteBatch.Draw(cursorTex, cursorRect, Color.White);
                     break;
                 #endregion
