@@ -49,6 +49,8 @@ namespace TieOrDye
         int p1Count;
         int p2Count;
 
+        float volumeLevel = 1f;
+
         //Game interface and draw variable
         GraphicsDeviceManager graphics;
         GameWindow viewport;
@@ -104,6 +106,8 @@ namespace TieOrDye
         Texture2D inactiveStartButtonTex;
         Texture2D activeStartButtonTex;
         bool startActive;
+
+        Song song;
 
         #endregion
 
@@ -293,6 +297,9 @@ namespace TieOrDye
             tempSprite = Content.Load<Texture2D>("GolemAngleDownOrange");
             player2Sprites.Add(tempSprite);
             tempSprite = Content.Load<Texture2D>("GolemAngleDownRightOrange");
+            song = Content.Load<Song>("music");
+            MediaPlayer.Play(song);
+            MediaPlayer.Volume = volumeLevel;
             player2Sprites.Add(tempSprite);
         }
         #endregion
@@ -692,7 +699,14 @@ namespace TieOrDye
                     origin = size * 0.5f;
                     spriteBatch.Draw(noTexture, rectangle, Color.White);
                     spriteBatch.DrawString(font, "Volume", bounds, Color.White, 0, origin, 1, SpriteEffects.None, 0);
-                    spriteBatch.Draw(noTexture, new Rectangle(x + x + 10, 295, GraphicsDevice.Viewport.Width / 6, 100), Color.White);
+                    rectangle = new Rectangle(x + x + 10, 295, GraphicsDevice.Viewport.Width / 6, 100);
+                    size = font.MeasureString("X");
+                    bounds = Center(rectangle);
+                    origin = size * 0.5f;
+                    spriteBatch.Draw(noTexture, rectangle, Color.Black);
+                    spriteBatch.Draw(arrowRight, new Rectangle((x + x + 10 + GraphicsDevice.Viewport.Width / 6) - 80, 295, 80, 100), Color.White);
+                    spriteBatch.Draw(arrowRight, null, new Rectangle((x + x + 10), 295, 80, 100), null, null, 0, null, Color.White, SpriteEffects.FlipHorizontally, 0);
+                    spriteBatch.DrawString(font, volumeLevel.ToString(), bounds, Color.White, 0, origin, 1, SpriteEffects.None, 0);
                     //spriteBatch.Draw();
                     spriteBatch.Draw(cursorTex, cursorRect, Color.White);
                     break;

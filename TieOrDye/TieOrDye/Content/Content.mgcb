@@ -145,3 +145,9 @@
 /processorParam:TextureFormat=Color
 /build:Start Button.png
 
+#begin music.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:music.wav
+
