@@ -111,9 +111,26 @@ namespace TieOrDye
         Song song;
         int playernumber = 1;
 
-        Keys p1Up, p1Down, p1Left, p1Right, p1Shoot, p2Up, p2Down, p2Left, p2Right, p2Shoot; 
+        Keys p1Up, p1Down, p1Left, p1Right, p1Shoot, p2Up, p2Down, p2Left, p2Right, p2Shoot;
 
         #endregion
+
+        int mouseOffsetX;
+        int mouseOffsetY;
+
+
+        public Vector2 GetMousePosition()
+        {
+            var ms = Mouse.GetState();
+            return new Vector2(ms.X - mouseOffsetX, ms.Y - mouseOffsetY);
+        }
+
+        public void ResetMouseOffsets()
+        {
+            mouseOffsetX = (Window.ClientBounds.Width - GraphicsDevice.Viewport.Width) / 2;
+            mouseOffsetY = (Window.ClientBounds.Height - GraphicsDevice.Viewport.Height) / 2;
+        }
+
 
         #region game1
         public Game1()
@@ -124,7 +141,7 @@ namespace TieOrDye
             //Changes resolution - Default resolution is 800x480 -- This code changes it to 1000x800
 
             //graphics.IsFullScreen = true;
-            //this.IsMouseVisible = true;
+            this.IsMouseVisible = true;
         }
         #endregion
 
@@ -142,6 +159,7 @@ namespace TieOrDye
             graphics.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height;
             graphics.IsFullScreen = true;
             graphics.ApplyChanges();
+            ResetMouseOffsets();
 
             p1Up = Keys.W;
             p1Down = Keys.S;
@@ -213,6 +231,7 @@ namespace TieOrDye
 
             //stoneColor = Color.White;
             //this.IsMouseVisible = true;
+            ResetMouseOffsets();
             base.Initialize();
         }
         #endregion
@@ -313,8 +332,8 @@ namespace TieOrDye
             tempSprite = Content.Load<Texture2D>("GolemAngleDownOrange");
             player2Sprites.Add(tempSprite);
             tempSprite = Content.Load<Texture2D>("GolemAngleDownRightOrange");
-            //song = Content.Load<Song>("music");
-            //MediaPlayer.Play(song);
+            song = Content.Load<Song>("music");
+            MediaPlayer.Play(song);
             MediaPlayer.Volume = volumeLevel;
             player2Sprites.Add(tempSprite);
         }
@@ -583,6 +602,7 @@ namespace TieOrDye
                             graphics.PreferredBackBufferWidth = width; //sets width and height accordingly
                             graphics.PreferredBackBufferHeight = height;
                             graphics.ApplyChanges(); //applys the change
+                            ResetMouseOffsets();
                         }
                     if (cursorRect.Intersects(new Rectangle(z + z + 10, 535, z, 100))) //back button
                         if (currMState.LeftButton == ButtonState.Released && prevState.LeftButton == ButtonState.Pressed)
@@ -741,9 +761,9 @@ namespace TieOrDye
             //Start spritebatch
             spriteBatch.Begin();
 
-            var mouse = OpenTK.Input.Mouse.GetCursorState();
-
-            cursorRect = new Rectangle(mouse.X, mouse.Y, 20, 20);
+            var mouse = Mouse.GetState();
+            var mousePos = GetMousePosition();
+            cursorRect = new Rectangle((int)mousePos.X, (int)mousePos.Y, 20, 20);
 
             switch (currentGameState)
             {
@@ -835,7 +855,8 @@ namespace TieOrDye
                 #region options
                 case GameStates.Options:
                     int x = (GraphicsDevice.Viewport.Width / 8); //I use this a lot so it makes the code shorter
-                    spriteBatch.Draw(optionsScreen, new Rectangle(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight), Color.White); //draws the background screen
+                    spriteBatch.Draw(optionsScreen, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White); //draws the background screen
+                    //spriteBatch.Draw()
                     Rectangle rectangle = new Rectangle(x, 50, x, 100); //rectangle for box
                     spriteBatch.Draw(noTexture, rectangle, Color.Black); //draws that box
                     Vector2 size  = font.MeasureString("Options"); //measures the text that will be displayed in the box
