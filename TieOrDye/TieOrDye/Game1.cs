@@ -313,8 +313,8 @@ namespace TieOrDye
             tempSprite = Content.Load<Texture2D>("GolemAngleDownOrange");
             player2Sprites.Add(tempSprite);
             tempSprite = Content.Load<Texture2D>("GolemAngleDownRightOrange");
-            song = Content.Load<Song>("music");
-            MediaPlayer.Play(song);
+            //song = Content.Load<Song>("music");
+            //MediaPlayer.Play(song);
             MediaPlayer.Volume = volumeLevel;
             player2Sprites.Add(tempSprite);
         }
@@ -410,8 +410,10 @@ namespace TieOrDye
                             currentGameState = GameStates.Options;
                     // determines if game is exited when player clicks on the Exit rectangle
                     if (cursorRect.Intersects(new Rectangle(GraphicsDevice.Viewport.Width / 3, 750, GraphicsDevice.Viewport.Width / 3, 150)))
-                        if (currMState.LeftButton == ButtonState.Pressed)
+                        if (currMState.LeftButton == ButtonState.Pressed && prevState.LeftButton == ButtonState.Pressed)
                             this.Exit();
+
+                    prevState = currMState;
                     break;
                 #endregion
                 #region ingame
@@ -534,21 +536,21 @@ namespace TieOrDye
                 case GameStates.Options:
                     int z = (GraphicsDevice.Viewport.Width / 8);
                     if (cursorRect.Intersects(new Rectangle((z + z + 10 + GraphicsDevice.Viewport.Width / 6) - 80, 175, 80, 100)))
-                        if (currMState.LeftButton == ButtonState.Pressed && prevState.LeftButton == ButtonState.Released)
+                        if (currMState.LeftButton == ButtonState.Pressed && prevState.LeftButton == ButtonState.Released) //resolution right
                         {
                             if (location == 13)
                                 return;
                             location += 1;
                         }
                     if(cursorRect.Intersects(new Rectangle((z + z + 10), 175, 80, 100)))
-                        if(currMState.LeftButton == ButtonState.Pressed && prevState.LeftButton == ButtonState.Released)
+                        if(currMState.LeftButton == ButtonState.Pressed && prevState.LeftButton == ButtonState.Released) //resolution left
                         {
                             if (location == 0)
                                 return;
                             location -= 1;
                         }
                     if(cursorRect.Intersects(new Rectangle((z + z + 10 + GraphicsDevice.Viewport.Width / 6) - 80, 295, 80, 100)))
-                        if(currMState.LeftButton == ButtonState.Pressed && prevState.LeftButton == ButtonState.Released)
+                        if(currMState.LeftButton == ButtonState.Pressed && prevState.LeftButton == ButtonState.Released) //volume right
                         {
                             if(dblVolumeLevel >= .9)
                                 return;
@@ -556,7 +558,7 @@ namespace TieOrDye
                             volumeLevel = (float)dblVolumeLevel;
                         }
                     if(cursorRect.Intersects(new Rectangle((z + z + 10), 295, 80, 100)))
-                        if(currMState.LeftButton == ButtonState.Pressed && prevState.LeftButton == ButtonState.Released)
+                        if(currMState.LeftButton == ButtonState.Pressed && prevState.LeftButton == ButtonState.Released) //volume left
                         {
                             dblVolumeLevel -= .1;
                             volumeLevel = (float)dblVolumeLevel;
@@ -568,22 +570,22 @@ namespace TieOrDye
                             }
                         }
                     if (cursorRect.Intersects(new Rectangle(z, 415, z, 100)))
-                        if (currMState.LeftButton == ButtonState.Pressed && prevState.LeftButton == ButtonState.Released)
+                        if (currMState.LeftButton == ButtonState.Pressed && prevState.LeftButton == ButtonState.Released) //controls button
                             currentGameState = GameStates.ControlOptions;
                     if (cursorRect.Intersects(new Rectangle(z, 535, z, 100)))
-                        if (currMState.LeftButton == ButtonState.Pressed && prevState.LeftButton == ButtonState.Released)
+                        if (currMState.LeftButton == ButtonState.Pressed && prevState.LeftButton == ButtonState.Released) //the apply button
                         {
-                            string res = resolution[location];
-                            var tempArr = res.Split('x');
-                            int width = int.Parse(tempArr[0]);
-                            int height = int.Parse(tempArr[1]);
+                            string res = resolution[location]; //sets the string to the string of new resolution
+                            var tempArr = res.Split('x'); //splits it by the char x
+                            int width = int.Parse(tempArr[0]); //sets width to the first parse
+                            int height = int.Parse(tempArr[1]); //sets height to the second parse
 
-                            graphics.PreferredBackBufferWidth = width;
+                            graphics.PreferredBackBufferWidth = width; //sets width and height accordingly
                             graphics.PreferredBackBufferHeight = height;
-                            graphics.ApplyChanges();
+                            graphics.ApplyChanges(); //applys the change
                         }
-                    if (cursorRect.Intersects(new Rectangle(z + z + 10, 535, z, 100)))
-                        if (currMState.LeftButton == ButtonState.Pressed && prevState.LeftButton == ButtonState.Released)
+                    if (cursorRect.Intersects(new Rectangle(z + z + 10, 535, z, 100))) //back button
+                        if (currMState.LeftButton == ButtonState.Released && prevState.LeftButton == ButtonState.Pressed)
                             if (cameFromMenu)
                                 currentGameState = GameStates.Menu;
                             else
@@ -832,34 +834,34 @@ namespace TieOrDye
                 #endregion
                 #region options
                 case GameStates.Options:
-                    int x = (GraphicsDevice.Viewport.Width / 8);
-                    spriteBatch.Draw(optionsScreen, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);
-                    Rectangle rectangle = new Rectangle(x, 50, x, 100);
-                    spriteBatch.Draw(noTexture, rectangle, Color.Black);
-                    Vector2 size  = font.MeasureString("Options");
-                    Vector2 bounds = Center(rectangle);
-                    Vector2 origin = size * 0.5f;
-                    spriteBatch.DrawString(font, "Options", bounds, Color.White, 0, origin, 1, SpriteEffects.None, 0);
-                    rectangle = new Rectangle(x, 175, x, 100);
+                    int x = (GraphicsDevice.Viewport.Width / 8); //I use this a lot so it makes the code shorter
+                    spriteBatch.Draw(optionsScreen, new Rectangle(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight), Color.White); //draws the background screen
+                    Rectangle rectangle = new Rectangle(x, 50, x, 100); //rectangle for box
+                    spriteBatch.Draw(noTexture, rectangle, Color.Black); //draws that box
+                    Vector2 size  = font.MeasureString("Options"); //measures the text that will be displayed in the box
+                    Vector2 bounds = Center(rectangle); // gets the center of the rectangles
+                    Vector2 origin = size * 0.5f; // multiplies the size by .5f to move the text to the center 
+                    spriteBatch.DrawString(font, "Options", bounds, Color.White, 0, origin, 1, SpriteEffects.None, 0); //draws it at that locations
+                    rectangle = new Rectangle(x, 175, x, 100); //resolution box
                     spriteBatch.Draw(noTexture, rectangle, Color.Black);
                     size = font.MeasureString("Resolution");
                     bounds = Center(rectangle);
                     origin = size * 0.5f;
-                    spriteBatch.DrawString(font, "Resolution", bounds, Color.White, 0, origin, 1, SpriteEffects.None, 0);
-                    rectangle = new Rectangle(x +x + 10, 175, GraphicsDevice.Viewport.Width / 6, 100);
+                    spriteBatch.DrawString(font, "Resolution", bounds, Color.White, 0, origin, 1, SpriteEffects.None, 0); //resolution end
+                    rectangle = new Rectangle(x +x + 10, 175, GraphicsDevice.Viewport.Width / 6, 100); //displays current resolution
                     size = font.MeasureString("XXXXxXXXX");
                     bounds = Center(rectangle);
                     origin = size * 0.5f;
-                    spriteBatch.Draw(noTexture, rectangle, Color.Black);
+                    spriteBatch.Draw(noTexture, rectangle, Color.Black); 
                     if (cursorRect.Intersects(new Rectangle((x + x + 10 + GraphicsDevice.Viewport.Width / 6) - 80, 175, 80, 100)))
-                        spriteBatch.Draw(arrowRight, new Rectangle((x + x + 10 + GraphicsDevice.Viewport.Width / 6) - 80, 175, 80, 100), Color.Blue);
+                        spriteBatch.Draw(arrowRight, new Rectangle((x + x + 10 + GraphicsDevice.Viewport.Width / 6) - 80, 175, 80, 100), Color.Blue); //draws arrows to change resolution
                     else
                         spriteBatch.Draw(arrowRight, new Rectangle((x + x + 10 + GraphicsDevice.Viewport.Width / 6) - 80, 175, 80, 100), Color.White); 
                     if (cursorRect.Intersects(new Rectangle((x + x + 10), 175, 80, 100)))
                         spriteBatch.Draw(arrowRight, null, new Rectangle((x + x + 10), 175, 80, 100), null, null, 0, null, Color.Blue, SpriteEffects.FlipHorizontally, 0);
                     else
-                        spriteBatch.Draw(arrowRight, null, new Rectangle((x + x + 10), 175, 80, 100), null, null, 0, null, Color.White, SpriteEffects.FlipHorizontally, 0 );
-                    spriteBatch.DrawString(font, resolution[location], bounds, Color.White, 0, origin, 1, SpriteEffects.None, 0);
+                        spriteBatch.Draw(arrowRight, null, new Rectangle((x + x + 10), 175, 80, 100), null, null, 0, null, Color.White, SpriteEffects.FlipHorizontally, 0 ); //end of arrows
+                    spriteBatch.DrawString(font, resolution[location], bounds, Color.White, 0, origin, 1, SpriteEffects.None, 0); //draws resolution
                     rectangle = new Rectangle(x, 295, x, 100);
                     size = font.MeasureString("Volume");
                     bounds = Center(rectangle);
