@@ -470,6 +470,37 @@ namespace TieOrDye
                         orangeOrbs[i].UpdateOrbs();
                     }
 
+                    //Stuns player when hit by opposite orb
+                    for (int h = 0; h < blueOrbs.Count; h++)
+                    {
+                        Circle blueOrbCirc = new Circle((int)blueOrbs[h].X + (ORB_WIDTH / 2), (int)blueOrbs[h].Y + (ORB_WIDTH / 2), (ORB_WIDTH / 2)); //Circle object for orb
+                        if (blueOrbCirc.Intersects(p2.PlayerRect))    //Blue orb hits orange player
+                        {
+                            blueOrbs.Remove(blueOrbs[h]);
+                            h--;
+                            p2.Stunned = true;
+                        }
+                        else if (blueOrbCirc.Intersects(p1.PlayerRect)) //Blue orb hits blue player
+                        {
+                            blueOrbs.Remove(blueOrbs[h]);
+                            h--;
+                        }
+                    }
+                    for (int j = 0; j < orangeOrbs.Count; j++)
+                    {
+                        Circle orangeOrbCirc = new Circle((int)orangeOrbs[j].X + (ORB_WIDTH / 2), (int)orangeOrbs[j].Y + (ORB_WIDTH / 2), (ORB_WIDTH / 2));
+                        if (orangeOrbCirc.Intersects(p2.PlayerRect))  //orange orb hits orange player
+                        {
+                            orangeOrbs.Remove(orangeOrbs[j]);
+                            j--;
+                        }
+                        else if (orangeOrbCirc.Intersects(p1.PlayerRect)) //orange orb hits blue player
+                        {
+                            orangeOrbs.Remove(orangeOrbs[j]);
+                            j--;
+                            p1.Stunned = true;
+                        }
+                    }
 
                     ///
                     /// Orb colors  - Needs many changes

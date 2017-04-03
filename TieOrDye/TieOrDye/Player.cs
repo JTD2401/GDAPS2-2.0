@@ -25,6 +25,7 @@ namespace TieOrDye
         bool immune; //Immunity boolean
         int pWidth; //Player width
         int pHeight; //Player height
+        bool stunned; //stunned attribute
 
         //player constructor
         public Player(Texture2D t2, int x, int y, int pw, int ph) :base(t2, x, y)
@@ -32,6 +33,7 @@ namespace TieOrDye
             pWidth = pw;
             pHeight = ph;
             playerRect = new Rectangle(x, y, pw, ph);
+            stunned = false;
         }
 
         //Player rectangle property
@@ -53,10 +55,10 @@ namespace TieOrDye
             set { playerRect.Y = value; }
         }
 
-        //Determine what happens when orb hits a player
-        public void OnHit()
+        public bool Stunned
         {
-
+            get { return stunned; }
+            set { stunned = value; }
         }
     }
 }
