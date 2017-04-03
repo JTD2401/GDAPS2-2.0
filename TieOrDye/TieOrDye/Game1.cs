@@ -35,7 +35,7 @@ namespace TieOrDye
         double time;
 
         //Attribute and enum for the game state
-        enum GameStates { Menu, Pause, Options, InGame, GameOver };
+        enum GameStates { Menu, Pause, Options, ControlOptions, InGame, GameOver };
         GameStates currentGameState;
 
         //Random object
@@ -50,6 +50,7 @@ namespace TieOrDye
         int p2Count;
 
         float volumeLevel = 1f;
+        double dblVolumeLevel = 1;
 
         //Game interface and draw variable
         GraphicsDeviceManager graphics;
@@ -105,9 +106,12 @@ namespace TieOrDye
         //Gameboard inactive and active start button, along with boolean if button is active
         Texture2D inactiveStartButtonTex;
         Texture2D activeStartButtonTex;
-        bool startActive;
 
+        bool startActive;
         Song song;
+        int playernumber = 1;
+
+        Keys p1Up, p1Down, p1Left, p1Right, p1Shoot, p2Up, p2Down, p2Left, p2Right, p2Shoot; 
 
         #endregion
 
@@ -138,6 +142,18 @@ namespace TieOrDye
             graphics.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height;
             graphics.IsFullScreen = true;
             graphics.ApplyChanges();
+
+            p1Up = Keys.W;
+            p1Down = Keys.S;
+            p1Left = Keys.A;
+            p1Right = Keys.D;
+            p1Shoot = Keys.Space;
+
+            p2Up = Keys.Up;
+            p2Down = Keys.Down;
+            p2Left = Keys.Left;
+            p2Right = Keys.Right;
+            p2Shoot = Keys.RightShift;
 
             try
             {
@@ -362,8 +378,9 @@ namespace TieOrDye
                         startActive = false;//Make the button inactive
 
                     if (cursorRect.Intersects(new Rectangle(190, 450, 392, 103)))
-                        if (currMState.LeftButton == ButtonState.Pressed)
+                        if (currMState.LeftButton == ButtonState.Pressed && prevState.LeftButton == ButtonState.Released)
                         {
+                            Debug.WriteLine("Click");
                             currentGameState = GameStates.Options;
                             cameFromMenu = true;
                         }
@@ -373,6 +390,7 @@ namespace TieOrDye
                         if (currMState.LeftButton == ButtonState.Pressed)
                             this.Exit();
                     //Sets total game time
+                    prevState = currMState;
                     time = 61;
                     break;
                 #endregion
@@ -399,9 +417,9 @@ namespace TieOrDye
                 #region ingame
                 case GameStates.InGame:  // gameplay state
                     //Uses the animation class to process the input from keyboard as well as updating the rectangle's position according to direction pressed
-                    player1Animation.processInput(currKbState, p1, Keys.W, Keys.A, Keys.S, Keys.D);
+                    player1Animation.processInput(currKbState, p1, p1Up, p1Left, p1Down, p1Right);
                     p1.PlayerRect = player1Animation.PlayerPositionRectangle;
-                    player2Animation.processInput(currKbState, p2, Keys.Up, Keys.Left, Keys.Down, Keys.Right);
+                    player2Animation.processInput(currKbState, p2, p2Up, p2Left, p2Down, p2Right);
                     p2.PlayerRect = player2Animation.PlayerPositionRectangle;
 
                     // prevents players from passing beyond the border
@@ -410,12 +428,12 @@ namespace TieOrDye
                     //MoveStones(stonesList);
 
                     //Creates orbs - Cooldown is only 1 update loop currently
-                    if ((currKbState.IsKeyDown(Keys.Space) && (prevKbState.IsKeyDown(Keys.Space) == false))) //P1 Shoots
+                    if ((currKbState.IsKeyDown(p1Shoot) && (prevKbState.IsKeyDown(p1Shoot) == false))) //P1 Shoots
                     {
                         Orb o1 = new Orb(bOrbTex, 0, 0, p1, player1Animation, ORB_WIDTH, ORB_SPEED);
                         blueOrbs.Add(o1);
                     }
-                    if ((currKbState.IsKeyDown(Keys.RightShift) && (prevKbState.IsKeyDown(Keys.RightShift) == false))) //P2 Shoots
+                    if ((currKbState.IsKeyDown(p2Shoot) && (prevKbState.IsKeyDown(p2Shoot) == false))) //P2 Shoots
                     {
                         Orb o2 = new Orb(oOrbTex, 0, 0, p2, player2Animation, ORB_WIDTH, ORB_SPEED);
                         orangeOrbs.Add(o2);
@@ -508,7 +526,7 @@ namespace TieOrDye
                     if (time <= 0)
                         currentGameState = GameStates.GameOver;
 
-                    if (currKbState.IsKeyDown(Keys.P) || currKbState.IsKeyDown(Keys.Escape)) { currentGameState = GameStates.Pause; }
+                    if (currKbState.IsKeyDown(Keys.P) || currKbState.IsKeyDown(Keys.Escape)) { currentGameState = GameStates.Pause; cameFromMenu = false; }
 
                     break;
                 #endregion
@@ -529,6 +547,167 @@ namespace TieOrDye
                                 return;
                             location -= 1;
                         }
+                    if(cursorRect.Intersects(new Rectangle((z + z + 10 + GraphicsDevice.Viewport.Width / 6) - 80, 295, 80, 100)))
+                        if(currMState.LeftButton == ButtonState.Pressed && prevState.LeftButton == ButtonState.Released)
+                        {
+                            if(dblVolumeLevel >= .9)
+                                return;
+                            dblVolumeLevel += .1;
+                            volumeLevel = (float)dblVolumeLevel;
+                        }
+                    if(cursorRect.Intersects(new Rectangle((z + z + 10), 295, 80, 100)))
+                        if(currMState.LeftButton == ButtonState.Pressed && prevState.LeftButton == ButtonState.Released)
+                        {
+                            dblVolumeLevel -= .1;
+                            volumeLevel = (float)dblVolumeLevel;
+                            if (dblVolumeLevel < .1)
+                            {
+                                dblVolumeLevel = 0;
+                                volumeLevel = 0f;
+                                return;
+                            }
+                        }
+                    if (cursorRect.Intersects(new Rectangle(z, 415, z, 100)))
+                        if (currMState.LeftButton == ButtonState.Pressed && prevState.LeftButton == ButtonState.Released)
+                            currentGameState = GameStates.ControlOptions;
+                    if (cursorRect.Intersects(new Rectangle(z, 535, z, 100)))
+                        if (currMState.LeftButton == ButtonState.Pressed && prevState.LeftButton == ButtonState.Released)
+                        {
+                            string res = resolution[location];
+                            var tempArr = res.Split('x');
+                            int width = int.Parse(tempArr[0]);
+                            int height = int.Parse(tempArr[1]);
+
+                            graphics.PreferredBackBufferWidth = width;
+                            graphics.PreferredBackBufferHeight = height;
+                            graphics.ApplyChanges();
+                        }
+                    if (cursorRect.Intersects(new Rectangle(z + z + 10, 535, z, 100)))
+                        if (currMState.LeftButton == ButtonState.Pressed && prevState.LeftButton == ButtonState.Released)
+                            if (cameFromMenu)
+                                currentGameState = GameStates.Menu;
+                            else
+                                currentGameState = GameStates.Pause;
+                    MediaPlayer.Volume = volumeLevel;
+                    prevState = currMState;
+                    break;
+                #endregion
+                #region control options
+                case GameStates.ControlOptions:
+                    z = GraphicsDevice.Viewport.Width / 18;
+                    int width2 = GraphicsDevice.Viewport.Width / 8;
+                    if (cursorRect.Intersects(new Rectangle(z, 175, 80, 100)))
+                        if (currMState.LeftButton == ButtonState.Pressed && prevState.LeftButton == ButtonState.Pressed)
+                        {
+                            if (playernumber == 1)
+                                return;
+                            playernumber -= 1;
+                        }
+                    if (cursorRect.Intersects(new Rectangle((z + width2 + GraphicsDevice.Viewport.Width / 8) - 80, 175, 80, 100)))
+                        if(currMState.LeftButton == ButtonState.Pressed && prevState.LeftButton == ButtonState.Pressed)
+                        {
+                            if (playernumber == 2)
+                                return;
+                            playernumber += 1;
+                        }
+                    if(playernumber == 1)
+                    {
+                        if (cursorRect.Intersects(new Rectangle(z + width2 + 10, 295, width2, 100)))
+                            if (currMState.LeftButton == ButtonState.Pressed && prevState.LeftButton == ButtonState.Pressed)
+                            {
+                                KeyboardState state = Keyboard.GetState();
+                                var input = new KeyboardState();
+                                if (state != input)
+                                {
+                                    var key = state.GetPressedKeys();
+                                    p1Up = key[0];
+                                }
+                            }
+                        if (cursorRect.Intersects(new Rectangle(z + width2 + 10, 415, width2, 100)))
+                            if (currMState.LeftButton == ButtonState.Pressed && prevState.LeftButton == ButtonState.Pressed)
+                            {
+                                KeyboardState state = Keyboard.GetState();
+                                var input = new KeyboardState();
+                                if (state != input)
+                                {
+                                    var key = state.GetPressedKeys();
+                                    p1Down = key[0];
+                                }
+                            }
+                        if (cursorRect.Intersects(new Rectangle(z + width2 + 10, 535, width2, 100)))
+                            if (currMState.LeftButton == ButtonState.Pressed && prevState.LeftButton == ButtonState.Pressed)
+                            {
+                                KeyboardState state = Keyboard.GetState();
+                                var input = new KeyboardState();
+                                if (state != input)
+                                {
+                                    var key = state.GetPressedKeys();
+                                    p1Left = key[0];
+                                }
+                            }
+                        if (cursorRect.Intersects(new Rectangle(z + width2 + 10, 655, width2, 100)))
+                            if (currMState.LeftButton == ButtonState.Pressed && prevState.LeftButton == ButtonState.Pressed)
+                            {
+                                KeyboardState state = Keyboard.GetState();
+                                var input = new KeyboardState();
+                                if (state != input)
+                                {
+                                    var key = state.GetPressedKeys();
+                                    p1Right = key[0];
+                                }
+                            }
+                    }
+                    else
+                    {
+                        if (cursorRect.Intersects(new Rectangle(z + width2 + 10, 295, width2, 100)))
+                            if (currMState.LeftButton == ButtonState.Pressed && prevState.LeftButton == ButtonState.Pressed)
+                            {
+                                KeyboardState state = Keyboard.GetState();
+                                var input = new KeyboardState();
+                                if (state != input)
+                                {
+                                    var key = state.GetPressedKeys();
+                                    p2Up = key[0];
+                                }
+                            }
+                        if (cursorRect.Intersects(new Rectangle(z + width2 + 10, 415, width2, 100)))
+                            if (currMState.LeftButton == ButtonState.Pressed && prevState.LeftButton == ButtonState.Pressed)
+                            {
+                                KeyboardState state = Keyboard.GetState();
+                                var input = new KeyboardState();
+                                if (state != input)
+                                {
+                                    var key = state.GetPressedKeys();
+                                    p2Down = key[0];
+                                }
+                            }
+                        if (cursorRect.Intersects(new Rectangle(z + width2 + 10, 535, width2, 100)))
+                            if (currMState.LeftButton == ButtonState.Pressed && prevState.LeftButton == ButtonState.Pressed)
+                            {
+                                KeyboardState state = Keyboard.GetState();
+                                var input = new KeyboardState();
+                                if (state != input)
+                                {
+                                    var key = state.GetPressedKeys();
+                                    p2Left = key[0];
+                                }
+                            }
+                        if (cursorRect.Intersects(new Rectangle(z + width2 + 10, 655, width2, 100)))
+                            if (currMState.LeftButton == ButtonState.Pressed && prevState.LeftButton == ButtonState.Pressed)
+                            {
+                                KeyboardState state = Keyboard.GetState();
+                                var input = new KeyboardState();
+                                if (state != input)
+                                {
+                                    var key = state.GetPressedKeys();
+                                    p2Right = key[0];
+                                }
+                            }
+                    }
+                    
+                    if (cursorRect.Intersects(new Rectangle(z, 1000, width2, 100)))
+                        if (currMState.LeftButton == ButtonState.Pressed && prevState.LeftButton == ButtonState.Released)
+                            currentGameState = GameStates.Options;
                     prevState = currMState;
                     break;
                 #endregion
@@ -556,14 +735,11 @@ namespace TieOrDye
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-
             // TODO: Add your drawing code here
-
             //Start spritebatch
             spriteBatch.Begin();
 
             var mouse = OpenTK.Input.Mouse.GetCursorState();
-
 
             cursorRect = new Rectangle(mouse.X, mouse.Y, 20, 20);
 
@@ -573,33 +749,18 @@ namespace TieOrDye
                 case GameStates.Menu:
                     //Draw gameboard
                     spriteBatch.Draw(gameBoard, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);
-                    Debug.WriteLine(cursorRect);
                     if (cursorRect.Intersects(new Rectangle(190, 150, 392, 103)))
-                    {
                         spriteBatch.Draw(start, new Rectangle(200, 150, 392, 103), Color.Violet);
-                    }
                     else
-                    {
                         spriteBatch.Draw(start, new Rectangle(190, 150, 392, 103), Color.White);
-                    }
-
                     if (cursorRect.Intersects(new Rectangle(190, 450, 392, 103)))
-                    {
                         spriteBatch.Draw(options, new Rectangle(200, 450, 392, 103), Color.Violet);
-                    }
                     else
-                    {
                         spriteBatch.Draw(options, new Rectangle(190, 450, 392, 103), Color.White);
-                    }
-
                     if (cursorRect.Intersects(new Rectangle(190, 750, 392, 103)))
-                    {
                         spriteBatch.Draw(exit, new Rectangle(200, 750, 392, 103), Color.Violet);
-                    }
                     else
-                    {
                         spriteBatch.Draw(exit, new Rectangle(190, 750, 392, 103), Color.White);
-                    }
                     //Draw cursor
                     spriteBatch.Draw(cursorTex, cursorRect, Color.White);  // draws cursor
                     break;
@@ -672,7 +833,7 @@ namespace TieOrDye
                 #region options
                 case GameStates.Options:
                     int x = (GraphicsDevice.Viewport.Width / 8);
-                    spriteBatch.Draw(optionsScreen, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);  // draws pause screen
+                    spriteBatch.Draw(optionsScreen, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);
                     Rectangle rectangle = new Rectangle(x, 50, x, 100);
                     spriteBatch.Draw(noTexture, rectangle, Color.Black);
                     Vector2 size  = font.MeasureString("Options");
@@ -690,8 +851,14 @@ namespace TieOrDye
                     bounds = Center(rectangle);
                     origin = size * 0.5f;
                     spriteBatch.Draw(noTexture, rectangle, Color.Black);
-                    spriteBatch.Draw(arrowRight, new Rectangle((x + x + 10 + GraphicsDevice.Viewport.Width / 6) - 80, 175, 80, 100), Color.White);
-                    spriteBatch.Draw(arrowRight, null, new Rectangle((x + x + 10), 175, 80, 100), null, null, 0, null, Color.White, SpriteEffects.FlipHorizontally, 0 );
+                    if (cursorRect.Intersects(new Rectangle((x + x + 10 + GraphicsDevice.Viewport.Width / 6) - 80, 175, 80, 100)))
+                        spriteBatch.Draw(arrowRight, new Rectangle((x + x + 10 + GraphicsDevice.Viewport.Width / 6) - 80, 175, 80, 100), Color.Blue);
+                    else
+                        spriteBatch.Draw(arrowRight, new Rectangle((x + x + 10 + GraphicsDevice.Viewport.Width / 6) - 80, 175, 80, 100), Color.White); 
+                    if (cursorRect.Intersects(new Rectangle((x + x + 10), 175, 80, 100)))
+                        spriteBatch.Draw(arrowRight, null, new Rectangle((x + x + 10), 175, 80, 100), null, null, 0, null, Color.Blue, SpriteEffects.FlipHorizontally, 0);
+                    else
+                        spriteBatch.Draw(arrowRight, null, new Rectangle((x + x + 10), 175, 80, 100), null, null, 0, null, Color.White, SpriteEffects.FlipHorizontally, 0 );
                     spriteBatch.DrawString(font, resolution[location], bounds, Color.White, 0, origin, 1, SpriteEffects.None, 0);
                     rectangle = new Rectangle(x, 295, x, 100);
                     size = font.MeasureString("Volume");
@@ -704,10 +871,229 @@ namespace TieOrDye
                     bounds = Center(rectangle);
                     origin = size * 0.5f;
                     spriteBatch.Draw(noTexture, rectangle, Color.Black);
-                    spriteBatch.Draw(arrowRight, new Rectangle((x + x + 10 + GraphicsDevice.Viewport.Width / 6) - 80, 295, 80, 100), Color.White);
-                    spriteBatch.Draw(arrowRight, null, new Rectangle((x + x + 10), 295, 80, 100), null, null, 0, null, Color.White, SpriteEffects.FlipHorizontally, 0);
+                    if (cursorRect.Intersects(new Rectangle((x + x + 10 + GraphicsDevice.Viewport.Width / 6) - 80, 295, 80, 100)))
+                        spriteBatch.Draw(arrowRight, new Rectangle((x + x + 10 + GraphicsDevice.Viewport.Width / 6) - 80, 295, 80, 100), Color.Blue);
+                    else
+                        spriteBatch.Draw(arrowRight, new Rectangle((x + x + 10 + GraphicsDevice.Viewport.Width / 6) - 80, 295, 80, 100), Color.White);
+                    if (cursorRect.Intersects(new Rectangle((x + x + 10), 295, 80, 100)))
+                        spriteBatch.Draw(arrowRight, null, new Rectangle((x + x + 10), 295, 80, 100), null, null, 0, null, Color.Blue, SpriteEffects.FlipHorizontally, 0);
+                    else
+                        spriteBatch.Draw(arrowRight, null, new Rectangle((x + x + 10), 295, 80, 100), null, null, 0, null, Color.White, SpriteEffects.FlipHorizontally, 0);
                     spriteBatch.DrawString(font, volumeLevel.ToString(), bounds, Color.White, 0, origin, 1, SpriteEffects.None, 0);
-                    //spriteBatch.Draw();
+                    rectangle = new Rectangle(x, 415, x, 100);
+                    size = font.MeasureString("Controls");
+                    bounds = Center(rectangle);
+                    origin = size * 0.5f;
+                    spriteBatch.Draw(noTexture, rectangle, Color.Black);
+                    if (cursorRect.Intersects(rectangle))
+                        spriteBatch.DrawString(font, "Controls", bounds, Color.Blue, 0, origin, 1, SpriteEffects.None, 0);
+                    else
+                        spriteBatch.DrawString(font, "Controls", bounds, Color.White, 0, origin, 1, SpriteEffects.None, 0);
+                    rectangle = new Rectangle(x, 535, x, 100);
+                    size = font.MeasureString("Apply");
+                    bounds = Center(rectangle);
+                    origin = size * 0.5f;
+                    spriteBatch.Draw(noTexture, rectangle, Color.Black);
+                    if(cursorRect.Intersects(rectangle))
+                        spriteBatch.DrawString(font, "Apply", bounds, Color.Blue, 0, origin, 1, SpriteEffects.None, 0);
+                    else
+                        spriteBatch.DrawString(font, "Apply", bounds, Color.White, 0, origin, 1, SpriteEffects.None, 0);
+                    rectangle = new Rectangle(x + x + 10, 535, x, 100);
+                    size = font.MeasureString("Back");
+                    bounds = Center(rectangle);
+                    origin = size * 0.5f;
+                    spriteBatch.Draw(noTexture, rectangle, Color.Black);
+                    if(cursorRect.Intersects(rectangle))
+                        spriteBatch.DrawString(font, "Back", bounds, Color.Blue, 0, origin, 1, SpriteEffects.None, 0);
+                    else
+                        spriteBatch.DrawString(font, "Back", bounds, Color.White, 0, origin, 1, SpriteEffects.None, 0);
+                    spriteBatch.Draw(cursorTex, cursorRect, Color.White);
+                    break;
+                #endregion
+                #region control options
+                case GameStates.ControlOptions:
+                    spriteBatch.Draw(optionsScreen, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);
+                    x = GraphicsDevice.Viewport.Width / 18;
+                    int width = GraphicsDevice.Viewport.Width / 8;
+                    rectangle = new Rectangle(x, 50, width, 100);
+                    size = font.MeasureString("Keyboard");
+                    bounds = Center(rectangle);
+                    origin = size * 0.5f;
+                    spriteBatch.Draw(noTexture, rectangle, Color.White);
+                    spriteBatch.DrawString(font, "Keyboard", bounds, Color.White, 0, origin, 1, SpriteEffects.None, 0);
+                    rectangle = new Rectangle(x, 175, width * 2, 100);
+                    size = font.MeasureString("Player 1");
+                    bounds = Center(rectangle);
+                    origin = size * 0.5f;
+                    spriteBatch.Draw(noTexture, rectangle, Color.White);
+                    if (cursorRect.Intersects(new Rectangle((x + width + GraphicsDevice.Viewport.Width / 8) - 80, 175, 80, 100)))
+                        spriteBatch.Draw(arrowRight, new Rectangle((x + width + GraphicsDevice.Viewport.Width / 8) - 80, 175, 80, 100), Color.Blue);
+                    else
+                        spriteBatch.Draw(arrowRight, new Rectangle((x + width + GraphicsDevice.Viewport.Width / 8) - 80, 175, 80, 100), Color.White);
+                    if (cursorRect.Intersects(new Rectangle(x, 175, 80, 100)))
+                        spriteBatch.Draw(arrowRight, null, new Rectangle(x, 175, 80, 100), null, null, 0, null, Color.Blue, SpriteEffects.FlipHorizontally, 0);
+                    else
+                        spriteBatch.Draw(arrowRight, null, new Rectangle(x, 175, 80, 100), null, null, 0, null, Color.White, SpriteEffects.FlipHorizontally, 0);
+                    if(playernumber == 1)
+                        spriteBatch.DrawString(font, "Player1", bounds, Color.White, 0, origin, 1, SpriteEffects.None, 0);
+                    else
+                        spriteBatch.DrawString(font, "Player2", bounds, Color.White, 0, origin, 1, SpriteEffects.None, 0);
+                    if(playernumber == 1)
+                    {
+                        rectangle = new Rectangle(x, 295, width, 100);
+                        size = font.MeasureString("Up");
+                        bounds = Center(rectangle);
+                        origin = size * 0.5f;
+                        spriteBatch.Draw(noTexture, rectangle, Color.White);
+                        spriteBatch.DrawString(font, "Up", bounds, Color.White, 0, origin, 1, SpriteEffects.None, 0);
+                        rectangle = new Rectangle(x + width + 10, 295, width, 100);
+                        size = font.MeasureString(p1Up.ToString());
+                        bounds = Center(rectangle);
+                        origin = size * 0.5f;
+                        spriteBatch.Draw(noTexture, rectangle, Color.White);
+                        if (cursorRect.Intersects(rectangle))
+                            if (currMState.LeftButton == ButtonState.Pressed && prevState.LeftButton == ButtonState.Pressed)
+                                spriteBatch.DrawString(font, "...", bounds, Color.White, 0, origin, 1, SpriteEffects.None, 0);
+                            else
+                                spriteBatch.DrawString(font, p1Up.ToString(), bounds, Color.White, 0, origin, 1, SpriteEffects.None, 0);
+                        else
+                            spriteBatch.DrawString(font, p1Up.ToString(), bounds, Color.White, 0, origin, 1, SpriteEffects.None, 0);
+                        rectangle = new Rectangle(x, 415, width, 100);
+                        size = font.MeasureString("Down");
+                        bounds = Center(rectangle);
+                        origin = size * 0.5f;
+                        spriteBatch.Draw(noTexture, rectangle, Color.White);
+                        spriteBatch.DrawString(font, "Down", bounds, Color.White, 0, origin, 1, SpriteEffects.None, 0);
+                        rectangle = new Rectangle(x + width + 10, 415, width, 100);
+                        size = font.MeasureString(p1Down.ToString());
+                        bounds = Center(rectangle);
+                        origin = size * 0.5f;
+                        spriteBatch.Draw(noTexture, rectangle, Color.White);
+                        if (cursorRect.Intersects(rectangle))
+                            if (currMState.LeftButton == ButtonState.Pressed && prevState.LeftButton == ButtonState.Pressed)
+                                spriteBatch.DrawString(font, "...", bounds, Color.White, 0, origin, 1, SpriteEffects.None, 0);
+                            else
+                                spriteBatch.DrawString(font, p1Down.ToString(), bounds, Color.White, 0, origin, 1, SpriteEffects.None, 0);
+                        else
+                            spriteBatch.DrawString(font, p1Down.ToString(), bounds, Color.White, 0, origin, 1, SpriteEffects.None, 0);
+                        rectangle = new Rectangle(x, 535, width, 100);
+                        size = font.MeasureString("Left");
+                        bounds = Center(rectangle);
+                        origin = size * 0.5f;
+                        spriteBatch.Draw(noTexture, rectangle, Color.White);
+                        spriteBatch.DrawString(font, "Left", bounds, Color.White, 0, origin, 1, SpriteEffects.None, 0);
+                        rectangle = new Rectangle(x + width + 10, 535, width, 100);
+                        size = font.MeasureString(p1Left.ToString());
+                        bounds = Center(rectangle);
+                        origin = size * 0.5f;
+                        spriteBatch.Draw(noTexture, rectangle, Color.White);
+                        if (cursorRect.Intersects(rectangle))
+                            if (currMState.LeftButton == ButtonState.Pressed && prevState.LeftButton == ButtonState.Pressed)
+                                spriteBatch.DrawString(font, "...", bounds, Color.White, 0, origin, 1, SpriteEffects.None, 0);
+                            else
+                                spriteBatch.DrawString(font, p1Left.ToString(), bounds, Color.White, 0, origin, 1, SpriteEffects.None, 0);
+                        else
+                            spriteBatch.DrawString(font, p1Left.ToString(), bounds, Color.White, 0, origin, 1, SpriteEffects.None, 0);
+                        rectangle = new Rectangle(x, 655, width, 100);
+                        size = font.MeasureString("Right");
+                        bounds = Center(rectangle);
+                        origin = size * 0.5f;
+                        spriteBatch.Draw(noTexture, rectangle, Color.White);
+                        spriteBatch.DrawString(font, "Right", bounds, Color.White, 0, origin, 1, SpriteEffects.None, 0);
+                        rectangle = new Rectangle(x + width + 10, 655, width, 100);
+                        size = font.MeasureString(p1Right.ToString());
+                        bounds = Center(rectangle);
+                        origin = size * 0.5f;
+                        spriteBatch.Draw(noTexture, rectangle, Color.White);
+                        if (cursorRect.Intersects(rectangle))
+                            if (currMState.LeftButton == ButtonState.Pressed && prevState.LeftButton == ButtonState.Pressed)
+                                spriteBatch.DrawString(font, "...", bounds, Color.White, 0, origin, 1, SpriteEffects.None, 0);
+                            else
+                                spriteBatch.DrawString(font, p1Right.ToString(), bounds, Color.White, 0, origin, 1, SpriteEffects.None, 0);
+                        else
+                            spriteBatch.DrawString(font, p1Right.ToString(), bounds, Color.White, 0, origin, 1, SpriteEffects.None, 0);
+                    }
+                    else
+                    {
+                        rectangle = new Rectangle(x, 295, width, 100);
+                        size = font.MeasureString("Up");
+                        bounds = Center(rectangle);
+                        origin = size * 0.5f;
+                        spriteBatch.Draw(noTexture, rectangle, Color.White);
+                        spriteBatch.DrawString(font, "Up", bounds, Color.White, 0, origin, 1, SpriteEffects.None, 0);
+                        rectangle = new Rectangle(x + width + 10, 295, width, 100);
+                        size = font.MeasureString(p2Up.ToString());
+                        bounds = Center(rectangle);
+                        origin = size * 0.5f;
+                        spriteBatch.Draw(noTexture, rectangle, Color.White);
+                        if (cursorRect.Intersects(rectangle))
+                            if (currMState.LeftButton == ButtonState.Pressed && prevState.LeftButton == ButtonState.Pressed)
+                                spriteBatch.DrawString(font, "...", bounds, Color.White, 0, origin, 1, SpriteEffects.None, 0);
+                            else
+                                spriteBatch.DrawString(font, p2Up.ToString(), bounds, Color.White, 0, origin, 1, SpriteEffects.None, 0);
+                        else
+                            spriteBatch.DrawString(font, p2Up.ToString(), bounds, Color.White, 0, origin, 1, SpriteEffects.None, 0);
+                        rectangle = new Rectangle(x, 415, width, 100);
+                        size = font.MeasureString("Down");
+                        bounds = Center(rectangle);
+                        origin = size * 0.5f;
+                        spriteBatch.Draw(noTexture, rectangle, Color.White);
+                        spriteBatch.DrawString(font, "Down", bounds, Color.White, 0, origin, 1, SpriteEffects.None, 0);
+                        rectangle = new Rectangle(x + width + 10, 415, width, 100);
+                        size = font.MeasureString(p1Down.ToString());
+                        bounds = Center(rectangle);
+                        origin = size * 0.5f;
+                        spriteBatch.Draw(noTexture, rectangle, Color.White);
+                        if (cursorRect.Intersects(rectangle))
+                            if (currMState.LeftButton == ButtonState.Pressed && prevState.LeftButton == ButtonState.Pressed)
+                                spriteBatch.DrawString(font, "...", bounds, Color.White, 0, origin, 1, SpriteEffects.None, 0);
+                            else
+                                spriteBatch.DrawString(font, p2Down.ToString(), bounds, Color.White, 0, origin, 1, SpriteEffects.None, 0);
+                        else
+                            spriteBatch.DrawString(font, p2Down.ToString(), bounds, Color.White, 0, origin, 1, SpriteEffects.None, 0);
+                        rectangle = new Rectangle(x, 535, width, 100);
+                        size = font.MeasureString("Left");
+                        bounds = Center(rectangle);
+                        origin = size * 0.5f;
+                        spriteBatch.Draw(noTexture, rectangle, Color.White);
+                        spriteBatch.DrawString(font, "Left", bounds, Color.White, 0, origin, 1, SpriteEffects.None, 0);
+                        rectangle = new Rectangle(x + width + 10, 535, width, 100);
+                        size = font.MeasureString(p2Left.ToString());
+                        bounds = Center(rectangle);
+                        origin = size * 0.5f;
+                        spriteBatch.Draw(noTexture, rectangle, Color.White);
+                        if (cursorRect.Intersects(rectangle))
+                            if (currMState.LeftButton == ButtonState.Pressed && prevState.LeftButton == ButtonState.Pressed)
+                                spriteBatch.DrawString(font, "...", bounds, Color.White, 0, origin, 1, SpriteEffects.None, 0);
+                            else
+                                spriteBatch.DrawString(font, p2Left.ToString(), bounds, Color.White, 0, origin, 1, SpriteEffects.None, 0);
+                        else
+                            spriteBatch.DrawString(font, p2Left.ToString(), bounds, Color.White, 0, origin, 1, SpriteEffects.None, 0);
+                        rectangle = new Rectangle(x, 655, width, 100);
+                        size = font.MeasureString("Right");
+                        bounds = Center(rectangle);
+                        origin = size * 0.5f;
+                        spriteBatch.Draw(noTexture, rectangle, Color.White);
+                        spriteBatch.DrawString(font, "Right", bounds, Color.White, 0, origin, 1, SpriteEffects.None, 0);
+                        rectangle = new Rectangle(x + width + 10, 655, width, 100);
+                        size = font.MeasureString(p2Right.ToString());
+                        bounds = Center(rectangle);
+                        origin = size * 0.5f;
+                        spriteBatch.Draw(noTexture, rectangle, Color.White);
+                        if (cursorRect.Intersects(rectangle))
+                            if (currMState.LeftButton == ButtonState.Pressed && prevState.LeftButton == ButtonState.Pressed)
+                                spriteBatch.DrawString(font, "...", bounds, Color.White, 0, origin, 1, SpriteEffects.None, 0);
+                            else
+                                spriteBatch.DrawString(font, p2Right.ToString(), bounds, Color.White, 0, origin, 1, SpriteEffects.None, 0);
+                        else
+                            spriteBatch.DrawString(font, p2Right.ToString(), bounds, Color.White, 0, origin, 1, SpriteEffects.None, 0);
+                    }
+                    rectangle = new Rectangle(x, 1000, width, 100);
+                    size = font.MeasureString("Back");
+                    bounds = Center(rectangle);
+                    origin = size * 0.5f;
+                    spriteBatch.Draw(noTexture, rectangle, Color.White);
+                    spriteBatch.DrawString(font, "Back", bounds, Color.White, 0, origin, 1, SpriteEffects.None, 0);
                     spriteBatch.Draw(cursorTex, cursorRect, Color.White);
                     break;
                 #endregion
