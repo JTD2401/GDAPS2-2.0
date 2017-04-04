@@ -44,6 +44,7 @@
     <Compile Include="GameBoard.cs" />
     <Compile Include="GameObject.cs" />
     <Compile Include="GameScores.cs" />
+    <Compile Include="Item.cs" />
     <Compile Include="Menu.cs" />
     <Compile Include="Orb.cs" />
     <Compile Include="Player.cs" />

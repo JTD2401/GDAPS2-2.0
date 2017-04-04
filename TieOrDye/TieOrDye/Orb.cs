@@ -19,6 +19,7 @@ namespace TieOrDye
         Texture2D orbTex;
         int orbSpeed;
         int orbWidth;
+        Circle orbCirc;
         enum orbDir { Up, Down, Left, Right, UpLeft, UpRight, DownLeft, Downright };
         orbDir dir;
 
@@ -31,6 +32,9 @@ namespace TieOrDye
             int orbY = y;
             orbWidth = oWidth;
             orbSpeed = oSpeed;
+
+            orbCirc = new Circle(x, y, oWidth / 2);
+
             //Place the orb in different locations depending on direction of player when shot
             //Also sets orb direction 
             switch (anim.Look)
@@ -81,6 +85,16 @@ namespace TieOrDye
             //Set orb properties
             X = orbX;
             Y = orbY;
+        }
+
+        public int OrbSpeed
+        {
+            get { return orbSpeed; }
+            set { orbSpeed = value; }
+        }
+        public Circle OrbCirc
+        {
+            get { return orbCirc; }
         }
 
         public void UpdateOrbs()

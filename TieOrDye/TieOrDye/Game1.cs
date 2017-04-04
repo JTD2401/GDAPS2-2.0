@@ -116,6 +116,12 @@ namespace TieOrDye
 
         int mouseOffsetX;
         int mouseOffsetY;
+
+        Item item;
+        bool timesUp;
+        int num;
+        int num2;
+        double effectTime;
         #endregion
 
         #region game1
@@ -158,6 +164,12 @@ namespace TieOrDye
             p2Left = Keys.Left;
             p2Right = Keys.Right;
             p2Shoot = Keys.RightShift;
+
+            item = new Item(stoneTex, -1000, -1000, 100, 1);
+            timesUp = false;
+            num = 0;
+            num2 = 0;
+            effectTime = 6;
 
             try
             {
@@ -506,6 +518,11 @@ namespace TieOrDye
                                 stonesList[x].StoneTex = blueStone;
                                 blueOrbs.Remove(blueOrbs[i]);
                                 i--;
+                                if (stonesList[x].ItemSpawn == true)
+                                {
+                                    item = new Item(stoneTex, stonesList[x].XPos, stonesList[x].YPos, stonesList[x].Circle.Radius, 1);
+                                    item.ItemCheckInfo(c2, c1);
+                                }
                             }
                         }
                         for (int j = 0; j < orangeOrbs.Count; j++)
@@ -516,6 +533,11 @@ namespace TieOrDye
                                 stonesList[x].StoneTex = orangeStone;
                                 orangeOrbs.Remove(orangeOrbs[j]);
                                 j--;
+                                if (stonesList[x].ItemSpawn == true)
+                                {
+                                    item = new Item(stoneTex, stonesList[x].XPos, stonesList[x].YPos, stonesList[x].Circle.Radius, 1);
+                                    item.ItemCheckInfo(c3, c1);
+                                }
                             }
                         }
 
@@ -752,6 +774,10 @@ namespace TieOrDye
                     DrawStones(stonesList);
                     player1Animation.drawAnimation(spriteBatch);
                     player2Animation.drawAnimation(spriteBatch);
+
+                    checkItemIntersects(p1, blueOrbs, gameTime, num, player1Animation);
+                    checkItemIntersects(p2, orangeOrbs, gameTime, num2, player2Animation);
+
                     //Draw orbs
                     for (int i = 0; i < blueOrbs.Count; i++)
                     {
@@ -1006,7 +1032,10 @@ namespace TieOrDye
             for (int i = 0; i < sl.Count; i++)  //For each stone in the stone list
             {
                 spriteBatch.Draw(stonesList[i].StoneTex, new Rectangle(sl[i].XPos, sl[i].YPos, WIDTH_OF_STONES, WIDTH_OF_STONES), Color.White); //draw it
+                stonesList[i].ItemSpawn = true;
             }
+
+           
         }
         #endregion
 
@@ -1120,6 +1149,39 @@ namespace TieOrDye
         }
         #endregion
 
-        #endregion
+        #region CheckItemIntersects
+        void checkItemIntersects(Player player, List<Orb> orbList, GameTime gt, int counter, Animation anim)
+        {
+            if (item.ItemCirc.Intersects(player.PlayerRect))
+            {
+                if (player == p1) { num++; counter = num; }
+                if (player == p2) { num2++; counter = num2; }
+            }
+            if (num == 0 && num2 == 0)
+            {
+                item.DrawItem(spriteBatch);
+            }
+            else
+            {
+                if (counter > 0)
+                {
+                    effectTime -= gt.ElapsedGameTime.TotalSeconds;
+                    if (effectTime > 0)
+                    {
+                        item.ItemGet(player, 1, orbList, anim);
+                    }
+                    else if ((int)effectTime == 0)
+                    {
+                        item.ItemGet(player, 2, orbList, anim);
+                    }
+                }
+
+
+
+            }
+        }
+
+            #endregion
+            #endregion
+        }
     }
-}
