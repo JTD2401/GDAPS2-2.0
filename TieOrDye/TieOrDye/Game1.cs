@@ -49,7 +49,7 @@ namespace TieOrDye
         int p1Count;
         int p2Count;
 
-        float volumeLevel = 1f;
+        float volumeLevel = 0f;
         double dblVolumeLevel = 1;
 
         //Game interface and draw variable
@@ -67,7 +67,7 @@ namespace TieOrDye
         SpriteFont font;
 
         bool cameFromMenu = false;
-        string[] resolution = new string[] { "1920x1080", "1600x900", "1366x768", "1280x720", "1920x1200", "1680x1050", "1440x900", "1280x800", "1920x1440", "1856x1392", "1600x1200", "1440x1080", "1280x960", "1024x768" };
+        string[] resolution = new string[] { "1920x1080", "1600x900", "1920x1200", "1680x1050", "1440x900", "1920x1440", "1856x1392", "1600x1200", "1440x1080", "1280x960"};
         int location;
 
         Texture2D pauseScreen, resumeButton, options, mainMenu, exit , start, p1Tex, p2Tex, gameBoard, Level1, blueStone, orangeStone, cursorTex, optionsScreen, noTexture, arrowRight;  // base pause screen
@@ -147,9 +147,11 @@ namespace TieOrDye
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            graphics.IsFullScreen = false;
             graphics.PreferredBackBufferWidth = GraphicsDevice.DisplayMode.Width;
             graphics.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height;
-            graphics.IsFullScreen = true;
+            Debug.WriteLine(graphics.PreferredBackBufferFormat.ToString());
+            Window.IsBorderless = true;
             graphics.ApplyChanges();
             ResetMouseOffsets();
 
@@ -633,15 +635,20 @@ namespace TieOrDye
                     if (cursorRect.Intersects(new Rectangle(z, 535, z, 100)))
                         if (buttonPress()) //the apply button
                         {
+                            if (resolution[location] == graphics.PreferredBackBufferWidth.ToString() + "x" + graphics.PreferredBackBufferHeight.ToString())
+                                return;
                             string res = resolution[location]; //sets the string to the string of new resolution
                             var tempArr = res.Split('x'); //splits it by the char x
                             int width = int.Parse(tempArr[0]); //sets width to the first parse
                             int height = int.Parse(tempArr[1]); //sets height to the second parse
 
+                            if (width > GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width || height > GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height)
+                                return;
+
                             graphics.PreferredBackBufferWidth = width; //sets width and height accordingly
                             graphics.PreferredBackBufferHeight = height;
                             graphics.ApplyChanges(); //applys the change
-                            //ResetMouseOffsets();
+                            ResetMouseOffsets();
                         }
                     if (cursorRect.Intersects(new Rectangle(z + z + 10, 535, z, 100))) //back button
                         if (buttonPress())
@@ -707,8 +714,7 @@ namespace TieOrDye
                             if (buttonPressForCfg()) //changes shoot button
                                 checkButtonPress(p2Shoot, "p2Shoot");
                     }
-                    
-                    if (cursorRect.Intersects(new Rectangle(z, 1000, width2, 100)))
+                    if (cursorRect.Intersects(new Rectangle(z, 850, width2, 100)))
                         if (buttonPress())
                             currentGameState = GameStates.Options;
                     prevState = currMState;
@@ -932,8 +938,7 @@ namespace TieOrDye
                         rectangle = new Rectangle(x + width + 10, 775, width, 100);
                         makeBox(rectangle, p2Shoot.ToString(), noTexture, Color.White, false, true);
                     }
-
-                    rectangle = new Rectangle(x, 1000, width, 100);
+                    rectangle = new Rectangle(x, 895, width, 100);
                     makeBox(rectangle, "Back", noTexture, Color.White, false, false);
                     spriteBatch.Draw(cursorTex, cursorRect, Color.White);
                     break;
@@ -1050,16 +1055,20 @@ namespace TieOrDye
         #region getMousePosition
         public Vector2 GetMousePosition()
         {
-            var ms = Mouse.GetState();
-            return new Vector2(ms.X - mouseOffsetX, ms.Y - mouseOffsetY);
+            var ms = OpenTK.Input.Mouse.GetCursorState();
+            return new Vector2(ms.X 
+                //- mouseOffsetX
+                , ms.Y 
+                //- mouseOffsetY
+                );
         }
         #endregion
 
         #region ResetMouseOffsets
         public void ResetMouseOffsets()
         {
-            mouseOffsetX = (Window.ClientBounds.Width - GraphicsDevice.Viewport.Width) / 2;
-            mouseOffsetY = (Window.ClientBounds.Height - GraphicsDevice.Viewport.Height) / 2;
+            mouseOffsetX = (GraphicsDevice.Adapter.CurrentDisplayMode.Width - graphics.PreferredBackBufferWidth);
+            mouseOffsetY = (GraphicsDevice.Adapter.CurrentDisplayMode.Height - graphics.PreferredBackBufferHeight);
         }
         #endregion
 
@@ -1182,6 +1191,6 @@ namespace TieOrDye
         }
 
             #endregion
-            #endregion
+        #endregion
         }
     }
