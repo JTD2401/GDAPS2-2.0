@@ -781,8 +781,8 @@ namespace TieOrDye
                     player1Animation.drawAnimation(spriteBatch);
                     player2Animation.drawAnimation(spriteBatch);
 
-                    checkItemIntersects(p1, blueOrbs, gameTime, num, player1Animation);
-                    checkItemIntersects(p2, orangeOrbs, gameTime, num2, player2Animation);
+                    checkItemIntersects(p1, blueOrbs, gameTime, num, player1Animation, bOrbTex);
+                    checkItemIntersects(p2, orangeOrbs, gameTime, num2, player2Animation, oOrbTex);
 
                     //Draw orbs
                     for (int i = 0; i < blueOrbs.Count; i++)
@@ -1159,35 +1159,42 @@ namespace TieOrDye
         #endregion
 
         #region CheckItemIntersects
-        void checkItemIntersects(Player player, List<Orb> orbList, GameTime gt, int counter, Animation anim)
+        void checkItemIntersects(Player player, List<Orb> orbList, GameTime gt, int counter, Animation anim, Texture2D orbTex)
         {
             if (item.ItemCirc.Intersects(player.PlayerRect))
             {
                 if (player == p1) { num++; counter = num; }
                 if (player == p2) { num2++; counter = num2; }
             }
+
             if (num == 0 && num2 == 0)
             {
                 item.DrawItem(spriteBatch);
             }
-            else
+
+            if (num == 0 || num2 == 0)
             {
                 if (counter > 0)
                 {
                     effectTime -= gt.ElapsedGameTime.TotalSeconds;
                     if (effectTime > 0)
                     {
-                        item.ItemGet(player, 1, orbList, anim);
+                        item.ItemGet(player, 1, orbList, anim, orbTex);
                     }
                     else if ((int)effectTime == 0)
                     {
-                        item.ItemGet(player, 2, orbList, anim);
+                        item.ItemGet(player, 2, orbList, anim, orbTex);
+                        num = 0;
+                        num2 = 0;
+                        item.OrbC = new Circle(-100, -100, 10);
+                        item.StoneC = new Circle(-50, -50, 10);
+                        item = new Item(stoneTex, -100, -100, 10, 1);
+                        effectTime = 5;
                     }
                 }
-
-
-
             }
+
+
         }
 
             #endregion

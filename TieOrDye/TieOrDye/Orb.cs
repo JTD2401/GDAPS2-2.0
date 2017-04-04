@@ -35,6 +35,7 @@ namespace TieOrDye
 
             orbCirc = new Circle(x, y, oWidth / 2);
 
+
             //Place the orb in different locations depending on direction of player when shot
             //Also sets orb direction 
             switch (anim.Look)
@@ -87,24 +88,32 @@ namespace TieOrDye
             Y = orbY;
         }
 
+        public Texture2D OrbTex
+        {
+            get { return orbTex; }
+        }
+
         public int OrbSpeed
         {
             get { return orbSpeed; }
             set { orbSpeed = value; }
         }
+
+
+
         public Circle OrbCirc
         {
             get { return orbCirc; }
         }
 
+
         public void UpdateOrbs()
         {
             //Check for collision  and change direction
-            
-       
-            
+
+
             //Update orb position
-            switch(dir)
+            switch (dir)
             {
                 case orbDir.Up:
                     Y -= orbSpeed;
