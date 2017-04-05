@@ -832,8 +832,8 @@ namespace TieOrDye
                     }
 
                     // draws player models on either side of screen
-                    spriteBatch.Draw(p1Tex, new Rectangle(0, 300, 450, 600), Color.White);
-                    spriteBatch.Draw(p2Tex, new Rectangle(1400, 300, 500, 600), Color.White);
+                    spriteBatch.Draw(p1Tex, new Rectangle(GraphicsDevice.Viewport.Width / 50, 300, GraphicsDevice.Viewport.Width / 4, GraphicsDevice.Viewport.Height / 2), Color.White);
+                    spriteBatch.Draw(p2Tex, new Rectangle(((GraphicsDevice.Viewport.Width / 4) + (GraphicsDevice.Viewport.Width / 2)) - 35, 300, GraphicsDevice.Viewport.Width / 4, GraphicsDevice.Viewport.Height / 2), Color.White);
 
                     spriteBatch.DrawString(font, ""+p1Count, new Vector2(275, 110), Color.White, 0f, Vector2.Zero, 2, SpriteEffects.None, 0);
                     spriteBatch.DrawString(font, "" + p2Count, new Vector2(1650, 110), Color.White, 0f, Vector2.Zero, 2, SpriteEffects.None, 0);
