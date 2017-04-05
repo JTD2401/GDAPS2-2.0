@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
+using Microsoft.Xna.Framework.Audio;
 
 /*
 TieOrDye Animation Class
@@ -23,7 +25,11 @@ namespace TieOrDye
 
         List<Texture2D> playerSprites;
         Rectangle playerPositionRectangle;
+
         double playerSpeed;
+        float timer;
+        double timeCounter;
+        bool ableToPlay;
 
         public enum PlayerState { Up, Down, Left, Right, UpLeft, UpRight, DownLeft, Downright };
         PlayerState look;
@@ -40,9 +46,24 @@ namespace TieOrDye
             playerSpeed = inputPlayerSpeed;
         }
 
-        public void processInput(KeyboardState inputKeyboardState, Player inputPlayerObject, Keys inputUp, Keys inputLeft, Keys inputDown, Keys inputRight)
+        public void processInput(KeyboardState inputKeyboardState, Player inputPlayerObject, Keys inputUp, Keys inputLeft, Keys inputDown, Keys inputRight, SoundEffect inputWalkSound, GameTime inputGameTime)
         {
             playerPositionRectangle = inputPlayerObject.PlayerRect;
+
+            //Portion to set the timer and adjust the timing of the sound effect
+            timer += (float)inputGameTime.ElapsedGameTime.TotalSeconds;
+            timeCounter += (double)timer;
+
+            if (timer >= .25)
+            {
+                timer = 0F;
+                ableToPlay = true;
+            }
+            else
+            {
+                ableToPlay = false;
+            }
+
 
             // TODO: Add your update logic here
             string dir = "";
@@ -103,38 +124,70 @@ namespace TieOrDye
                 case "W":
                     look = PlayerState.Up;
                     playerPositionRectangle.Y -= (int)playerSpeed;
+                    if (ableToPlay)
+                    {
+                        inputWalkSound.Play();
+                    }
                     break;
                 case "A":
                     look = PlayerState.Left;
                     playerPositionRectangle.X -= (int)playerSpeed;
+                    if (ableToPlay)
+                    {
+                        inputWalkSound.Play();
+                    }
                     break;
                 case "S":
                     look = PlayerState.Down;
                     playerPositionRectangle.Y += (int)playerSpeed;
+                    if (ableToPlay)
+                    {
+                        inputWalkSound.Play();
+                    }
                     break;
                 case "D":
                     look = PlayerState.Right;
                     playerPositionRectangle.X += (int)playerSpeed;
+                    if (ableToPlay)
+                    {
+                        inputWalkSound.Play();
+                    }
                     break;
                 case "WA":
                     look = PlayerState.UpLeft;
                     playerPositionRectangle.Y -= (int)playerSpeed;
                     playerPositionRectangle.X -= (int)playerSpeed;
+                    if (ableToPlay)
+                    {
+                        inputWalkSound.Play();
+                    }
                     break;
                 case "WD":
                     look = PlayerState.UpRight;
                     playerPositionRectangle.Y -= (int)playerSpeed;
                     playerPositionRectangle.X += (int)playerSpeed;
+                    if (ableToPlay)
+                    {
+                        inputWalkSound.Play();
+                    }
                     break;
                 case "SA":
                     look = PlayerState.DownLeft;
                     playerPositionRectangle.Y += (int)playerSpeed;
                     playerPositionRectangle.X -= (int)playerSpeed;
+                    if (ableToPlay)
+                    {
+                        inputWalkSound.Play();
+                    }
                     break;
                 case "SD":
                     look = PlayerState.Downright;
                     playerPositionRectangle.Y += (int)playerSpeed;
                     playerPositionRectangle.X += (int)playerSpeed;
+                    if (ableToPlay)
+                    {
+                        inputWalkSound.Play();
+                    }
                     break;
                 default:
                     return;

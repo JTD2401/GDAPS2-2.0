@@ -151,3 +151,9 @@
 /processorParam:Quality=Best
 /build:music.wav
 
+#begin Thump.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Thump.wav
+
