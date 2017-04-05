@@ -107,6 +107,9 @@ namespace TieOrDye
         Texture2D inactiveStartButtonTex;
         Texture2D activeStartButtonTex;
 
+        //Sound effect and sound
+        SoundEffect walkSound;
+
         bool startActive;
         Song song;
         int playernumber = 1;
@@ -332,6 +335,10 @@ namespace TieOrDye
             tempSprite = Content.Load<Texture2D>("GolemAngleDownOrange");
             player2Sprites.Add(tempSprite);
             tempSprite = Content.Load<Texture2D>("GolemAngleDownRightOrange");
+
+            //Load the sound effect for the player
+            walkSound = Content.Load<SoundEffect>("Thump");
+
             song = Content.Load<Song>("music");
             MediaPlayer.Play(song);
             MediaPlayer.Volume = volumeLevel;
@@ -438,9 +445,9 @@ namespace TieOrDye
                 #region ingame
                 case GameStates.InGame:  // gameplay state
                     //Uses the animation class to process the input from keyboard as well as updating the rectangle's position according to direction pressed
-                    player1Animation.processInput(currKbState, p1, p1Up, p1Left, p1Down, p1Right);
+                    player1Animation.processInput(currKbState, p1, p1Up, p1Left, p1Down, p1Right, walkSound, gameTime);
                     p1.PlayerRect = player1Animation.PlayerPositionRectangle;
-                    player2Animation.processInput(currKbState, p2, p2Up, p2Left, p2Down, p2Right);
+                    player2Animation.processInput(currKbState, p2, p2Up, p2Left, p2Down, p2Right, walkSound, gameTime);
                     p2.PlayerRect = player2Animation.PlayerPositionRectangle;
 
                     // prevents players from passing beyond the border
