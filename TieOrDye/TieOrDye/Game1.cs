@@ -588,7 +588,7 @@ namespace TieOrDye
                     if (cursorRect.Intersects(new Rectangle((z + z + 10 + GraphicsDevice.Viewport.Width / 6) - 80, 175, 80, 100)))
                         if (buttonPress()) //resolution right
                         {
-                            if (location == 13)
+                            if (location == 9)
                                 return;
                             location += 1;
                         }
@@ -773,6 +773,8 @@ namespace TieOrDye
 
                     checkItemIntersects(p1, blueOrbs, gameTime, num, player1Animation, bOrbTex);
                     checkItemIntersects(p2, orangeOrbs, gameTime, num2, player2Animation, oOrbTex);
+
+                    
 
                     //Draw orbs
                     for (int i = 0; i < blueOrbs.Count; i++)
