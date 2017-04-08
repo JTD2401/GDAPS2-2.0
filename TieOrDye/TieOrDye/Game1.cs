@@ -26,6 +26,8 @@ namespace TieOrDye
         const int WIDTH_OF_STONES = 30;
         const int ORB_WIDTH = 10;
         const int ORB_SPEED = 3;
+        const int BLUE_STOPPER = 250;
+        const int ORANGE_STOPPER = 250;
 
         //Variables to store the player speed and positions
         double playerSpeed1, playerSpeed2;
@@ -111,6 +113,12 @@ namespace TieOrDye
         SoundEffect walkSound;
 
         bool startActive;
+        bool orangeShot = false;
+        bool blueShot = false;
+
+        Stopwatch blueStopper;
+        Stopwatch orangeStopper;
+
         Song song;
         int playernumber = 1;
 
@@ -154,7 +162,7 @@ namespace TieOrDye
             graphics.PreferredBackBufferWidth = GraphicsDevice.DisplayMode.Width;
             graphics.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height;
             Debug.WriteLine(graphics.PreferredBackBufferFormat.ToString());
-            Window.IsBorderless = true;
+            //Window.IsBorderless = true;
             graphics.ApplyChanges();
             ResetMouseOffsets();
 
@@ -456,15 +464,47 @@ namespace TieOrDye
                     //MoveStones(stonesList);
 
                     //Creates orbs - Cooldown is only 1 update loop currently
-                    if ((currKbState.IsKeyDown(p1Shoot) && (prevKbState.IsKeyDown(p1Shoot) == false))) //P1 Shoots
+                    if (blueShot)
                     {
-                        Orb o1 = new Orb(bOrbTex, 0, 0, p1, player1Animation, ORB_WIDTH, ORB_SPEED);
-                        blueOrbs.Add(o1);
+                        if (blueStopper.ElapsedMilliseconds >= BLUE_STOPPER)
+                        {
+                            blueShot = false;
+                            blueStopper.Stop();
+                            blueStopper.Reset();
+                        }
+                        else { }
                     }
-                    if ((currKbState.IsKeyDown(p2Shoot) && (prevKbState.IsKeyDown(p2Shoot) == false))) //P2 Shoots
+                    else
                     {
-                        Orb o2 = new Orb(oOrbTex, 0, 0, p2, player2Animation, ORB_WIDTH, ORB_SPEED);
-                        orangeOrbs.Add(o2);
+                        if ((currKbState.IsKeyUp(p1Shoot) && (prevKbState.IsKeyDown(p1Shoot)))) //P1 Shoots
+                        {
+                            Orb o1 = new Orb(bOrbTex, 0, 0, p1, player1Animation, ORB_WIDTH, ORB_SPEED);
+                            blueOrbs.Add(o1);
+                            blueShot = true;
+                            blueStopper = new Stopwatch();
+                            blueStopper.Start();
+                        }
+                        else { }
+                    }
+                    if (orangeShot)
+                    {
+                        if (orangeStopper.ElapsedMilliseconds >= ORANGE_STOPPER)
+                        {
+                            orangeShot = false;
+                            orangeStopper.Stop();
+                            orangeStopper.Reset();
+                        }
+                    }
+                    else
+                    {
+                        if ((currKbState.IsKeyDown(p2Shoot) && (prevKbState.IsKeyDown(p2Shoot) == false))) //P2 Shoots
+                        {
+                            Orb o2 = new Orb(oOrbTex, 0, 0, p2, player2Animation, ORB_WIDTH, ORB_SPEED);
+                            orangeOrbs.Add(o2);
+                            orangeShot = true;
+                            orangeStopper = new Stopwatch();
+                            orangeStopper.Start();
+                        }
                     }
 
                     //Update orb locations
