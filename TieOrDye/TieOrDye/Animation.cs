@@ -8,6 +8,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Audio;
+using System.IO;
+using System.Diagnostics;
 
 /*
 TieOrDye Animation Class
@@ -26,9 +28,10 @@ namespace TieOrDye
         List<Texture2D> playerSprites;
         Rectangle playerPositionRectangle;
 
+        Stopwatch soundEffectBuffer;
+        int amountTimeBuffer = 250;
+
         double playerSpeed;
-        float timer;
-        double timeCounter;
         bool ableToPlay;
 
         public enum PlayerState { Up, Down, Left, Right, UpLeft, UpRight, DownLeft, Downright };
@@ -44,19 +47,21 @@ namespace TieOrDye
         {
             playerSprites = inputListOfSprite;
             playerSpeed = inputPlayerSpeed;
+            soundEffectBuffer = new Stopwatch();
         }
 
         public void processInput(KeyboardState inputKeyboardState, Player inputPlayerObject, Keys inputUp, Keys inputLeft, Keys inputDown, Keys inputRight, SoundEffect inputWalkSound, GameTime inputGameTime)
         {
             playerPositionRectangle = inputPlayerObject.PlayerRect;
 
-            //Portion to set the timer and adjust the timing of the sound effect
-            timer += (float)inputGameTime.ElapsedGameTime.TotalSeconds;
-            timeCounter += (double)timer;
+            //Stopwatch
+            soundEffectBuffer.Start();
 
-            if (timer >= .25)
+            if(soundEffectBuffer.ElapsedMilliseconds >= amountTimeBuffer)
             {
-                timer = 0F;
+                soundEffectBuffer.Stop();
+                soundEffectBuffer.Reset();
+
                 ableToPlay = true;
             }
             else
