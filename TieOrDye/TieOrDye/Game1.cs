@@ -402,6 +402,11 @@ namespace TieOrDye
                             p1Count = 0;
                             p2Count = 0;
 
+                            blueOrbs.Clear();
+                            orangeOrbs.Clear();
+
+                            item.OrbC = new Circle(0, 0, 0);
+
                             //Create stone objects
                             CreateStones(NUMBER_OF_STONES, WIDTH_OF_STONES);
                             //Start game
