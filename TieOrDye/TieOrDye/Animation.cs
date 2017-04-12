@@ -89,116 +89,118 @@ namespace TieOrDye
             previousOfwasd[2] = previousKState.IsKeyDown(inputDown);
             previousOfwasd[3] = previousKState.IsKeyDown(inputRight);
 
-            // check which keys are pressed and change the position according to key
-            if (previousOfwasd[0] == true && wasd[1] == true)
+            //Only process player input when player is not stunned
+            if(inputPlayerObject.Stunned == false)
             {
-                dir = "WA";
-            }
-            else if (previousOfwasd[0] == true && wasd[3] == true)
-            {
-                dir = "WD";
-            }
-            else if (previousOfwasd[2] == true && wasd[1] == true)
-            {
-                dir = "SA";
-            }
-            else if (previousOfwasd[2] == true && wasd[3] == true)
-            {
-                dir = "SD";
-            }
-            else if (wasd[0] == true)
-            {
-                dir = "W";
-            }
-            else if (wasd[1] == true)
-            {
-                dir = "A";
-            }
-            else if (wasd[2] == true)
-            {
-                dir = "S";
-            }
-            else if (wasd[3] == true)
-            {
-                dir = "D";
-            }
+                // check which keys are pressed and change the position according to key
+                if (previousOfwasd[0] == true && wasd[1] == true)
+                {
+                    dir = "WA";
+                }
+                else if (previousOfwasd[0] == true && wasd[3] == true)
+                {
+                    dir = "WD";
+                }
+                else if (previousOfwasd[2] == true && wasd[1] == true)
+                {
+                    dir = "SA";
+                }
+                else if (previousOfwasd[2] == true && wasd[3] == true)
+                {
+                    dir = "SD";
+                }
+                else if (wasd[0] == true)
+                {
+                    dir = "W";
+                }
+                else if (wasd[1] == true)
+                {
+                    dir = "A";
+                }
+                else if (wasd[2] == true)
+                {
+                    dir = "S";
+                }
+                else if (wasd[3] == true)
+                {
+                    dir = "D";
+                }
 
-            // assign a value to look
-            switch (dir)
-            {
-                case "W":
-                    look = PlayerState.Up;
-                    playerPositionRectangle.Y -= (int)playerSpeed;
-                    if (ableToPlay)
-                    {
-                        inputWalkSound.Play();
-                    }
-                    break;
-                case "A":
-                    look = PlayerState.Left;
-                    playerPositionRectangle.X -= (int)playerSpeed;
-                    if (ableToPlay)
-                    {
-                        inputWalkSound.Play();
-                    }
-                    break;
-                case "S":
-                    look = PlayerState.Down;
-                    playerPositionRectangle.Y += (int)playerSpeed;
-                    if (ableToPlay)
-                    {
-                        inputWalkSound.Play();
-                    }
-                    break;
-                case "D":
-                    look = PlayerState.Right;
-                    playerPositionRectangle.X += (int)playerSpeed;
-                    if (ableToPlay)
-                    {
-                        inputWalkSound.Play();
-                    }
-                    break;
-                case "WA":
-                    look = PlayerState.UpLeft;
-                    playerPositionRectangle.Y -= (int)playerSpeed;
-                    playerPositionRectangle.X -= (int)playerSpeed;
-                    if (ableToPlay)
-                    {
-                        inputWalkSound.Play();
-                    }
-                    break;
-                case "WD":
-                    look = PlayerState.UpRight;
-                    playerPositionRectangle.Y -= (int)playerSpeed;
-                    playerPositionRectangle.X += (int)playerSpeed;
-                    if (ableToPlay)
-                    {
-                        inputWalkSound.Play();
-                    }
-                    break;
-                case "SA":
-                    look = PlayerState.DownLeft;
-                    playerPositionRectangle.Y += (int)playerSpeed;
-                    playerPositionRectangle.X -= (int)playerSpeed;
-                    if (ableToPlay)
-                    {
-                        inputWalkSound.Play();
-                    }
-                    break;
-                case "SD":
-                    look = PlayerState.Downright;
-                    playerPositionRectangle.Y += (int)playerSpeed;
-                    playerPositionRectangle.X += (int)playerSpeed;
-                    if (ableToPlay)
-                    {
-                        inputWalkSound.Play();
-                    }
-                    break;
-                default:
-                    return;
+                // assign a value to look
+                switch (dir)
+                {
+                    case "W":
+                        look = PlayerState.Up;
+                        playerPositionRectangle.Y -= (int)playerSpeed;
+                        if (ableToPlay)
+                        {
+                            inputWalkSound.Play();
+                        }
+                        break;
+                    case "A":
+                        look = PlayerState.Left;
+                        playerPositionRectangle.X -= (int)playerSpeed;
+                        if (ableToPlay)
+                        {
+                            inputWalkSound.Play();
+                        }
+                        break;
+                    case "S":
+                        look = PlayerState.Down;
+                        playerPositionRectangle.Y += (int)playerSpeed;
+                        if (ableToPlay)
+                        {
+                            inputWalkSound.Play();
+                        }
+                        break;
+                    case "D":
+                        look = PlayerState.Right;
+                        playerPositionRectangle.X += (int)playerSpeed;
+                        if (ableToPlay)
+                        {
+                            inputWalkSound.Play();
+                        }
+                        break;
+                    case "WA":
+                        look = PlayerState.UpLeft;
+                        playerPositionRectangle.Y -= (int)playerSpeed;
+                        playerPositionRectangle.X -= (int)playerSpeed;
+                        if (ableToPlay)
+                        {
+                            inputWalkSound.Play();
+                        }
+                        break;
+                    case "WD":
+                        look = PlayerState.UpRight;
+                        playerPositionRectangle.Y -= (int)playerSpeed;
+                        playerPositionRectangle.X += (int)playerSpeed;
+                        if (ableToPlay)
+                        {
+                            inputWalkSound.Play();
+                        }
+                        break;
+                    case "SA":
+                        look = PlayerState.DownLeft;
+                        playerPositionRectangle.Y += (int)playerSpeed;
+                        playerPositionRectangle.X -= (int)playerSpeed;
+                        if (ableToPlay)
+                        {
+                            inputWalkSound.Play();
+                        }
+                        break;
+                    case "SD":
+                        look = PlayerState.Downright;
+                        playerPositionRectangle.Y += (int)playerSpeed;
+                        playerPositionRectangle.X += (int)playerSpeed;
+                        if (ableToPlay)
+                        {
+                            inputWalkSound.Play();
+                        }
+                        break;
+                    default:
+                        return;
+                }
             }
-
-
         }
 
         public void drawAnimation(SpriteBatch spriteBatch)

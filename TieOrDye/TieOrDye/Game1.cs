@@ -28,6 +28,8 @@ namespace TieOrDye
         const int ORB_SPEED = 3;
         const int BLUE_STOPPER = 250;
         const int ORANGE_STOPPER = 250;
+        const int PLAYER_STUN_DURATION = 2000;
+        const int PLAYER_IMMUNITY_DURATION = 3000;
 
         //Variables to store the player speed and positions
         double playerSpeed1, playerSpeed2;
@@ -35,6 +37,10 @@ namespace TieOrDye
 
         //Timer of the game
         double time;
+
+        //Time players get stunned
+        Stopwatch p1StunWatch;
+        Stopwatch p2StunWatch;
 
         //Attribute and enum for the game state
         enum GameStates { Menu, Pause, Options, ControlOptions, InGame, GameOver };
@@ -239,6 +245,10 @@ namespace TieOrDye
             //Empty lists for orbs
             blueOrbs = new List<Orb>();
             orangeOrbs = new List<Orb>();
+
+            //Stunwatches
+            p1StunWatch = new Stopwatch();
+            p2StunWatch = new Stopwatch();
 
             //stoneColor = Color.White;
             //this.IsMouseVisible = true;
@@ -483,11 +493,14 @@ namespace TieOrDye
                     {
                         if ((currKbState.IsKeyUp(p1Shoot) && (prevKbState.IsKeyDown(p1Shoot)))) //P1 Shoots
                         {
-                            Orb o1 = new Orb(bOrbTex, 0, 0, p1, player1Animation, ORB_WIDTH, ORB_SPEED);
-                            blueOrbs.Add(o1);
-                            blueShot = true;
-                            blueStopper = new Stopwatch();
-                            blueStopper.Start();
+                            if(p1.Stunned == false)
+                            {
+                                Orb o1 = new Orb(bOrbTex, 0, 0, p1, player1Animation, ORB_WIDTH, ORB_SPEED);
+                                blueOrbs.Add(o1);
+                                blueShot = true;
+                                blueStopper = new Stopwatch();
+                                blueStopper.Start();
+                            }
                         }
                         else { }
                     }
@@ -504,11 +517,14 @@ namespace TieOrDye
                     {
                         if ((currKbState.IsKeyDown(p2Shoot) && (prevKbState.IsKeyDown(p2Shoot) == false))) //P2 Shoots
                         {
-                            Orb o2 = new Orb(oOrbTex, 0, 0, p2, player2Animation, ORB_WIDTH, ORB_SPEED);
-                            orangeOrbs.Add(o2);
-                            orangeShot = true;
-                            orangeStopper = new Stopwatch();
-                            orangeStopper.Start();
+                            if(p2.Stunned == false)
+                            {
+                                Orb o2 = new Orb(oOrbTex, 0, 0, p2, player2Animation, ORB_WIDTH, ORB_SPEED);
+                                orangeOrbs.Add(o2);
+                                orangeShot = true;
+                                orangeStopper = new Stopwatch();
+                                orangeStopper.Start();
+                            }
                         }
                     }
 
@@ -531,6 +547,7 @@ namespace TieOrDye
                             blueOrbs.Remove(blueOrbs[h]);
                             h--;
                             p2.Stunned = true;
+                            p2StunWatch.Start();
                         }
                     }
                     for (int j = 0; j < orangeOrbs.Count; j++)
@@ -541,6 +558,7 @@ namespace TieOrDye
                             orangeOrbs.Remove(orangeOrbs[j]);
                             j--;
                             p1.Stunned = true;
+                            p1StunWatch.Start();
                         }
                     }
 
@@ -599,33 +617,37 @@ namespace TieOrDye
                                 p2Count++;
                             }
                         }
-
-
-                        /*
-                        bool p1Inter = false;
-                        bool p2Inter = false;
-                        if (stonesList[x].Circle.Intersects(p1.PlayerRect))
-                        p1Inter = true;
-                        if(stonesList[x].Circle.Intersects(p2.PlayerRect))
-                        p2Inter = true;
-
-                        if(p1Inter && stonesList[x].StoneTex == stoneTex)  //if the current stone intersects the blue player rectangle and is gray, change its color to blue
-                        {
-                            
-                            stonesList[x].StoneTex = blueStone;
-                            p1Count++;
-                        }
-
-                        if(p2Inter && stonesList[x].StoneTex == stoneTex)
-                        {
-                            
-                            stonesList[x].StoneTex = orangeStone;
-                            p2Count++;
-                        }
-                        */
                     }
 
-                    
+                    if (p1StunWatch.IsRunning)
+                    {
+                        //Unstun player 1 and make them immune
+                        if (p1StunWatch.ElapsedMilliseconds >= PLAYER_STUN_DURATION)
+                        {
+                            p1.Stunned = false;
+                            p1.Immune = true;
+                            //Unimmune player 1 and reset the stopwatch
+                            if (p1StunWatch.ElapsedMilliseconds >= PLAYER_STUN_DURATION + PLAYER_IMMUNITY_DURATION)
+                            {
+                                p1.Immune = false;
+                                p1StunWatch.Reset();
+                            }
+                        }
+                    }
+                    if(p2StunWatch.IsRunning)
+                    {
+                        if (p2StunWatch.ElapsedMilliseconds >= PLAYER_STUN_DURATION)
+                        {
+                            p2.Stunned = false;
+                            p2.Immune = true;
+                            if (p2StunWatch.ElapsedMilliseconds >= PLAYER_STUN_DURATION + PLAYER_IMMUNITY_DURATION)
+                            {
+                                p2.Immune = true;
+                                p2StunWatch.Reset();
+                            }
+                        }
+                    }
+
                     time -= gameTime.ElapsedGameTime.TotalSeconds;
                     if (time <= 0)
                         currentGameState = GameStates.GameOver;

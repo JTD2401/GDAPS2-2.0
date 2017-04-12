@@ -60,5 +60,11 @@ namespace TieOrDye
             get { return stunned; }
             set { stunned = value; }
         }
+
+        public bool Immune
+        {
+            get { return immune; }
+            set { immune = value; }
+        }
     }
 }
