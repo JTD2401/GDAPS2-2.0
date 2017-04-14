@@ -16,6 +16,10 @@ namespace TieOrDye
     class Stone : GameObject
     {
         //attributes
+        bool wallHitLeft;
+        bool wallHitRight;
+        bool wallHitUp;
+        bool wallHitDown;
         Random rng;
         Vector2 direction;
         Texture2D stoneTex;
@@ -26,8 +30,8 @@ namespace TieOrDye
             circle = new Circle(x, y, radius);
             Thread.Sleep(30);
             rng = new Random();
-            var dir = rng.Next(1,5);
-            if(dir == 1)
+            var dir = rng.Next(1, 5);
+            if (dir == 1)
                 direction = new Vector2(2, 0);
             if (dir == 2)
                 direction = new Vector2(-2, 0);
@@ -36,6 +40,34 @@ namespace TieOrDye
             if (dir == 4)
                 direction = new Vector2(0, -2);
             stoneTex = t2;
+            wallHitLeft = false;
+            wallHitRight = false;
+            wallHitUp = false;
+            wallHitDown = false;
+        }
+
+        public bool WallHitLeft
+        {
+            get { return wallHitLeft; }
+            set { wallHitLeft = value; }
+        }
+
+        public bool WallHitRight
+        {
+            get { return wallHitRight; }
+            set { wallHitRight = value; }
+        }
+
+        public bool WallHitUp
+        {
+            get { return wallHitUp; }
+            set { wallHitUp = value; }
+        }
+
+        public bool WallHitDown
+        {
+            get { return wallHitDown; }
+            set { wallHitDown = value; }
         }
 
         public Circle Circle
@@ -70,7 +102,8 @@ namespace TieOrDye
         public Vector2 Direction
         {
             get { return direction; }
+            set { direction = value; }
         }
-        
+
     }
 }

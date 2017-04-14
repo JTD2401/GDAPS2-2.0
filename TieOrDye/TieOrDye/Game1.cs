@@ -476,7 +476,7 @@ namespace TieOrDye
                     // prevents players from passing beyond the border
                     ScreenBorder(p1);
                     ScreenBorder(p2);
-                    //MoveStones(stonesList);
+                    MoveStones(stonesList);
 
                     //Creates orbs - Cooldown is only 1 update loop currently
                     if (blueShot)
@@ -1029,8 +1029,58 @@ namespace TieOrDye
         {
             for (int i = 0; i < stonesList.Count; i++)
             {
+                WallChange(stonesList[i]);
+
+                StoneChange(stonesList[i]);
+
                 stonesList[i].XPos += (int)stonesList[i].Direction.X;
                 stonesList[i].YPos += (int)stonesList[i].Direction.Y;
+            }
+        }
+        #endregion
+
+        #region WallChange
+        private void WallChange(Stone stone)
+        {
+            if (stone.XPos <= 50) { stone.WallHitLeft = true; stone.WallHitRight = false; }
+
+            if (stone.XPos >= GraphicsDevice.Viewport.Width - 100) { stone.WallHitRight = true; stone.WallHitLeft = false; }
+
+            if (stone.YPos <= 50) { stone.WallHitUp = true; stone.WallHitDown = false; }
+
+            if (stone.YPos >= GraphicsDevice.Viewport.Height - 100) { stone.WallHitDown = true; stone.WallHitUp = false; }
+
+            if (stone.WallHitLeft == true && stone.WallHitRight == false)
+            {
+                stone.Direction = new Vector2(2, 0);
+            }
+
+            if (stone.WallHitLeft == false && stone.WallHitRight == true)
+            {
+                stone.Direction = new Vector2(-2, 0);
+            }
+
+            if (stone.WallHitUp == true && stone.WallHitDown == false)
+            {
+                stone.Direction = new Vector2(0, 2);
+            }
+
+            if (stone.WallHitUp == false && stone.WallHitDown == true)
+            {
+                stone.Direction = new Vector2(0, -2);
+            }
+
+        }
+        #endregion
+
+        #region StoneChange
+        private void StoneChange(Stone stone)
+        {
+            
+            if (stone.Circle.Intersects(stonesList[0].Circle))
+            {
+
+            
             }
         }
         #endregion
