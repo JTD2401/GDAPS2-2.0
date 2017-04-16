@@ -80,6 +80,10 @@ namespace TieOrDye
 
         Texture2D pauseScreen, resumeButton, options, mainMenu, exit , start, p1Tex, p2Tex, gameBoard, Level1, blueStone, orangeStone, cursorTex, optionsScreen, noTexture, arrowRight;  // base pause screen
 
+        //list of walls
+        List<Wall> walls;
+        Texture2D wallTex;
+
         //List of blue orbs
         List<Orb> blueOrbs;
         Texture2D bOrbTex;
@@ -165,6 +169,7 @@ namespace TieOrDye
         {
             // TODO: Add your initialization logic here
             graphics.IsFullScreen = false;
+            Window.IsBorderless = true;
             graphics.PreferredBackBufferWidth = GraphicsDevice.DisplayMode.Width;
             graphics.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height;
             Debug.WriteLine(graphics.PreferredBackBufferFormat.ToString());
@@ -246,6 +251,21 @@ namespace TieOrDye
             blueOrbs = new List<Orb>();
             orangeOrbs = new List<Orb>();
 
+            //Walls 
+            walls = new List<Wall>();
+
+            walls.Add(new Wall(wallTex, 329, 185, 151, 200));
+            walls.Add(new Wall(wallTex, 1446, 193, 151, 200));
+            walls.Add(new Wall(wallTex, 337, 734, 151, 200));
+            walls.Add(new Wall(wallTex, 1446, 730, 151, 200));
+            walls.Add(new Wall(wallTex, 782, 508, 360, 153));
+            walls.Add(new Wall(wallTex, 813, 492, 300, 17));
+            walls.Add(new Wall(wallTex, 812, 660, 300, 17));
+            walls.Add(new Wall(wallTex, 0, 0, 1920, 84));
+            walls.Add(new Wall(wallTex, 0, 0, 150, 1080));
+            walls.Add(new Wall(wallTex, 1776, 5, 150, 1080));
+            walls.Add(new Wall(wallTex, 10, 1002, 1920, 85));
+
             //Stunwatches
             p1StunWatch = new Stopwatch();
             p2StunWatch = new Stopwatch();
@@ -311,6 +331,8 @@ namespace TieOrDye
             optionsScreen = Content.Load<Texture2D>("OptionsScreen");
 
             noTexture = Content.Load<Texture2D>("notexture");
+
+            wallTex = Content.Load<Texture2D>("Transparent");
             // TODO: use this.Content to load your game content here
 
             //Following will be loading the sprite for golems in
@@ -477,6 +499,7 @@ namespace TieOrDye
                     ScreenBorder(p1);
                     ScreenBorder(p2);
                     MoveStones(stonesList);
+                    DoWallCollision();
 
                     //Creates orbs - Cooldown is only 1 update loop currently
                     if (blueShot)
@@ -1029,9 +1052,10 @@ namespace TieOrDye
         {
             for (int i = 0; i < stonesList.Count; i++)
             {
-                WallChange(stonesList[i]);
 
                 StoneChange(stonesList[i]);
+
+                DoWallCollision(stonesList[i]);
 
                 stonesList[i].XPos += (int)stonesList[i].Direction.X;
                 stonesList[i].YPos += (int)stonesList[i].Direction.Y;
@@ -1039,48 +1063,22 @@ namespace TieOrDye
         }
         #endregion
 
-        #region WallChange
-        private void WallChange(Stone stone)
-        {
-            if (stone.XPos <= 50) { stone.WallHitLeft = true; stone.WallHitRight = false; }
-
-            if (stone.XPos >= GraphicsDevice.Viewport.Width - 100) { stone.WallHitRight = true; stone.WallHitLeft = false; }
-
-            if (stone.YPos <= 50) { stone.WallHitUp = true; stone.WallHitDown = false; }
-
-            if (stone.YPos >= GraphicsDevice.Viewport.Height - 100) { stone.WallHitDown = true; stone.WallHitUp = false; }
-
-            if (stone.WallHitLeft == true && stone.WallHitRight == false)
-            {
-                stone.Direction = new Vector2(2, 0);
-            }
-
-            if (stone.WallHitLeft == false && stone.WallHitRight == true)
-            {
-                stone.Direction = new Vector2(-2, 0);
-            }
-
-            if (stone.WallHitUp == true && stone.WallHitDown == false)
-            {
-                stone.Direction = new Vector2(0, 2);
-            }
-
-            if (stone.WallHitUp == false && stone.WallHitDown == true)
-            {
-                stone.Direction = new Vector2(0, -2);
-            }
-
-        }
-        #endregion
-
         #region StoneChange
         private void StoneChange(Stone stone)
         {
-            
-            if (stone.Circle.Intersects(stonesList[0].Circle))
+            Circle c1 = new Circle(stone.XPos + (WIDTH_OF_STONES / 2), stone.YPos + (WIDTH_OF_STONES / 2), (WIDTH_OF_STONES / 2));
+            foreach(Stone obj in stonesList)
             {
+                Circle c2 = new Circle((int)obj.XPos + (WIDTH_OF_STONES / 2), (int)obj.YPos + (WIDTH_OF_STONES / 2), (WIDTH_OF_STONES / 2));
 
-            
+                if (stone.Equals(obj))
+                    return;
+                if (c1.Intersects(c2))
+                {
+                    stone.Direction = new Vector2(-stone.Direction.X, -stone.Direction.Y);
+                    obj.Direction = new Vector2(-obj.Direction.X, -obj.Direction.Y);
+                }
+                    
             }
         }
         #endregion
@@ -1313,7 +1311,82 @@ namespace TieOrDye
 
         }
 
-            #endregion
         #endregion
+
+        #region Wall Collide
+        public void DoWallCollision()
+        {
+            foreach (Wall obj in walls)
+            {
+                if (obj.Bounds.Intersects(p1.PlayerRect))
+                {
+                    if (Math.Abs(obj.Bounds.Top - p1.PlayerRect.Bottom) < p1.PlayerRect.Height /2)
+                        p1.Y = (obj.Bounds.Y - p1.PlayerRect.Height);
+                    if (Math.Abs(obj.Bounds.Left - p1.PlayerRect.Right) < p1.PlayerRect.Width /2)
+                        p1.X = (obj.Bounds.X - p1.PlayerRect.Width);
+                    if (Math.Abs(obj.Bounds.Right - p1.PlayerRect.Left) < p1.PlayerRect.Width / 2)
+                        p1.X = (obj.Bounds.X + obj.Bounds.Width);
+                    if (Math.Abs(obj.Bounds.Bottom - p1.PlayerRect.Top) < p1.PlayerRect.Height / 2)
+                        p1.Y = (obj.Bounds.Y + obj.Bounds.Height);
+                }
+                if (obj.Bounds.Intersects(p2.PlayerRect))
+                {
+                    if (Math.Abs(obj.Bounds.Top - p2.PlayerRect.Bottom) < p2.PlayerRect.Height /2)
+                        p2.Y = (obj.Bounds.Y - p2.PlayerRect.Height);
+                    if (Math.Abs(obj.Bounds.Left - p2.PlayerRect.Right) < p2.PlayerRect.Width / 2)
+                        p2.X = (obj.Bounds.X - p2.PlayerRect.Width);
+                    if (Math.Abs(obj.Bounds.Right - p2.PlayerRect.Left) < p2.PlayerRect.Width / 2)
+                        p2.X = (obj.Bounds.X + obj.Bounds.Width);
+                    if (Math.Abs(obj.Bounds.Bottom - p2.PlayerRect.Top) < p2.PlayerRect.Height / 2)
+                        p2.Y = (obj.Bounds.Y + obj.Bounds.Height);
+                }
+            }
         }
+
+        void DoWallCollision(Stone stone)
+        {
+            Circle c1 = new Circle(stone.XPos + (WIDTH_OF_STONES / 2), stone.YPos + (WIDTH_OF_STONES / 2), (WIDTH_OF_STONES / 2));
+            foreach(Wall obj in walls)
+            {
+                if (c1.Intersects(obj.Bounds))
+                {
+                    if (Math.Abs(obj.Bounds.Top - (stone.YPos + WIDTH_OF_STONES)) < WIDTH_OF_STONES)
+                        stone.Direction = new Vector2(stone.Direction.X, -stone.Direction.Y);
+                    if (Math.Abs(obj.Bounds.Bottom - stone.YPos) < WIDTH_OF_STONES)
+                        stone.Direction = new Vector2(stone.Direction.X, -stone.Direction.Y);
+                    if (Math.Abs(obj.Bounds.Left - stone.XPos) < WIDTH_OF_STONES)
+                        stone.Direction = new Vector2(-stone.Direction.X, stone.Direction.Y);
+                    if (Math.Abs(obj.Bounds.Right - (stone.XPos + WIDTH_OF_STONES)) < WIDTH_OF_STONES)
+                        stone.Direction = new Vector2(-stone.Direction.X, stone.Direction.Y);
+                }
+            }
+
+            if (c1.Intersects(p1.PlayerRect))
+            {
+                if (Math.Abs(p1.PlayerRect.Top - (stone.YPos + WIDTH_OF_STONES)) < WIDTH_OF_STONES)
+                    stone.Direction = new Vector2(stone.Direction.X, -stone.Direction.Y);
+                if (Math.Abs(p1.PlayerRect.Bottom - stone.YPos) < WIDTH_OF_STONES)
+                    stone.Direction = new Vector2(stone.Direction.X, -stone.Direction.Y);
+                if (Math.Abs(p1.PlayerRect.Left - stone.YPos) < WIDTH_OF_STONES)
+                    stone.Direction = new Vector2(-stone.Direction.X, stone.Direction.Y);
+                if (Math.Abs(p1.PlayerRect.Right - (stone.XPos + WIDTH_OF_STONES)) < WIDTH_OF_STONES)
+                    stone.Direction = new Vector2(-stone.Direction.X, stone.Direction.Y);
+            }
+            if (c1.Intersects(p2.PlayerRect))
+            {
+                if (Math.Abs(p2.PlayerRect.Top - (stone.YPos + WIDTH_OF_STONES)) < WIDTH_OF_STONES)
+                    stone.Direction = new Vector2(stone.Direction.X, -stone.Direction.Y);
+                if (Math.Abs(p2.PlayerRect.Bottom - stone.YPos) < WIDTH_OF_STONES)
+                    stone.Direction = new Vector2(stone.Direction.X, -stone.Direction.Y);
+                if (Math.Abs(p2.PlayerRect.Left - stone.YPos) < WIDTH_OF_STONES)
+                    stone.Direction = new Vector2(-stone.Direction.X, stone.Direction.Y);
+                if (Math.Abs(p2.PlayerRect.Right - (stone.XPos + WIDTH_OF_STONES)) < WIDTH_OF_STONES)
+                    stone.Direction = new Vector2(-stone.Direction.X, stone.Direction.Y);
+            }
+
+        }
+        #endregion
+
+        #endregion
     }
+}

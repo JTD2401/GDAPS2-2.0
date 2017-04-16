@@ -30,7 +30,7 @@ namespace TieOrDye
             circle = new Circle(x, y, radius);
             Thread.Sleep(30);
             rng = new Random();
-            var dir = rng.Next(1, 5);
+            var dir = rng.Next(1, 9);
             if (dir == 1)
                 direction = new Vector2(2, 0);
             if (dir == 2)
@@ -39,6 +39,14 @@ namespace TieOrDye
                 direction = new Vector2(0, 2);
             if (dir == 4)
                 direction = new Vector2(0, -2);
+            if (dir == 5)
+                direction = new Vector2(2, 2);
+            if (dir == 6)
+                Direction = new Vector2(-2, -2);
+            if (dir == 7)
+                Direction = new Vector2(2, -2);
+            if (dir == 8)
+                Direction = new Vector2(-2, 2);
             stoneTex = t2;
             wallHitLeft = false;
             wallHitRight = false;
