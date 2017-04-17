@@ -501,7 +501,7 @@ namespace TieOrDye
                     MoveStones(stonesList);
                     DoWallCollision();
 
-                    //Creates orbs - Cooldown is only 1 update loop currently
+                    //Creates orbs - Cooldown can be changed 
                     if (blueShot)
                     {
                         if (blueStopper.ElapsedMilliseconds >= BLUE_STOPPER)
