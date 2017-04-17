@@ -147,6 +147,8 @@
     <Content Include="Content\InactiveStartButton.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Item_Inverter.png" />
+    <Content Include="Content\Item_SpeedUp.png" />
     <Content Include="Content\Main Menu Button Pause Menu.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
