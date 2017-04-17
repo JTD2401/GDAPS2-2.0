@@ -25,6 +25,7 @@ namespace TieOrDye
         Texture2D stoneTex;
         Circle circle;
         bool itemSpawn;
+        bool itemSpawn2;
         public Stone(Texture2D t2, int x, int y, int radius) : base(t2, x, y)
         {
             circle = new Circle(x, y, radius);
@@ -87,6 +88,12 @@ namespace TieOrDye
         {
             get { return itemSpawn; }
             set { itemSpawn = value; }
+        }
+
+        public bool ItemSpawn2
+        {
+            get { return itemSpawn2; }
+            set { itemSpawn2 = value; }
         }
 
         public Texture2D StoneTex

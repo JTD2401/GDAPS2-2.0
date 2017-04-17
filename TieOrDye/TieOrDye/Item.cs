@@ -34,9 +34,16 @@ namespace TieOrDye
             type = t;
         }
 
+        public int Type
+        {
+            get { return type; }
+            set { type = value; }
+        }
+
         public Circle ItemCirc
         {
             get { return itemCirc; }
+            set { itemCirc = value; }
         }
 
         public void ItemCheckInfo(Circle orb, Circle stone)
@@ -63,14 +70,21 @@ namespace TieOrDye
                 case 1:
                     for (int x = 0; x < orbList.Count; x++)
                     {
-                        orbList[x].OrbSpeed += 10;
+                        orbList[x].OrbSpeed += 6;
                     }
                     break;
                 case 2:
                     counter = 0;
                     for (int x = 0; x < orbList.Count; x++)
                     {
-                        orbList[x].OrbSpeed -= 10;
+                        if (orbList[x].OrbSpeed > 3)
+                        {
+                            orbList[x].OrbSpeed -= 6;
+                        }
+                        else
+                        {
+                            orbList[x].OrbSpeed -= orbList[x].OrbSpeed * 2;
+                        }
                     }
                     break;
                 case 3:
@@ -93,6 +107,21 @@ namespace TieOrDye
                     break;
             }
 
+        }
+
+        public void changeItemLoc(Stone stone, List<Stone> stonesList)
+        {
+            int num = gen.Next(25);
+            if (stone.ItemSpawn == true)
+            {
+                stone.ItemSpawn = false;
+                stonesList[num].ItemSpawn = true;
+            }
+            else if (stone.ItemSpawn2 == true)
+            {
+                stone.ItemSpawn2 = false;
+                stonesList[num].ItemSpawn2 = true;
+            }
         }
     }
 }
