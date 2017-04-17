@@ -17,9 +17,20 @@ namespace TieOrDye
     {
         //attributes
         Texture2D orbTex;
+        Circle orbCirc;
+
         int orbSpeed;
         int orbWidth;
-        Circle orbCirc;
+
+        int orbX;
+        int orbY;
+
+        bool travelToMaxDistance;
+        int MAX_DISTANCE = 500;
+
+        int initialPlayerXPos;
+        int initialPlayerYPos;
+
         enum orbDir { Up, Down, Left, Right, UpLeft, UpRight, DownLeft, Downright };
         orbDir dir;
 
@@ -27,13 +38,21 @@ namespace TieOrDye
         {
             //Set texture
             orbTex = t2;
+
             //Default orb location if switch statement can't change location
-            int orbX = x;
-            int orbY = y;
+            orbX = x;
+            orbY = y;
+
+            //Initial player position
+            initialPlayerXPos = p.X;
+            initialPlayerYPos = p.Y;
+
             orbWidth = oWidth;
             orbSpeed = oSpeed;
 
             orbCirc = new Circle(x, y, oWidth / 2);
+
+            travelToMaxDistance = false;
 
 
             //Place the orb in different locations depending on direction of player when shot
@@ -83,27 +102,10 @@ namespace TieOrDye
                 default:
                     break;
             }
+
             //Set orb properties
             X = orbX;
             Y = orbY;
-        }
-
-        public Texture2D OrbTex
-        {
-            get { return orbTex; }
-        }
-
-        public int OrbSpeed
-        {
-            get { return orbSpeed; }
-            set { orbSpeed = value; }
-        }
-
-
-
-        public Circle OrbCirc
-        {
-            get { return orbCirc; }
         }
 
 
@@ -111,6 +113,14 @@ namespace TieOrDye
         {
             //Check for collision  and change direction
 
+            //Check for maximum distance traveled
+            double theXValue = Math.Pow(X - initialPlayerXPos, 2);
+            double theYValue = Math.Pow(Y - initialPlayerYPos, 2);
+
+            if (Math.Sqrt(theXValue + theYValue) >= 400)
+            {
+                travelToMaxDistance = true;
+            }
 
             //Update orb position
             switch (dir)
@@ -148,7 +158,35 @@ namespace TieOrDye
 
         public void DrawOrbs(SpriteBatch sb)
         {
-            sb.Draw(orbTex, new Rectangle((int)X, (int)Y, orbWidth, orbWidth), Color.White);
+                sb.Draw(orbTex, new Rectangle((int)X, (int)Y, orbWidth, orbWidth), Color.White);
         }
+
+        public Texture2D OrbTex
+        {
+            get { return orbTex; }
+        }
+
+        public int OrbSpeed
+        {
+            get { return orbSpeed; }
+            set { orbSpeed = value; }
+        }
+
+
+
+        public Circle OrbCirc
+        {
+            get { return orbCirc; }
+        }
+
+        public bool TravelToMaxDistance
+        {
+            get
+            {
+                return travelToMaxDistance;
+            }
+        }
+
+
     }
 }

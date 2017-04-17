@@ -555,6 +555,11 @@ namespace TieOrDye
                     for (int i = 0; i < blueOrbs.Count; i++)
                     {
                         blueOrbs[i].UpdateOrbs();
+
+                        if (blueOrbs[i].TravelToMaxDistance == true)
+                        {
+                            blueOrbs.RemoveAt(i);
+                        }
                     }
                     for (int i = 0; i < orangeOrbs.Count; i++)
                     {
