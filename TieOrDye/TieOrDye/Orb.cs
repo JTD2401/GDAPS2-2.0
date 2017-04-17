@@ -28,6 +28,8 @@ namespace TieOrDye
         bool travelToMaxDistance;
         int MAX_DISTANCE = 500;
 
+        bool orbBounce;
+
         int initialPlayerXPos;
         int initialPlayerYPos;
 
@@ -53,6 +55,7 @@ namespace TieOrDye
             orbCirc = new Circle(x, y, oWidth / 2);
 
             travelToMaxDistance = false;
+            orbBounce = false;
 
 
             //Place the orb in different locations depending on direction of player when shot

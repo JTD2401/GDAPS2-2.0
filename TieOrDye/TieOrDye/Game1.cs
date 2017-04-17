@@ -564,6 +564,11 @@ namespace TieOrDye
                     for (int i = 0; i < orangeOrbs.Count; i++)
                     {
                         orangeOrbs[i].UpdateOrbs();
+
+                        if (orangeOrbs[i].TravelToMaxDistance == true)
+                        {
+                            orangeOrbs.RemoveAt(i);
+                        }
                     }
 
                     //Stuns player when hit by opposite orb
