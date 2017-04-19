@@ -25,7 +25,7 @@ namespace TieOrDye
         const int NUMBER_OF_STONES = 25;
         const int WIDTH_OF_STONES = 30;
         const int ORB_WIDTH = 10;
-        const int ORB_SPEED = 3;
+        const int ORB_SPEED = 3 * 2;
         const int BLUE_STOPPER = 250;
         const int ORANGE_STOPPER = 250;
         const int PLAYER_STUN_DURATION = 2000;
@@ -1185,6 +1185,9 @@ namespace TieOrDye
                 int stoneX = rand.Next(0, GraphicsDevice.Viewport.Width - stoneWidth + 1);
                 //Generate random int for stone y location
                 int stoneY = rand.Next(0, GraphicsDevice.Viewport.Height - stoneWidth + 1);
+
+                Stone s = new Stone(stoneTex, stoneX, stoneY, stoneWidth);
+                Circle c1 = new Circle(s.XPos + (WIDTH_OF_STONES / 2), s.YPos + (WIDTH_OF_STONES / 2), WIDTH_OF_STONES / 2);
                 //Check if a stone is already drawn in that location
                 for (int j = 0; j < stonesList.Count; j++)   //For each stone in list
                 {
@@ -1194,10 +1197,17 @@ namespace TieOrDye
                     }
                     
                 }
+
+                foreach (Wall obj in walls)
+                {
+                    if (obj.Bounds.Contains(stoneX + WIDTH_OF_STONES, stoneY + WIDTH_OF_STONES))
+                        canCreate = false;
+                    if (c1.Intersects(obj.Bounds))
+                        canCreate = false;
+                }
+
                 if (canCreate)//If the stone can be created
                 {
-                    //Create stone object
-                    Stone s = new Stone(stoneTex, stoneX, stoneY, stoneWidth);
                     //Add stone object to stone list
                     stonesList.Add(s);
                 }
@@ -1502,6 +1512,11 @@ namespace TieOrDye
                         stone.Direction = new Vector2(-stone.Direction.X, stone.Direction.Y);
                     if (Math.Abs(obj.Bounds.Right - (stone.XPos + WIDTH_OF_STONES)) < WIDTH_OF_STONES)
                         stone.Direction = new Vector2(-stone.Direction.X, stone.Direction.Y);
+                }
+                if (obj.Bounds.Contains(stone.X, stone.Y))
+                {
+                    stone.X += 5;
+                    stone.Y += 5;
                 }
             }
 

@@ -33,21 +33,21 @@ namespace TieOrDye
             rng = new Random();
             var dir = rng.Next(1, 9);
             if (dir == 1)
-                direction = new Vector2(2, 0);
+                direction = new Vector2(3, 0);
             if (dir == 2)
-                direction = new Vector2(-2, 0);
+                direction = new Vector2(-3, 0);
             if (dir == 3)
-                direction = new Vector2(0, 2);
+                direction = new Vector2(0, 3);
             if (dir == 4)
-                direction = new Vector2(0, -2);
+                direction = new Vector2(0, -3);
             if (dir == 5)
-                direction = new Vector2(2, 2);
+                direction = new Vector2(3, 3);
             if (dir == 6)
-                Direction = new Vector2(-2, -2);
+                Direction = new Vector2(-3, -3);
             if (dir == 7)
-                Direction = new Vector2(2, -2);
+                Direction = new Vector2(3, -3);
             if (dir == 8)
-                Direction = new Vector2(-2, 2);
+                Direction = new Vector2(-3, 3);
             stoneTex = t2;
             wallHitLeft = false;
             wallHitRight = false;
