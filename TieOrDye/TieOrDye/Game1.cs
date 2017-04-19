@@ -43,7 +43,7 @@ namespace TieOrDye
         Stopwatch p2StunWatch;
 
         //Attribute and enum for the game state
-        enum GameStates { Menu, Pause, Options, ControlOptions, InGame, GameOver };
+        enum GameStates { Menu, Pause, Options, ControlOptions, InGame, GameOver, Instructions };
         GameStates currentGameState;
 
         //Random object
@@ -64,7 +64,7 @@ namespace TieOrDye
         GraphicsDeviceManager graphics;
         GameWindow viewport;
         SpriteBatch spriteBatch;
-
+         
         //Reader for the tool
         BinaryReader read;
 
@@ -148,6 +148,9 @@ namespace TieOrDye
         bool check2;
         bool check3;
         bool check4;
+
+        int width;
+        int height;
         #endregion
 
         #region game1
@@ -203,6 +206,8 @@ namespace TieOrDye
             check2 = false;
             check3 = false;
             check4 = false;
+            width = GraphicsDevice.Viewport.Width;
+            height = GraphicsDevice.Viewport.Height;
 
             try
             {
@@ -414,7 +419,6 @@ namespace TieOrDye
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-
             // TODO: Add your update logic here
             //Current mouse state
             currMState = Mouse.GetState();
@@ -476,28 +480,6 @@ namespace TieOrDye
                     time = 61;
                     break;
                 #endregion
-                #region pause
-                case GameStates.Pause:  // options menu state
-
-                    // determines if game state is changed to InGame when player clicks on the Resume rectangle
-                    if (cursorRect.Intersects(new Rectangle(GraphicsDevice.Viewport.Width / 3, 150, GraphicsDevice.Viewport.Width / 3, 150)))
-                        if (currMState.LeftButton == ButtonState.Pressed)
-                            currentGameState = GameStates.InGame;
-                    // determines if game state is changed to Menu when player clicks on the Main Menu rectangle 
-                    if (cursorRect.Intersects(new Rectangle(GraphicsDevice.Viewport.Width / 3, 550, GraphicsDevice.Viewport.Width / 3, 150)))
-                        if (currMState.LeftButton == ButtonState.Pressed)
-                            currentGameState = GameStates.Menu;
-                    if (cursorRect.Intersects(new Rectangle(GraphicsDevice.Viewport.Width / 3, 350, GraphicsDevice.Viewport.Width / 3, 150)))
-                        if (currMState.LeftButton == ButtonState.Pressed)
-                            currentGameState = GameStates.Options;
-                    // determines if game is exited when player clicks on the Exit rectangle
-                    if (cursorRect.Intersects(new Rectangle(GraphicsDevice.Viewport.Width / 3, 750, GraphicsDevice.Viewport.Width / 3, 150)))
-                        if (currMState.LeftButton == ButtonState.Pressed && prevState.LeftButton == ButtonState.Pressed)
-                            this.Exit();
-
-                    prevState = currMState;
-                    break;
-                #endregion
                 #region ingame
                 case GameStates.InGame:  // gameplay state
                     //Uses the animation class to process the input from keyboard as well as updating the rectangle's position according to direction pressed
@@ -509,7 +491,7 @@ namespace TieOrDye
                     // prevents players from passing beyond the border
                     ScreenBorder(p1);
                     ScreenBorder(p2);
-                    MoveStones(stonesList);
+                    //MoveStones(stonesList);
                     DoWallCollision();
 
                     //Creates orbs - Cooldown can be changed 
@@ -527,7 +509,7 @@ namespace TieOrDye
                     {
                         if ((currKbState.IsKeyUp(p1Shoot) && (prevKbState.IsKeyDown(p1Shoot)))) //P1 Shoots
                         {
-                            if(p1.Stunned == false)
+                            if (p1.Stunned == false)
                             {
                                 Orb o1 = new Orb(bOrbTex, 0, 0, p1, player1Animation, ORB_WIDTH, ORB_SPEED);
                                 blueOrbs.Add(o1);
@@ -551,7 +533,7 @@ namespace TieOrDye
                     {
                         if ((currKbState.IsKeyDown(p2Shoot) && (prevKbState.IsKeyDown(p2Shoot) == false))) //P2 Shoots
                         {
-                            if(p2.Stunned == false)
+                            if (p2.Stunned == false)
                             {
                                 Orb o2 = new Orb(oOrbTex, 0, 0, p2, player2Animation, ORB_WIDTH, ORB_SPEED);
                                 orangeOrbs.Add(o2);
@@ -596,7 +578,7 @@ namespace TieOrDye
                     }
                     for (int j = 0; j < orangeOrbs.Count; j++)
                     {
-                        Circle orangeOrbCirc = new Circle((int)orangeOrbs[j].X + (ORB_WIDTH / 2), (int)orangeOrbs[j].Y + (ORB_WIDTH / 2), (ORB_WIDTH / 2));                      
+                        Circle orangeOrbCirc = new Circle((int)orangeOrbs[j].X + (ORB_WIDTH / 2), (int)orangeOrbs[j].Y + (ORB_WIDTH / 2), (ORB_WIDTH / 2));
                         if (orangeOrbCirc.Intersects(p1.PlayerRect)) //orange orb hits blue player
                         {
                             orangeOrbs.Remove(orangeOrbs[j]);
@@ -688,7 +670,7 @@ namespace TieOrDye
                             }
                         }
                     }
-                    if(p2StunWatch.IsRunning)
+                    if (p2StunWatch.IsRunning)
                     {
                         if (p2StunWatch.ElapsedMilliseconds >= PLAYER_STUN_DURATION)
                         {
@@ -710,6 +692,40 @@ namespace TieOrDye
 
                     break;
                 #endregion
+                #region pause
+                case GameStates.Pause:  // options menu state
+
+                    // determines if game state is changed to InGame when player clicks on the Resume rectangle
+                    if (cursorRect.Intersects(new Rectangle(GraphicsDevice.Viewport.Width / 3, 150, GraphicsDevice.Viewport.Width / 3, 150)))
+                        if (currMState.LeftButton == ButtonState.Pressed)
+                            currentGameState = GameStates.InGame;
+                    // determines if game state is changed to Menu when player clicks on the Main Menu rectangle 
+                    if (cursorRect.Intersects(new Rectangle(GraphicsDevice.Viewport.Width / 3, 550, GraphicsDevice.Viewport.Width / 3, 150)))
+                        if (currMState.LeftButton == ButtonState.Pressed)
+                            currentGameState = GameStates.Menu;
+                    if (cursorRect.Intersects(new Rectangle(GraphicsDevice.Viewport.Width / 3, 350, GraphicsDevice.Viewport.Width / 3, 150)))
+                        if (currMState.LeftButton == ButtonState.Pressed)
+                            currentGameState = GameStates.Options;
+                    // determines if game is exited when player clicks on the Exit rectangle
+                    if (cursorRect.Intersects(new Rectangle(GraphicsDevice.Viewport.Width / 3, 750, GraphicsDevice.Viewport.Width / 3, 150)))
+                        if (currMState.LeftButton == ButtonState.Pressed && prevState.LeftButton == ButtonState.Pressed)
+                            this.Exit();
+                    if (cursorRect.Intersects(new Rectangle(GraphicsDevice.Viewport.Width / 3, 950, GraphicsDevice.Viewport.Width / 3, 150)))
+                        if (buttonPress())
+                            currentGameState = GameStates.Instructions;
+                        prevState = currMState;
+                    break;
+                #endregion
+                case GameStates.Instructions:
+                    if(cursorRect.Intersects(new Rectangle((this.width / 4), this.height - 75, 100, 50)))
+                    {
+                        if (buttonPress())
+                        {
+                            currentGameState = GameStates.Pause;
+                        }
+                    }
+                    prevState = currMState;
+                    break;
                 #region options
                 case GameStates.Options:
                     int z = (GraphicsDevice.Viewport.Width / 8);
@@ -757,8 +773,10 @@ namespace TieOrDye
                                 return;
                             string res = resolution[location]; //sets the string to the string of new resolution
                             var tempArr = res.Split('x'); //splits it by the char x
-                            int width = int.Parse(tempArr[0]); //sets width to the first parse
-                            int height = int.Parse(tempArr[1]); //sets height to the second parse
+                            //int width = int.Parse(tempArr[0]); //sets width to the first parse
+                            //int height = int.Parse(tempArr[1]); //sets height to the second parse
+                            this.width = int.Parse(tempArr[0]);
+                            this.height = int.Parse(tempArr[1]);
 
                             if (width > GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width || height > GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height)
                                 return;
@@ -895,6 +913,7 @@ namespace TieOrDye
                 #region ingame
                 case GameStates.InGame:
                     spriteBatch.Draw(Level1, windowsize, Color.White);
+                    spriteBatch.Draw(Level1, new Rectangle(0, 0, this.width, this.height), Color.White);
                     DrawStones(stonesList);
                     player1Animation.drawAnimation(spriteBatch);
                     player2Animation.drawAnimation(spriteBatch);
@@ -951,6 +970,11 @@ namespace TieOrDye
                     {
                         spriteBatch.Draw(exit, new Rectangle(GraphicsDevice.Viewport.Width / 3, 750, GraphicsDevice.Viewport.Width / 3, 150), Color.Violet);  // if mouse is over button, changes color
                     }
+                    spriteBatch.Draw(exit, new Rectangle(GraphicsDevice.Viewport.Width / 3, 950, GraphicsDevice.Viewport.Width / 3, 150), Color.White);
+                    if (cursorRect.Intersects(new Rectangle(GraphicsDevice.Viewport.Width / 3, 950, GraphicsDevice.Viewport.Width / 3, 150)))
+                    {
+                        spriteBatch.Draw(exit, new Rectangle(GraphicsDevice.Viewport.Width / 3, 950, GraphicsDevice.Viewport.Width / 3, 150), Color.Violet);  // if mouse is over button, changes color
+                    }
 
                     // draws player models on either side of screen
                     spriteBatch.Draw(p1Tex, new Rectangle(GraphicsDevice.Viewport.Width / 50, 300, GraphicsDevice.Viewport.Width / 4, GraphicsDevice.Viewport.Height / 2), Color.White);
@@ -963,6 +987,17 @@ namespace TieOrDye
                     spriteBatch.Draw(cursorTex, cursorRect, Color.White);
                     break;
                 #endregion
+                case GameStates.Instructions:
+                    spriteBatch.Draw(gameBoard, new Rectangle(0, 0, this.width, this.height), Color.White);
+                    spriteBatch.Draw(noTexture, new Rectangle((this.width / 4), this.height - 75, 100, 50), Color.Black);
+                    spriteBatch.DrawString(font, "Back", new Vector2((this.width / 4) + 20, this.height - 45), Color.White);
+                    if (cursorRect.Intersects(new Rectangle((this.width / 4), this.height - 75, 100, 50)))
+                    {
+                        spriteBatch.DrawString(font, "Back", new Vector2((this.width / 4) + 20, this.height - 45), Color.Blue);
+                    }
+                    
+                    spriteBatch.Draw(cursorTex, cursorRect, Color.White);
+                    break;
                 #region options
                 case GameStates.Options:
                     Rectangle rectangle;
@@ -1157,6 +1192,7 @@ namespace TieOrDye
                     {
                         canCreate = false; //prevent the stone from being created
                     }
+                    
                 }
                 if (canCreate)//If the stone can be created
                 {

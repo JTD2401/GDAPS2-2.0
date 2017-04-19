@@ -83,7 +83,7 @@ namespace TieOrDye
                         }
                         else
                         {
-                            orbList[x].OrbSpeed -= orbList[x].OrbSpeed * 2;
+                            orbList[x].OrbSpeed -= orbList[x].OrbSpeed * 6;
                         }
                     }
                     break;
@@ -91,16 +91,12 @@ namespace TieOrDye
                     counter++;
                     if(counter % 20 == 0)
                     {
-                        Orb oI1 = new Orb(orbTex, 0, 0, player, anim, 10, 3);
+                        Orb oI1 = new Orb(orbTex, 0, 0, player, anim, 10, 1);
                         orbList.Add(oI1);
-                        Orb oI2 = new Orb(orbTex, 0, 0, player, anim, 10, 3);
+                        Orb oI2 = new Orb(orbTex, 0, 0, player, anim, 10, 1);
                         orbList.Add(oI2);
                     }
                     
-
-                    break;
-                case 4:
-
 
                     break;
                 default:
