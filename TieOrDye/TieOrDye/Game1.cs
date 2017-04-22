@@ -140,15 +140,13 @@ namespace TieOrDye
 
         Item item1;
         Item item2;
-        int num;
-        bool item1Again;
         double effectTime;
         int firstItemCount;
         bool check1;
         bool check2;
         bool check3;
         bool check4;
-
+        bool fromMenu;
         int width;
         int height;
         #endregion
@@ -199,8 +197,8 @@ namespace TieOrDye
 
             item1 = new Item(stoneTex, -1000, -1000, 100, 1);
             item2 = new Item(stoneTex, -1000, -1000, 100, 3);
-            num = 0;
-            effectTime = 8;
+            fromMenu = true;
+            effectTime = 6;
             firstItemCount = 0;
             check1 = false;
             check2 = false;
@@ -431,7 +429,7 @@ namespace TieOrDye
             {
                 #region Menu
                 case GameStates.Menu:  // start menu state
-                    if (cursorRect.Intersects(new Rectangle(190, 150, activeStartButtonTex.Width, activeStartButtonTex.Height)))
+                    if (cursorRect.Intersects(new Rectangle(this.width / 10, (this.height / 8) * 2, activeStartButtonTex.Width, activeStartButtonTex.Height)))
                     {
                         //Make the button active
                         startActive = true;
@@ -463,7 +461,7 @@ namespace TieOrDye
                     else  //When the mouse is no longer hovering over the button
                         startActive = false;//Make the button inactive
 
-                    if (cursorRect.Intersects(new Rectangle(190, 450, 392, 103)))
+                    if (cursorRect.Intersects(new Rectangle(this.width / 10, (this.height / 8) * 3, 392, 103)))
                         if (buttonPress())
                         {
                             Debug.WriteLine("Click");
@@ -472,12 +470,17 @@ namespace TieOrDye
                         }
 
 
-                    if (cursorRect.Intersects(new Rectangle(190, 750, exit.Width, exit.Height)))
+                    if (cursorRect.Intersects(new Rectangle(this.width / 10, (this.height / 8) * 4, 392, 103)))
                         if (buttonPress())
                             this.Exit();
+
+                    if (cursorRect.Intersects(new Rectangle(this.width / 10, (this.height / 8) * 5, 392, 103)))
+                        if (buttonPress())
+                            currentGameState = GameStates.Instructions;
                     //Sets total game time
                     prevState = currMState;
                     time = 61;
+                    fromMenu = true;
                     break;
                 #endregion
                 #region ingame
@@ -491,7 +494,7 @@ namespace TieOrDye
                     // prevents players from passing beyond the border
                     ScreenBorder(p1);
                     ScreenBorder(p2);
-                    //MoveStones(stonesList);
+                    MoveStones(stonesList);
                     DoWallCollision();
 
                     //Creates orbs - Cooldown can be changed 
@@ -694,23 +697,24 @@ namespace TieOrDye
                 #endregion
                 #region pause
                 case GameStates.Pause:  // options menu state
-
+                    fromMenu = false;
                     // determines if game state is changed to InGame when player clicks on the Resume rectangle
-                    if (cursorRect.Intersects(new Rectangle(GraphicsDevice.Viewport.Width / 3, 150, GraphicsDevice.Viewport.Width / 3, 150)))
+                    if (cursorRect.Intersects(new Rectangle(GraphicsDevice.Viewport.Width / 3, this.height / 6, GraphicsDevice.Viewport.Width / 3, 150)))
                         if (currMState.LeftButton == ButtonState.Pressed)
                             currentGameState = GameStates.InGame;
                     // determines if game state is changed to Menu when player clicks on the Main Menu rectangle 
-                    if (cursorRect.Intersects(new Rectangle(GraphicsDevice.Viewport.Width / 3, 550, GraphicsDevice.Viewport.Width / 3, 150)))
+                    if (cursorRect.Intersects(new Rectangle(GraphicsDevice.Viewport.Width / 3, (this.height / 6) * 3, GraphicsDevice.Viewport.Width / 3, 150)))
                         if (currMState.LeftButton == ButtonState.Pressed)
                             currentGameState = GameStates.Menu;
-                    if (cursorRect.Intersects(new Rectangle(GraphicsDevice.Viewport.Width / 3, 350, GraphicsDevice.Viewport.Width / 3, 150)))
+                    if (cursorRect.Intersects(new Rectangle(GraphicsDevice.Viewport.Width / 3, (this.height / 6) * 2, GraphicsDevice.Viewport.Width / 3, 150)))
                         if (currMState.LeftButton == ButtonState.Pressed)
                             currentGameState = GameStates.Options;
                     // determines if game is exited when player clicks on the Exit rectangle
-                    if (cursorRect.Intersects(new Rectangle(GraphicsDevice.Viewport.Width / 3, 750, GraphicsDevice.Viewport.Width / 3, 150)))
+                    if (cursorRect.Intersects(new Rectangle(GraphicsDevice.Viewport.Width / 3, (this.height / 6) * 5, GraphicsDevice.Viewport.Width / 3, 150)))
                         if (currMState.LeftButton == ButtonState.Pressed && prevState.LeftButton == ButtonState.Pressed)
                             this.Exit();
-                    if (cursorRect.Intersects(new Rectangle(GraphicsDevice.Viewport.Width / 3, 950, GraphicsDevice.Viewport.Width / 3, 150)))
+                    // determines if game state is changed to Instructions when player clicks Instructions button
+                    if (cursorRect.Intersects(new Rectangle(GraphicsDevice.Viewport.Width / 3, (this.height / 6) * 4, GraphicsDevice.Viewport.Width / 3, 150)))
                         if (buttonPress())
                             currentGameState = GameStates.Instructions;
                         prevState = currMState;
@@ -719,9 +723,13 @@ namespace TieOrDye
                 case GameStates.Instructions:
                     if(cursorRect.Intersects(new Rectangle((this.width / 4), this.height - 75, 100, 50)))
                     {
-                        if (buttonPress())
+                        if (buttonPress() && fromMenu == false)
                         {
                             currentGameState = GameStates.Pause;
+                        }
+                        else if(buttonPress() && fromMenu == true)
+                        {
+                            currentGameState = GameStates.Menu;
                         }
                     }
                     prevState = currMState;
@@ -894,18 +902,22 @@ namespace TieOrDye
                 case GameStates.Menu:
                     //Draw gameboard
                     spriteBatch.Draw(gameBoard, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);
-                    if (cursorRect.Intersects(new Rectangle(190, 150, 392, 103)))
-                        spriteBatch.Draw(start, new Rectangle(200, 150, 392, 103), Color.Violet);
+                    if (cursorRect.Intersects(new Rectangle(this.width / 10, (this.height / 8) * 2, 392, 103)))
+                        spriteBatch.Draw(start, new Rectangle(this.width / 10 + 10, (this.height / 8) * 2, 392, 103), Color.Violet);
                     else
-                        spriteBatch.Draw(start, new Rectangle(190, 150, 392, 103), Color.White);
-                    if (cursorRect.Intersects(new Rectangle(190, 450, 392, 103)))
-                        spriteBatch.Draw(options, new Rectangle(200, 450, 392, 103), Color.Violet);
+                        spriteBatch.Draw(start, new Rectangle(this.width / 10, (this.height / 8) * 2, 392, 103), Color.White);
+                    if (cursorRect.Intersects(new Rectangle(this.width / 10, (this.height / 8) * 3, 392, 103)))
+                        spriteBatch.Draw(options, new Rectangle(this.width / 10 + 10, (this.height / 8) * 3, 392, 103), Color.Violet);
                     else
-                        spriteBatch.Draw(options, new Rectangle(190, 450, 392, 103), Color.White);
-                    if (cursorRect.Intersects(new Rectangle(190, 750, 392, 103)))
-                        spriteBatch.Draw(exit, new Rectangle(200, 750, 392, 103), Color.Violet);
+                        spriteBatch.Draw(options, new Rectangle(this.width / 10, (this.height / 8) * 3, 392, 103), Color.White);
+                    if (cursorRect.Intersects(new Rectangle(this.width / 10, (this.height / 8) * 4, 392, 103)))
+                        spriteBatch.Draw(exit, new Rectangle(this.width / 10 + 10, (this.height / 8) * 4, 392, 103), Color.Violet);
                     else
-                        spriteBatch.Draw(exit, new Rectangle(190, 750, 392, 103), Color.White);
+                        spriteBatch.Draw(exit, new Rectangle(this.width / 10, (this.height / 8) * 4, 392, 103), Color.White);
+                    if(cursorRect.Intersects(new Rectangle(this.width / 10, (this.height / 8) * 5, 392, 103)))
+                        spriteBatch.Draw(resumeButton, new Rectangle(this.width / 10 + 10, (this.height / 8) * 5, 392, 103), Color.Violet);
+                    else
+                        spriteBatch.Draw(resumeButton, new Rectangle(this.width / 10, (this.height / 8) * 5, 392, 103), Color.White);
                     //Draw cursor
                     spriteBatch.Draw(cursorTex, cursorRect, Color.White);  // draws cursor
                     break;
@@ -944,36 +956,36 @@ namespace TieOrDye
                     spriteBatch.Draw(pauseScreen, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);  // draws pause screen
 
                     // draws resume button and checks if the mouse is over it
-                    spriteBatch.Draw(resumeButton, new Rectangle(GraphicsDevice.Viewport.Width / 3, 150, GraphicsDevice.Viewport.Width / 3, 150), Color.White);
-                    if (cursorRect.Intersects(new Rectangle(GraphicsDevice.Viewport.Width / 3, 150, GraphicsDevice.Viewport.Width / 3, 150)))
+                    spriteBatch.Draw(resumeButton, new Rectangle(GraphicsDevice.Viewport.Width / 3, this.height / 6, GraphicsDevice.Viewport.Width / 3, 150), Color.White);
+                    if (cursorRect.Intersects(new Rectangle(GraphicsDevice.Viewport.Width / 3, this.height / 6, GraphicsDevice.Viewport.Width / 3, 150)))
                     {
-                        spriteBatch.Draw(resumeButton, new Rectangle(GraphicsDevice.Viewport.Width / 3, 150, GraphicsDevice.Viewport.Width / 3, 150), Color.Violet);  // if mouse is over button, changes color
+                        spriteBatch.Draw(resumeButton, new Rectangle(GraphicsDevice.Viewport.Width / 3, this.height / 6, GraphicsDevice.Viewport.Width / 3, 150), Color.Violet);  // if mouse is over button, changes color
                     }
 
                     // draws options button and checks if the mouse is over it
-                    spriteBatch.Draw(options, new Rectangle(GraphicsDevice.Viewport.Width / 3, 350, GraphicsDevice.Viewport.Width / 3, 150), Color.White);
-                    if (cursorRect.Intersects(new Rectangle(GraphicsDevice.Viewport.Width / 3, 350, GraphicsDevice.Viewport.Width / 3, 150)))
+                    spriteBatch.Draw(options, new Rectangle(GraphicsDevice.Viewport.Width / 3, (this.height / 6) * 2, GraphicsDevice.Viewport.Width / 3, 150), Color.White);
+                    if (cursorRect.Intersects(new Rectangle(GraphicsDevice.Viewport.Width / 3, (this.height / 6) * 2, GraphicsDevice.Viewport.Width / 3, 150)))
                     {
-                        spriteBatch.Draw(options, new Rectangle(GraphicsDevice.Viewport.Width / 3, 350, GraphicsDevice.Viewport.Width / 3, 150), Color.Violet);  // if mouse is over button, changes color
+                        spriteBatch.Draw(options, new Rectangle(GraphicsDevice.Viewport.Width / 3, (this.height / 6) * 2, GraphicsDevice.Viewport.Width / 3, 150), Color.Violet);  // if mouse is over button, changes color
                     }
 
                     // draws Main Menu button and checks if the mouse is over it
-                    spriteBatch.Draw(mainMenu, new Rectangle(GraphicsDevice.Viewport.Width / 3, 550, GraphicsDevice.Viewport.Width / 3, 150), Color.White);
-                    if (cursorRect.Intersects(new Rectangle(GraphicsDevice.Viewport.Width / 3, 550, GraphicsDevice.Viewport.Width / 3, 150)))
+                    spriteBatch.Draw(mainMenu, new Rectangle(GraphicsDevice.Viewport.Width / 3, (this.height / 6) * 3, GraphicsDevice.Viewport.Width / 3, 150), Color.White);
+                    if (cursorRect.Intersects(new Rectangle(GraphicsDevice.Viewport.Width / 3, (this.height / 6) * 3, GraphicsDevice.Viewport.Width / 3, 150)))
                     {
-                        spriteBatch.Draw(mainMenu, new Rectangle(GraphicsDevice.Viewport.Width / 3, 550, GraphicsDevice.Viewport.Width / 3, 150), Color.Violet);  // if mouse is over button, changes color
+                        spriteBatch.Draw(mainMenu, new Rectangle(GraphicsDevice.Viewport.Width / 3, (this.height / 6) * 3, GraphicsDevice.Viewport.Width / 3, 150), Color.Violet);  // if mouse is over button, changes color
                     }
 
                     // draws Exit button and checks if the mouse is over it
-                    spriteBatch.Draw(exit, new Rectangle(GraphicsDevice.Viewport.Width / 3, 750, GraphicsDevice.Viewport.Width / 3, 150), Color.White);
-                    if (cursorRect.Intersects(new Rectangle(GraphicsDevice.Viewport.Width / 3, 750, GraphicsDevice.Viewport.Width / 3, 150)))
+                    spriteBatch.Draw(resumeButton, new Rectangle(GraphicsDevice.Viewport.Width / 3, (this.height / 6) * 4, GraphicsDevice.Viewport.Width / 3, 150), Color.White);
+                    if (cursorRect.Intersects(new Rectangle(GraphicsDevice.Viewport.Width / 3, (this.height / 6) * 4, GraphicsDevice.Viewport.Width / 3, 150)))
                     {
-                        spriteBatch.Draw(exit, new Rectangle(GraphicsDevice.Viewport.Width / 3, 750, GraphicsDevice.Viewport.Width / 3, 150), Color.Violet);  // if mouse is over button, changes color
+                        spriteBatch.Draw(resumeButton, new Rectangle(GraphicsDevice.Viewport.Width / 3, (this.height / 6) * 4, GraphicsDevice.Viewport.Width / 3, 150), Color.Violet);  // if mouse is over button, changes color
                     }
-                    spriteBatch.Draw(exit, new Rectangle(GraphicsDevice.Viewport.Width / 3, 950, GraphicsDevice.Viewport.Width / 3, 150), Color.White);
-                    if (cursorRect.Intersects(new Rectangle(GraphicsDevice.Viewport.Width / 3, 950, GraphicsDevice.Viewport.Width / 3, 150)))
+                    spriteBatch.Draw(exit, new Rectangle(GraphicsDevice.Viewport.Width / 3, (this.height / 6) * 5, GraphicsDevice.Viewport.Width / 3, 150), Color.White);
+                    if (cursorRect.Intersects(new Rectangle(GraphicsDevice.Viewport.Width / 3, (this.height / 6) * 5, GraphicsDevice.Viewport.Width / 3, 150)))
                     {
-                        spriteBatch.Draw(exit, new Rectangle(GraphicsDevice.Viewport.Width / 3, 950, GraphicsDevice.Viewport.Width / 3, 150), Color.Violet);  // if mouse is over button, changes color
+                        spriteBatch.Draw(exit, new Rectangle(GraphicsDevice.Viewport.Width / 3, (this.height / 6) * 5, GraphicsDevice.Viewport.Width / 3, 150), Color.Violet);  // if mouse is over button, changes color
                     }
 
                     // draws player models on either side of screen
@@ -1362,36 +1374,42 @@ namespace TieOrDye
         #region CheckItemIntersects
         void checkItemIntersects(Item item, GameTime gt)
         {
+            // checks if item selected is item1
             if (item == item1)
             {
+                // checks if item has been picked up
                 if (item.ItemCirc.Intersects(p1.PlayerRect))
                     check1 = true;
 
                 else if (item.ItemCirc.Intersects(p2.PlayerRect))
                     check2 = true;
-
+                // draws if both checks are false
                 if (check1 == false && check2 == false)
                     item.DrawItem(spriteBatch);
 
+                // goes through if player 1 collected item
                 if (check1 == true && check2 == false)
                 {
+                    // decrements effect time
                     effectTime -= gt.ElapsedGameTime.TotalSeconds;
+                    // as long as effect time is greater than 0, activate ability
                     if (effectTime > 0)
                         item.ItemGet(p1, item.Type, blueOrbs, player1Animation, bOrbTex);
-
+                    // if effect time becomes 0, end ability
                     else if ((int)effectTime == 0)
                     {
+                        // reverts everything back to its default
                         item.ItemGet(p1, 2, blueOrbs, player1Animation, bOrbTex);
                         check1 = false;
                         check2 = false;
                         item.OrbC = new Circle(-100, -100, 10);
                         item.StoneC = new Circle(-50, -50, 10);
                         item.ItemCirc = new Circle(-200, -200, 10);
-                        item1Again = false;
-                        effectTime = 8;
+                        effectTime = 6;
                     }
 
                 }
+                // goes through same as before, but for player two
                 else if (check1 == false && check2 == true)
                 {
                     effectTime -= gt.ElapsedGameTime.TotalSeconds;
@@ -1406,29 +1424,34 @@ namespace TieOrDye
                         item.OrbC = new Circle(-100, -100, 10);
                         item.StoneC = new Circle(-50, -50, 10);
                         item.ItemCirc = new Circle(-200, -200, 10);
-                        item1Again = false;
-                        effectTime = 8;
+                        effectTime = 6;
                     }
                 }
             }
+            // checks if its the second item that was picked up
             else if (item == item2)
             {
+                // checks which player picked up item
                 if (item.ItemCirc.Intersects(p1.PlayerRect))
                     check3 = true;
 
                 else if (item.ItemCirc.Intersects(p2.PlayerRect))
                     check4 = true;
 
+                // draws if nobody picked it up
                 if (check3 == false && check4 == false)
                     item.DrawItem(spriteBatch);
 
+                // once again, checks which player picked up the item and then activates ability
                 if (check3 == true && check2 == check4)
                 {
+                    // activate ability as long as effectTime is greater than 0
                     effectTime -= gt.ElapsedGameTime.TotalSeconds;
                     if (effectTime > 0)
                     {
                         item.ItemGet(p1, item.Type, blueOrbs, player1Animation, bOrbTex);
                     }
+                    // deactivate ability, reset to default
                     else if ((int)effectTime == 0)
                     {
                         item.ItemGet(p1, 2, blueOrbs, player1Animation, bOrbTex);
@@ -1437,11 +1460,11 @@ namespace TieOrDye
                         item.OrbC = new Circle(-100, -100, 10);
                         item.StoneC = new Circle(-50, -50, 10);
                         item.ItemCirc = new Circle(-200, -200, 10);
-                        item1Again = false;
-                        effectTime = 8;
+                        effectTime = 6;
                     }
 
                 }
+                // do same as above but with player 2
                 else if (check3 == false && check4 == true)
                 {
                     effectTime -= gt.ElapsedGameTime.TotalSeconds;
@@ -1457,8 +1480,7 @@ namespace TieOrDye
                         item.OrbC = new Circle(-100, -100, 10);
                         item.StoneC = new Circle(-50, -50, 10);
                         item.ItemCirc = new Circle(-200, -200, 10);
-                        item1Again = false;
-                        effectTime = 8;
+                        effectTime = 6;
                     }
                 }
             }
