@@ -79,6 +79,7 @@ namespace TieOrDye
         int location;
 
         Texture2D pauseScreen, resumeButton, options, mainMenu, exit , start, p1Tex, p2Tex, gameBoard, Level1, blueStone, orangeStone, cursorTex, optionsScreen, noTexture, arrowRight;  // base pause screen
+        Texture2D instructions, instructionsButton, gameover;
 
         //list of walls
         List<Wall> walls;
@@ -128,6 +129,7 @@ namespace TieOrDye
 
         Stopwatch blueStopper;
         Stopwatch orangeStopper;
+        Stopwatch endGameTimer;
 
         Song song;
         int playernumber = 1;
@@ -282,6 +284,9 @@ namespace TieOrDye
             p1StunWatch = new Stopwatch();
             p2StunWatch = new Stopwatch();
 
+            //Stopwatch for end game
+            endGameTimer = new Stopwatch();
+
             //stoneColor = Color.White;
             //this.IsMouseVisible = true;
             ResetMouseOffsets();
@@ -317,6 +322,10 @@ namespace TieOrDye
             pauseScreen = Content.Load<Texture2D>("Pause Screen No Buttons");
             // loads resume button texture
             resumeButton = Content.Load<Texture2D>("Resume Button");
+            //instructions button texture
+            instructionsButton = Content.Load<Texture2D>("InstructionsButton");
+            //instructions screen texture
+            instructions = Content.Load<Texture2D>("InstructionsScreen");
             // loads options button texture
             options = Content.Load<Texture2D>("Options Button");
             // loads Main Menu button texture
@@ -343,6 +352,8 @@ namespace TieOrDye
             optionsScreen = Content.Load<Texture2D>("OptionsScreen");
 
             noTexture = Content.Load<Texture2D>("notexture");
+
+            gameover = Content.Load<Texture2D>("GameOverScreen");
 
             wallTex = Content.Load<Texture2D>("Transparent");
             // TODO: use this.Content to load your game content here
@@ -472,14 +483,15 @@ namespace TieOrDye
 
                     if (cursorRect.Intersects(new Rectangle(this.width / 10, (this.height / 8) * 4, 392, 103)))
                         if (buttonPress())
-                            this.Exit();
+                            currentGameState = GameStates.Instructions;
 
                     if (cursorRect.Intersects(new Rectangle(this.width / 10, (this.height / 8) * 5, 392, 103)))
                         if (buttonPress())
-                            currentGameState = GameStates.Instructions;
+                            this.Exit();
+                    
                     //Sets total game time
                     prevState = currMState;
-                    time = 61;
+                    time = 5;
                     fromMenu = true;
                     break;
                 #endregion
@@ -689,7 +701,10 @@ namespace TieOrDye
 
                     time -= gameTime.ElapsedGameTime.TotalSeconds;
                     if (time <= 0)
+                    {
                         currentGameState = GameStates.GameOver;
+                        endGameTimer.Start();
+                    }
 
                     if (currKbState.IsKeyDown(Keys.P) || currKbState.IsKeyDown(Keys.Escape)) { currentGameState = GameStates.Pause; cameFromMenu = false; }
 
@@ -720,20 +735,14 @@ namespace TieOrDye
                         prevState = currMState;
                     break;
                 #endregion
+                #region instructions
                 case GameStates.Instructions:
-                    if(cursorRect.Intersects(new Rectangle((this.width / 4), this.height - 75, 100, 50)))
+                    if (prevKbState.IsKeyUp(Keys.Escape) && currKbState.IsKeyDown(Keys.Escape))
                     {
-                        if (buttonPress() && fromMenu == false)
-                        {
-                            currentGameState = GameStates.Pause;
-                        }
-                        else if(buttonPress() && fromMenu == true)
-                        {
-                            currentGameState = GameStates.Menu;
-                        }
+                        currentGameState = GameStates.Menu;
                     }
-                    prevState = currMState;
                     break;
+                #endregion
                 #region options
                 case GameStates.Options:
                     int z = (GraphicsDevice.Viewport.Width / 8);
@@ -866,10 +875,18 @@ namespace TieOrDye
                 #endregion
                 #region gameover
                 case GameStates.GameOver:  // end of game state
-                    if (currKbState.IsKeyDown(Keys.Space))
+                    //Add wait period to prevent accidentally leaving the game screen
+                    int endGameDelay = 3000; //Delay period
+
+                    if(endGameTimer.ElapsedMilliseconds >= endGameDelay)
                     {
-                        currentGameState = GameStates.Menu;
+                        if (currKbState.IsKeyDown(Keys.Space))
+                        {
+                            currentGameState = GameStates.Menu;
+                            endGameTimer.Reset();
+                        }
                     }
+                    
                     break;
                     #endregion
             }
@@ -911,13 +928,13 @@ namespace TieOrDye
                     else
                         spriteBatch.Draw(options, new Rectangle(this.width / 10, (this.height / 8) * 3, 392, 103), Color.White);
                     if (cursorRect.Intersects(new Rectangle(this.width / 10, (this.height / 8) * 4, 392, 103)))
-                        spriteBatch.Draw(exit, new Rectangle(this.width / 10 + 10, (this.height / 8) * 4, 392, 103), Color.Violet);
+                        spriteBatch.Draw(instructionsButton, new Rectangle(this.width / 10 + 10, (this.height / 8) * 4, 392, 103), Color.Violet);
                     else
-                        spriteBatch.Draw(exit, new Rectangle(this.width / 10, (this.height / 8) * 4, 392, 103), Color.White);
+                        spriteBatch.Draw(instructionsButton, new Rectangle(this.width / 10, (this.height / 8) * 4, 392, 103), Color.White);
                     if(cursorRect.Intersects(new Rectangle(this.width / 10, (this.height / 8) * 5, 392, 103)))
-                        spriteBatch.Draw(resumeButton, new Rectangle(this.width / 10 + 10, (this.height / 8) * 5, 392, 103), Color.Violet);
+                        spriteBatch.Draw(exit, new Rectangle(this.width / 10 + 10, (this.height / 8) * 5, 392, 103), Color.Violet);
                     else
-                        spriteBatch.Draw(resumeButton, new Rectangle(this.width / 10, (this.height / 8) * 5, 392, 103), Color.White);
+                        spriteBatch.Draw(exit, new Rectangle(this.width / 10, (this.height / 8) * 5, 392, 103), Color.White);
                     //Draw cursor
                     spriteBatch.Draw(cursorTex, cursorRect, Color.White);  // draws cursor
                     break;
@@ -999,17 +1016,14 @@ namespace TieOrDye
                     spriteBatch.Draw(cursorTex, cursorRect, Color.White);
                     break;
                 #endregion
+                #region instructions
                 case GameStates.Instructions:
-                    spriteBatch.Draw(gameBoard, new Rectangle(0, 0, this.width, this.height), Color.White);
-                    spriteBatch.Draw(noTexture, new Rectangle((this.width / 4), this.height - 75, 100, 50), Color.Black);
-                    spriteBatch.DrawString(font, "Back", new Vector2((this.width / 4) + 20, this.height - 45), Color.White);
-                    if (cursorRect.Intersects(new Rectangle((this.width / 4), this.height - 75, 100, 50)))
-                    {
-                        spriteBatch.DrawString(font, "Back", new Vector2((this.width / 4) + 20, this.height - 45), Color.Blue);
-                    }
+                    spriteBatch.Draw(instructions, new Rectangle(0, 0, this.width, this.height), Color.White);
+                    
                     
                     spriteBatch.Draw(cursorTex, cursorRect, Color.White);
                     break;
+                #endregion instructions
                 #region options
                 case GameStates.Options:
                     Rectangle rectangle;
@@ -1112,7 +1126,15 @@ namespace TieOrDye
                 #endregion
                 #region gameover
                 case GameStates.GameOver:
-                    spriteBatch.DrawString(font, "Press Space to go to Menu", new Vector2(500, 400), Color.Black);
+                    spriteBatch.Draw(gameover, new Rectangle(0, 0, this.width, this.height), Color.White);
+                    spriteBatch.DrawString(font, "P1 Score: " + p1Count, new Vector2(500, 400), Color.Aquamarine);
+                    spriteBatch.DrawString(font, "P2 Score: " + p2Count, new Vector2(500, 500), Color.Aquamarine);
+                    if (p1Count > p2Count)
+                        spriteBatch.DrawString(font, "P1 Wins!", new Vector2(500, 600), Color.Aquamarine);
+                    if (p2Count > p1Count)
+                        spriteBatch.DrawString(font, "P2 Wins!", new Vector2(500, 600), Color.Aquamarine);
+                    if (p1Count == p2Count)
+                        spriteBatch.DrawString(font, "Tie game!", new Vector2(500, 600), Color.Aquamarine);
                     break;
                     #endregion
             }
