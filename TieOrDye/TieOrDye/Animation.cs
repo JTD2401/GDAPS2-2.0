@@ -77,6 +77,11 @@ namespace TieOrDye
             previousKState = kState;
             kState = inputKeyboardState;
 
+            //Decrease volume of walking soundeffect
+            SoundEffectInstance temp = inputWalkSound.CreateInstance();
+            temp.Volume = 0.3f;
+            
+
             //Check each key's pressed down or not and change the truth value
             wasd[0] = kState.IsKeyDown(inputUp);
             wasd[1] = kState.IsKeyDown(inputLeft);
@@ -134,7 +139,7 @@ namespace TieOrDye
                         playerPositionRectangle.Y -= (int)playerSpeed;
                         if (ableToPlay)
                         {
-                            inputWalkSound.Play();
+                            temp.Play();
                         }
                         break;
                     case "A":
@@ -142,7 +147,7 @@ namespace TieOrDye
                         playerPositionRectangle.X -= (int)playerSpeed;
                         if (ableToPlay)
                         {
-                            inputWalkSound.Play();
+                            temp.Play();
                         }
                         break;
                     case "S":
@@ -150,7 +155,7 @@ namespace TieOrDye
                         playerPositionRectangle.Y += (int)playerSpeed;
                         if (ableToPlay)
                         {
-                            inputWalkSound.Play();
+                            temp.Play();
                         }
                         break;
                     case "D":
@@ -158,7 +163,7 @@ namespace TieOrDye
                         playerPositionRectangle.X += (int)playerSpeed;
                         if (ableToPlay)
                         {
-                            inputWalkSound.Play();
+                            temp.Play();
                         }
                         break;
                     case "WA":
@@ -167,7 +172,7 @@ namespace TieOrDye
                         playerPositionRectangle.X -= (int)playerSpeed;
                         if (ableToPlay)
                         {
-                            inputWalkSound.Play();
+                            temp.Play();
                         }
                         break;
                     case "WD":
@@ -176,7 +181,7 @@ namespace TieOrDye
                         playerPositionRectangle.X += (int)playerSpeed;
                         if (ableToPlay)
                         {
-                            inputWalkSound.Play();
+                            temp.Play();
                         }
                         break;
                     case "SA":
@@ -185,7 +190,7 @@ namespace TieOrDye
                         playerPositionRectangle.X -= (int)playerSpeed;
                         if (ableToPlay)
                         {
-                            inputWalkSound.Play();
+                            temp.Play();
                         }
                         break;
                     case "SD":
@@ -194,7 +199,7 @@ namespace TieOrDye
                         playerPositionRectangle.X += (int)playerSpeed;
                         if (ableToPlay)
                         {
-                            inputWalkSound.Play();
+                            temp.Play();
                         }
                         break;
                     default:

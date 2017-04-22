@@ -14,12 +14,15 @@ namespace TieOrDye
     {
         // attributes
         Texture2D itemTex;
-        int type;
+
         Circle itemCirc;
-        Random gen = new Random();
         Circle orbC;
         Circle stoneC;
+
         int counter = 0;
+        int type;
+
+        Random gen = new Random();
 
         // parameterized constructor
         public Item(Texture2D tex, int x, int y, int rad, int t) : base(tex, x, y)
@@ -59,7 +62,7 @@ namespace TieOrDye
         {
             if (orbC.Intersects(stoneC))
             {
-                sb.Draw(itemTex, new Rectangle(itemCirc.X, itemCirc.Y, itemCirc.Radius, itemCirc.Radius), Color.Purple);
+                sb.Draw(itemTex, new Rectangle(itemCirc.X, itemCirc.Y, itemCirc.Radius, itemCirc.Radius), Color.White);
             }
         }
 

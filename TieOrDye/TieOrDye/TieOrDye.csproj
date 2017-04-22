@@ -156,8 +156,15 @@
     <Content Include="Content\InstructionsScreen.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Item_Inverter.png" />
-    <Content Include="Content\Item_SpeedUp.png" />
+    <Content Include="Content\Item_Inverter.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Item_SpeedUp.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\laserSoundEffect.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Main Menu Button Pause Menu.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

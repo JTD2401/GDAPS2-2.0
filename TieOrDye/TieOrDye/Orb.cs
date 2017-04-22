@@ -5,8 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-
-
 /*
 TieOrDye Orb Class
 */
@@ -26,7 +24,7 @@ namespace TieOrDye
         int orbY;
 
         bool travelToMaxDistance;
-        int MAX_DISTANCE = 500;
+        int MAX_DISTANCE = 550;
 
         bool orbBounce;
 
@@ -120,7 +118,7 @@ namespace TieOrDye
             double theXValue = Math.Pow(X - initialPlayerXPos, 2);
             double theYValue = Math.Pow(Y - initialPlayerYPos, 2);
 
-            if (Math.Sqrt(theXValue + theYValue) >= 400)
+            if (Math.Sqrt(theXValue + theYValue) >= MAX_DISTANCE)
             {
                 travelToMaxDistance = true;
             }
@@ -185,9 +183,7 @@ namespace TieOrDye
         public bool TravelToMaxDistance
         {
             get
-            {
-                return travelToMaxDistance;
-            }
+            {  return travelToMaxDistance; }
         }
 
 

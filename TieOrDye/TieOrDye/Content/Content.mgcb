@@ -157,3 +157,9 @@
 /processorParam:Quality=Best
 /build:Thump.wav
 
+#begin laserSoundEffect.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:laserSoundEffect.wav
+

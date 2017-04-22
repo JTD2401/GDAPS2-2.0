@@ -123,6 +123,14 @@ namespace TieOrDye
         //Sound effect and sound
         SoundEffect walkSound;
 
+        //Attribute for player shooting sound effect
+        SoundEffect laserSoundEffect;
+        SoundEffectInstance laserSoundEffectInstance;
+
+        //Textures for the game item
+        Texture2D inverterImage;
+        Texture2D speedupImage;
+
         bool startActive;
         bool orangeShot = false;
         bool blueShot = false;
@@ -181,10 +189,12 @@ namespace TieOrDye
             graphics.PreferredBackBufferWidth = GraphicsDevice.DisplayMode.Width;
             graphics.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height;
             Debug.WriteLine(graphics.PreferredBackBufferFormat.ToString());
+
             //Window.IsBorderless = true;
             graphics.ApplyChanges();
             ResetMouseOffsets();
 
+            //Keybinding of both players
             p1Up = Keys.W;
             p1Down = Keys.S;
             p1Left = Keys.A;
@@ -197,8 +207,9 @@ namespace TieOrDye
             p2Right = Keys.Right;
             p2Shoot = Keys.RightShift;
 
-            item1 = new Item(stoneTex, -1000, -1000, 100, 1);
-            item2 = new Item(stoneTex, -1000, -1000, 100, 3);
+            item1 = new Item(inverterImage, -1000, -1000, 100, 1);
+            item2 = new Item(speedupImage, -1000, -1000, 100, 3);
+
             fromMenu = true;
             effectTime = 6;
             firstItemCount = 0;
@@ -402,6 +413,16 @@ namespace TieOrDye
             //Load the sound effect for the player
             walkSound = Content.Load<SoundEffect>("Thump");
 
+            //Sound effect for player shooting
+            laserSoundEffect = Content.Load<SoundEffect>("laserSoundEffect");
+            laserSoundEffectInstance = laserSoundEffect.CreateInstance();
+
+            //Load the images used for the items in game
+            inverterImage = Content.Load<Texture2D>("Item_Inverter");
+            speedupImage = Content.Load<Texture2D>("Item_SpeedUp");
+
+
+
             song = Content.Load<Song>("music");
             MediaPlayer.Play(song);
             MediaPlayer.Volume = volumeLevel;
@@ -491,7 +512,7 @@ namespace TieOrDye
                     
                     //Sets total game time
                     prevState = currMState;
-                    time = 5;
+                    time = 60;
                     fromMenu = true;
                     break;
                 #endregion
@@ -529,6 +550,9 @@ namespace TieOrDye
                                 Orb o1 = new Orb(bOrbTex, 0, 0, p1, player1Animation, ORB_WIDTH, ORB_SPEED);
                                 blueOrbs.Add(o1);
                                 blueShot = true;
+
+                                laserSoundEffectInstance.Play();
+
                                 blueStopper = new Stopwatch();
                                 blueStopper.Start();
                             }
@@ -553,6 +577,9 @@ namespace TieOrDye
                                 Orb o2 = new Orb(oOrbTex, 0, 0, p2, player2Animation, ORB_WIDTH, ORB_SPEED);
                                 orangeOrbs.Add(o2);
                                 orangeShot = true;
+
+                                laserSoundEffectInstance.Play();
+
                                 orangeStopper = new Stopwatch();
                                 orangeStopper.Start();
                             }
@@ -623,12 +650,12 @@ namespace TieOrDye
                                 i--;
                                 if (stonesList[x].ItemSpawn == true)
                                 {
-                                    item1 = new Item(stoneTex, stonesList[x].XPos, stonesList[x].YPos, stonesList[x].Circle.Radius, 1);
+                                    item1 = new Item(speedupImage, stonesList[x].XPos, stonesList[x].YPos, stonesList[x].Circle.Radius, 1);
                                     item1.ItemCheckInfo(c2, c1);
                                 }
                                 if (stonesList[x].ItemSpawn2 == true)
                                 {
-                                    item2 = new Item(stoneTex, stonesList[x].XPos, stonesList[x].YPos, stonesList[x].Circle.Radius, 3);
+                                    item2 = new Item(inverterImage, stonesList[x].XPos, stonesList[x].YPos, stonesList[x].Circle.Radius, 3);
                                     item2.ItemCheckInfo(c2, c1);
                                 }
                             }
@@ -643,12 +670,12 @@ namespace TieOrDye
                                 j--;
                                 if (stonesList[x].ItemSpawn == true)
                                 {
-                                    item1 = new Item(stoneTex, stonesList[x].XPos, stonesList[x].YPos, stonesList[x].Circle.Radius, 1);
+                                    item1 = new Item(speedupImage, stonesList[x].XPos, stonesList[x].YPos, stonesList[x].Circle.Radius, 1);
                                     item1.ItemCheckInfo(c3, c1);
                                 }
                                 if (stonesList[x].ItemSpawn2 == true)
                                 {
-                                    item2 = new Item(stoneTex, stonesList[x].XPos, stonesList[x].YPos, stonesList[x].Circle.Radius, 3);
+                                    item2 = new Item(inverterImage, stonesList[x].XPos, stonesList[x].YPos, stonesList[x].Circle.Radius, 3);
                                     item2.ItemCheckInfo(c3, c1);
                                 }
                             }
@@ -944,6 +971,7 @@ namespace TieOrDye
                     spriteBatch.Draw(Level1, windowsize, Color.White);
                     spriteBatch.Draw(Level1, new Rectangle(0, 0, this.width, this.height), Color.White);
                     DrawStones(stonesList);
+
                     player1Animation.drawAnimation(spriteBatch);
                     player2Animation.drawAnimation(spriteBatch);
 
