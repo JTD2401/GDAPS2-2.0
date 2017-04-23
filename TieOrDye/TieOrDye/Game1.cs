@@ -1022,10 +1022,10 @@ namespace TieOrDye
                     }
 
                     // draws Exit button and checks if the mouse is over it
-                    spriteBatch.Draw(resumeButton, new Rectangle(GraphicsDevice.Viewport.Width / 3, (this.height / 6) * 4, GraphicsDevice.Viewport.Width / 3, 150), Color.White);
+                    spriteBatch.Draw(instructionsButton, new Rectangle(GraphicsDevice.Viewport.Width / 3, (this.height / 6) * 4, GraphicsDevice.Viewport.Width / 3, 150), Color.White);
                     if (cursorRect.Intersects(new Rectangle(GraphicsDevice.Viewport.Width / 3, (this.height / 6) * 4, GraphicsDevice.Viewport.Width / 3, 150)))
                     {
-                        spriteBatch.Draw(resumeButton, new Rectangle(GraphicsDevice.Viewport.Width / 3, (this.height / 6) * 4, GraphicsDevice.Viewport.Width / 3, 150), Color.Violet);  // if mouse is over button, changes color
+                        spriteBatch.Draw(instructionsButton, new Rectangle(GraphicsDevice.Viewport.Width / 3, (this.height / 6) * 4, GraphicsDevice.Viewport.Width / 3, 150), Color.Violet);  // if mouse is over button, changes color
                     }
                     spriteBatch.Draw(exit, new Rectangle(GraphicsDevice.Viewport.Width / 3, (this.height / 6) * 5, GraphicsDevice.Viewport.Width / 3, 150), Color.White);
                     if (cursorRect.Intersects(new Rectangle(GraphicsDevice.Viewport.Width / 3, (this.height / 6) * 5, GraphicsDevice.Viewport.Width / 3, 150)))
