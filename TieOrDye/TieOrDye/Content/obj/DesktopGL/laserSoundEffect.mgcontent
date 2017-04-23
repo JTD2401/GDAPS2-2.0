@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PipelineBuildEvent xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <SourceFile>C:/Users/zheng/Desktop/New folder (5)/TieOrDye/TieOrDye/Content/laserSoundEffect.wav</SourceFile>
+  <SourceTime>2017-04-22T11:36:28.6288953-04:00</SourceTime>
+  <DestFile>C:/Users/zheng/Desktop/New folder (5)/TieOrDye/TieOrDye/Content/bin/DesktopGL/laserSoundEffect.xnb</DestFile>
+  <DestTime>2017-04-22T11:41:11.1101675-04:00</DestTime>
+  <Importer>WavImporter</Importer>
+  <ImporterTime>2016-03-30T02:36:08-04:00</ImporterTime>
+  <Processor>SoundEffectProcessor</Processor>
+  <ProcessorTime>2016-03-30T02:36:08-04:00</ProcessorTime>
+  <Parameters>
+    <Key>Quality</Key>
+    <Value>Best</Value>
+  </Parameters>
+  <Dependencies />
+  <BuildAsset />
+  <BuildOutput />
+</PipelineBuildEvent>
