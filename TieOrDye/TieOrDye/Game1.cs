@@ -22,7 +22,7 @@ namespace TieOrDye
 
         #region attributes
         //Constants 
-        const int NUMBER_OF_STONES = 25;
+        const int NUMBER_OF_STONES = 40;
         const int WIDTH_OF_STONES = 30;
         const int ORB_WIDTH = 10;
         const int ORB_SPEED = 3 * 2;
@@ -644,19 +644,23 @@ namespace TieOrDye
 
                             Circle c2 = new Circle((int)blueOrbs[i].X + (ORB_WIDTH / 2), (int)blueOrbs[i].Y + (ORB_WIDTH / 2), (ORB_WIDTH / 2)); //Circle object for orb
                             if (c1.Intersects(c2))
-                            {
+                            { 
                                 stonesList[x].StoneTex = blueStone;
                                 blueOrbs.Remove(blueOrbs[i]);
                                 i--;
-                                if (stonesList[x].ItemSpawn == true)
+                                if (stonesList[x].RapidFire == true)
                                 {
+                                    stonesList[x].RapidFire = false;
                                     item1 = new Item(speedupImage, stonesList[x].XPos, stonesList[x].YPos, stonesList[x].Circle.Radius, 1);
                                     item1.ItemCheckInfo(c2, c1);
+                                    item1.changeItemLoc(stonesList, 1);
                                 }
-                                if (stonesList[x].ItemSpawn2 == true)
+                                if (stonesList[x].Inverter == true)
                                 {
+                                    stonesList[x].Inverter = false;
                                     item2 = new Item(inverterImage, stonesList[x].XPos, stonesList[x].YPos, stonesList[x].Circle.Radius, 3);
                                     item2.ItemCheckInfo(c2, c1);
+                                    item2.changeItemLoc(stonesList, 2);
                                 }
                             }
                         }
@@ -668,15 +672,19 @@ namespace TieOrDye
                                 stonesList[x].StoneTex = orangeStone;
                                 orangeOrbs.Remove(orangeOrbs[j]);
                                 j--;
-                                if (stonesList[x].ItemSpawn == true)
+                                if (stonesList[x].RapidFire == true)
                                 {
+                                    stonesList[x].RapidFire = false;
                                     item1 = new Item(speedupImage, stonesList[x].XPos, stonesList[x].YPos, stonesList[x].Circle.Radius, 1);
                                     item1.ItemCheckInfo(c3, c1);
+                                    item1.changeItemLoc(stonesList, 1);
                                 }
-                                if (stonesList[x].ItemSpawn2 == true)
+                                if (stonesList[x].Inverter == true)
                                 {
+                                    stonesList[x].Inverter = false;
                                     item2 = new Item(inverterImage, stonesList[x].XPos, stonesList[x].YPos, stonesList[x].Circle.Radius, 3);
                                     item2.ItemCheckInfo(c3, c1);
+                                    item2.changeItemLoc(stonesList, 2);
                                 }
                             }
                         }
@@ -946,22 +954,14 @@ namespace TieOrDye
                 case GameStates.Menu:
                     //Draw gameboard
                     spriteBatch.Draw(gameBoard, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);
-                    if (cursorRect.Intersects(new Rectangle(this.width / 10, (this.height / 8) * 2, 392, 103)))
-                        spriteBatch.Draw(start, new Rectangle(this.width / 10 + 10, (this.height / 8) * 2, 392, 103), Color.Violet);
-                    else
-                        spriteBatch.Draw(start, new Rectangle(this.width / 10, (this.height / 8) * 2, 392, 103), Color.White);
-                    if (cursorRect.Intersects(new Rectangle(this.width / 10, (this.height / 8) * 3, 392, 103)))
-                        spriteBatch.Draw(options, new Rectangle(this.width / 10 + 10, (this.height / 8) * 3, 392, 103), Color.Violet);
-                    else
-                        spriteBatch.Draw(options, new Rectangle(this.width / 10, (this.height / 8) * 3, 392, 103), Color.White);
-                    if (cursorRect.Intersects(new Rectangle(this.width / 10, (this.height / 8) * 4, 392, 103)))
-                        spriteBatch.Draw(instructionsButton, new Rectangle(this.width / 10 + 10, (this.height / 8) * 4, 392, 103), Color.Violet);
-                    else
-                        spriteBatch.Draw(instructionsButton, new Rectangle(this.width / 10, (this.height / 8) * 4, 392, 103), Color.White);
-                    if(cursorRect.Intersects(new Rectangle(this.width / 10, (this.height / 8) * 5, 392, 103)))
-                        spriteBatch.Draw(exit, new Rectangle(this.width / 10 + 10, (this.height / 8) * 5, 392, 103), Color.Violet);
-                    else
-                        spriteBatch.Draw(exit, new Rectangle(this.width / 10, (this.height / 8) * 5, 392, 103), Color.White);
+
+                    makeBox(new Rectangle(this.width / 10, (this.height / 8) * 2, 392, 103), "", start, Color.White, true); //start button
+
+                    makeBox(new Rectangle(this.width / 10, (this.height / 8) * 3, 392, 103), "", options, Color.White, true); // options button
+
+                    makeBox(new Rectangle(this.width / 10, (this.height / 8) * 4, 392, 103), "", instructionsButton, Color.White, true); //instructions button
+
+                    makeBox(new Rectangle(this.width / 10, (this.height / 8) * 5, 392, 103), "", exit, Color.White, true); //exit button
                     //Draw cursor
                     spriteBatch.Draw(cursorTex, cursorRect, Color.White);  // draws cursor
                     break;
@@ -1180,7 +1180,6 @@ namespace TieOrDye
         {
             for (int i = 0; i < stonesList.Count; i++)
             {
-
                 StoneChange(stonesList[i]);
 
                 DoWallCollision(stonesList[i]);
@@ -1197,7 +1196,7 @@ namespace TieOrDye
             Circle c1 = new Circle(stone.XPos + (WIDTH_OF_STONES / 2), stone.YPos + (WIDTH_OF_STONES / 2), (WIDTH_OF_STONES / 2));
             foreach(Stone obj in stonesList)
             {
-                Circle c2 = new Circle((int)obj.XPos + (WIDTH_OF_STONES / 2), (int)obj.YPos + (WIDTH_OF_STONES / 2), (WIDTH_OF_STONES / 2));
+                Circle c2 = new Circle(obj.XPos + (WIDTH_OF_STONES / 2), obj.YPos + (WIDTH_OF_STONES / 2), (WIDTH_OF_STONES / 2));
 
                 if (stone.Equals(obj))
                     return;
@@ -1206,7 +1205,10 @@ namespace TieOrDye
                     stone.Direction = new Vector2(-stone.Direction.X, -stone.Direction.Y);
                     obj.Direction = new Vector2(-obj.Direction.X, -obj.Direction.Y);
                 }
+                if(c1.ContainsPoint(new Point(c2.X, c2.Y)))
+                {
                     
+                }
             }
         }
         #endregion
@@ -1289,17 +1291,20 @@ namespace TieOrDye
         {
             for (int i = 0; i < sl.Count; i++)  //For each stone in the stone list
             {
-                spriteBatch.Draw(stonesList[i].StoneTex, new Rectangle(sl[i].XPos, sl[i].YPos, WIDTH_OF_STONES, WIDTH_OF_STONES), Color.White); //draw it
+                var num = rand.Next(0, stonesList.Count);
+                if (sl[i].Inverter)
+                    spriteBatch.Draw(inverterImage, new Rectangle(sl[i].XPos, sl[i].YPos, WIDTH_OF_STONES, WIDTH_OF_STONES), Color.White); //draw it
+                else if (sl[i].RapidFire)
+                    spriteBatch.Draw(speedupImage, new Rectangle(sl[i].XPos, sl[i].YPos, WIDTH_OF_STONES, WIDTH_OF_STONES), Color.Yellow); //draw it
+                else
+                    spriteBatch.Draw(stonesList[i].StoneTex, new Rectangle(sl[i].XPos, sl[i].YPos, WIDTH_OF_STONES, WIDTH_OF_STONES), Color.White); //draw it
                 if (firstItemCount == 0)
                 {
-                    stonesList[15].ItemSpawn = true;
-                    stonesList[20].ItemSpawn2 = true;
+                    
+                    stonesList[num].RapidFire = true;
+                    num = rand.Next(0, stonesList.Count);
+                    stonesList[num].Inverter = true;
                     firstItemCount++;
-                }
-                if ((int)effectTime == 0)
-                {
-                    item1.changeItemLoc(stonesList[i], stonesList);
-                    item2.changeItemLoc(stonesList[i], stonesList);
                 }
             }
 
@@ -1347,11 +1352,11 @@ namespace TieOrDye
             if (makearrow) //makes arrows
             {
                 if (cursorRect.Intersects(new Rectangle(rect.X + rect.Width - 80, rect.Y, 80, rect.Height))) //changes color if the mouse is in the box
-                    spriteBatch.Draw(arrowRight, null, new Rectangle(rect.Width + rect.X - 80, rect.Y, 80, rect.Height), null, null, 0, null, Color.Blue, SpriteEffects.None, 0);
+                    spriteBatch.Draw(arrowRight, null, new Rectangle(rect.Width + rect.X - 80, rect.Y, 80, rect.Height), null, null, 0, null, Color.White, SpriteEffects.None, 0);
                 else
                     spriteBatch.Draw(arrowRight, null, new Rectangle(rect.X + rect.Width - 80, rect.Y, 80, rect.Height), null, null, 0, null, color, SpriteEffects.None, 0);
                 if (cursorRect.Intersects(new Rectangle(rect.X, rect.Y, 80, rect.Height)))
-                    spriteBatch.Draw(arrowRight, null, new Rectangle(rect.X, rect.Y, 80, rect.Height), null, null, 0, null, Color.Blue, SpriteEffects.FlipHorizontally, 0);
+                    spriteBatch.Draw(arrowRight, null, new Rectangle(rect.X, rect.Y, 80, rect.Height), null, null, 0, null, Color.White, SpriteEffects.FlipHorizontally, 0);
                 else
                     spriteBatch.Draw(arrowRight, null, new Rectangle(rect.X, rect.Y, 80, rect.Height), null, null, 0, null, color, SpriteEffects.FlipHorizontally, 0);
             }
@@ -1373,6 +1378,20 @@ namespace TieOrDye
                 else
                     spriteBatch.DrawString(font, text, bounds, color, 0, origin, 1, SpriteEffects.None, 0);
             }
+
+        }
+        public void makeBox(Rectangle rect, string text, Texture2D texture, Color color, bool menu) //makes a box
+        {
+            Vector2 size = font.MeasureString(text);
+            Vector2 bounds = Center(rect); //used to center the text in the box
+            Vector2 origin = size * 0.5f;
+
+            
+
+            if (cursorRect.Intersects(rect)) //changes color
+                spriteBatch.Draw(texture, new Rectangle(rect.X + 10, rect.Y, rect.Width, rect.Height), Color.Violet);
+            else
+                spriteBatch.Draw(texture, rect, color);
 
         }
         #endregion
@@ -1584,11 +1603,6 @@ namespace TieOrDye
                         stone.Direction = new Vector2(-stone.Direction.X, stone.Direction.Y);
                     if (Math.Abs(obj.Bounds.Right - (stone.XPos + WIDTH_OF_STONES)) < WIDTH_OF_STONES)
                         stone.Direction = new Vector2(-stone.Direction.X, stone.Direction.Y);
-                }
-                if (obj.Bounds.Contains(stone.X, stone.Y))
-                {
-                    stone.X += 5;
-                    stone.Y += 5;
                 }
             }
 

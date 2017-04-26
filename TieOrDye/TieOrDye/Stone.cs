@@ -24,8 +24,9 @@ namespace TieOrDye
         Vector2 direction;
         Texture2D stoneTex;
         Circle circle;
-        bool itemSpawn;
-        bool itemSpawn2;
+        bool rapidFire;
+        bool inverter;
+
         public Stone(Texture2D t2, int x, int y, int radius) : base(t2, x, y)
         {
             circle = new Circle(x, y, radius);
@@ -84,16 +85,16 @@ namespace TieOrDye
             get { return circle; }
         }
 
-        public bool ItemSpawn
+        public bool RapidFire
         {
-            get { return itemSpawn; }
-            set { itemSpawn = value; }
+            get { return rapidFire; }
+            set { rapidFire = value; }
         }
 
-        public bool ItemSpawn2
+        public bool Inverter
         {
-            get { return itemSpawn2; }
-            set { itemSpawn2 = value; }
+            get { return inverter; }
+            set { inverter = value; }
         }
 
         public Texture2D StoneTex

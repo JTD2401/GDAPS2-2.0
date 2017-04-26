@@ -63,6 +63,7 @@ namespace TieOrDye
             if (orbC.Intersects(stoneC))
             {
                 sb.Draw(itemTex, new Rectangle(itemCirc.X, itemCirc.Y, itemCirc.Radius, itemCirc.Radius), Color.White);
+                
             }
         }
 
@@ -104,19 +105,24 @@ namespace TieOrDye
         }
 
         // randomly changes which stone item is in when called
-        public void changeItemLoc(Stone stone, List<Stone> stonesList)
+        public void changeItemLoc(List<Stone> stonesList, int count)
         {
-            int num = gen.Next(25);
-            if (stone.ItemSpawn == true)
+            int num = gen.Next(0, stonesList.Count);
+            if (count == 1)
             {
-                stone.ItemSpawn = false;
-                stonesList[num].ItemSpawn = true;
+                if (stonesList[num].Inverter == true)
+                    changeItemLoc(stonesList, count);
+                else
+                    stonesList[num].RapidFire = true;
             }
-            else if (stone.ItemSpawn2 == true)
+            if (count == 2)
             {
-                stone.ItemSpawn2 = false;
-                stonesList[num].ItemSpawn2 = true;
+                if (stonesList[num].RapidFire == true)
+                    changeItemLoc(stonesList, count);
+                else
+                    stonesList[num].Inverter = true;
             }
+           
         }
     }
 }
