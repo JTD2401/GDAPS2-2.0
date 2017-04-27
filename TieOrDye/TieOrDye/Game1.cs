@@ -97,6 +97,9 @@ namespace TieOrDye
         List<Stone> stonesList; 
         Texture2D stoneTex;
 
+        //list for a grid
+        List<Rectangle> grid;
+
         //List that will contain different direction sprite for players
         List<Texture2D> player1Sprites;
         List<Texture2D> player2Sprites;
@@ -159,6 +162,8 @@ namespace TieOrDye
         bool fromMenu;
         int width;
         int height;
+        int gridX;
+        int gridY;
         #endregion
 
         #region game1
@@ -189,6 +194,18 @@ namespace TieOrDye
             graphics.PreferredBackBufferWidth = GraphicsDevice.DisplayMode.Width;
             graphics.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height;
             Debug.WriteLine(graphics.PreferredBackBufferFormat.ToString());
+
+            grid = new List<Rectangle>();
+            gridX = graphics.PreferredBackBufferWidth / 10;
+            gridY = graphics.PreferredBackBufferHeight / 10;
+            for (int j = 0; j < graphics.PreferredBackBufferHeight; j += gridY)
+            {
+                for (int i = 0; i < graphics.PreferredBackBufferWidth; i += gridX)
+                {
+                    grid.Add(new Rectangle(i, j, gridX, gridY));
+                }
+
+            }
 
             //Window.IsBorderless = true;
             graphics.ApplyChanges();
@@ -279,17 +296,15 @@ namespace TieOrDye
             //Walls 
             walls = new List<Wall>();
 
-            walls.Add(new Wall(wallTex, 329, 185, 151, 200));
-            walls.Add(new Wall(wallTex, 1446, 193, 151, 200));
-            walls.Add(new Wall(wallTex, 337, 734, 151, 200));
-            walls.Add(new Wall(wallTex, 1446, 730, 151, 200));
-            walls.Add(new Wall(wallTex, 782, 508, 360, 153));
-            walls.Add(new Wall(wallTex, 813, 492, 300, 17));
-            walls.Add(new Wall(wallTex, 812, 660, 300, 17));
-            walls.Add(new Wall(wallTex, 0, 0, 1920, 84));
-            walls.Add(new Wall(wallTex, 0, 0, 150, 1080));
-            walls.Add(new Wall(wallTex, 1776, 5, 150, 1080));
-            walls.Add(new Wall(wallTex, 10, 1002, 1920, 85));
+            walls.Add(new Wall(wallTex, grid[22].X, grid[22].Y, gridX, gridY * 2));
+            walls.Add(new Wall(wallTex, grid[27].X, grid[27].Y, gridX, gridY * 2));
+            walls.Add(new Wall(wallTex, grid[62].X, grid[62].Y, gridX, gridY * 2));
+            walls.Add(new Wall(wallTex, grid[67].X, grid[67].Y, gridX, gridY * 2));
+            walls.Add(new Wall(wallTex, grid[44].X, grid[44].Y, gridX * 2, gridY * 2));
+            walls.Add(new Wall(wallTex, grid[0].X, grid[0].Y, gridX * 10, gridY)); 
+            walls.Add(new Wall(wallTex, grid[0].X, grid[0].Y, gridX, gridY * 10));
+            walls.Add(new Wall(wallTex, grid[9].X, grid[9].Y, gridX, gridY * 10));
+            walls.Add(new Wall(wallTex, grid[90].X, grid[90].Y, gridX * 10, gridY));
 
             //Stunwatches
             p1StunWatch = new Stopwatch();
@@ -781,21 +796,26 @@ namespace TieOrDye
                 #region options
                 case GameStates.Options:
                     int z = (GraphicsDevice.Viewport.Width / 8);
-                    if (cursorRect.Intersects(new Rectangle((z + z + 10 + GraphicsDevice.Viewport.Width / 6) - 80, 175, 80, 100)))
+
+                    int width4 = (int)(gridX * 1.5);
+                    int height2 = (int)(gridY * .9);
+                    int width3 = (int)(gridX * .9);
+
+                    if (cursorRect.Intersects(new Rectangle(grid[23].X + width4 - 80, grid[23].Y, 80, height2)))
                         if (buttonPress()) //resolution right
                         {
                             if (location == 9)
                                 return;
                             location += 1;
                         }
-                    if(cursorRect.Intersects(new Rectangle((z + z + 10), 175, 80, 100)))
+                    if(cursorRect.Intersects(new Rectangle(grid[23].X, grid[23].Y, 80, height2)))
                         if(buttonPress()) //resolution left
                         {
                             if (location == 0)
                                 return;
                             location -= 1;
                         }
-                    if(cursorRect.Intersects(new Rectangle((z + z + 10 + GraphicsDevice.Viewport.Width / 6) - 80, 295, 80, 100)))
+                    if(cursorRect.Intersects(new Rectangle(grid[33].X + width4 - 80, grid[33].Y, 80, height2)))
                         if(buttonPress()) //volume right
                         {
                             if(dblVolumeLevel > .9)
@@ -803,7 +823,7 @@ namespace TieOrDye
                             dblVolumeLevel += .1;
                             volumeLevel = (float)dblVolumeLevel;
                         }
-                    if(cursorRect.Intersects(new Rectangle((z + z + 10), 295, 80, 100)))
+                    if(cursorRect.Intersects(new Rectangle(grid[33].X, grid[33].Y, 80, height2)))
                         if(buttonPress()) //volume left
                         {
                             dblVolumeLevel -= .1;
@@ -815,13 +835,15 @@ namespace TieOrDye
                                 return;
                             }
                         }
-                    if (cursorRect.Intersects(new Rectangle(z, 415, z, 100)))
+                    if (cursorRect.Intersects(new Rectangle(grid[41].X, grid[41].Y, width4, height2)))
                         if (buttonPress()) //controls button
                             currentGameState = GameStates.ControlOptions;
-                    if (cursorRect.Intersects(new Rectangle(z, 535, z, 100)))
+                    if (cursorRect.Intersects(new Rectangle(grid[51].X, grid[51].Y, width3, height2)))
                         if (buttonPress()) //the apply button
                         {
                             if (resolution[location] == graphics.PreferredBackBufferWidth.ToString() + "x" + graphics.PreferredBackBufferHeight.ToString())
+                                return;
+                            if (time < 60)
                                 return;
                             string res = resolution[location]; //sets the string to the string of new resolution
                             var tempArr = res.Split('x'); //splits it by the char x
@@ -836,9 +858,10 @@ namespace TieOrDye
                             graphics.PreferredBackBufferWidth = width; //sets width and height accordingly
                             graphics.PreferredBackBufferHeight = height;
                             graphics.ApplyChanges(); //applys the change
+                            ResetGrid();
                             ResetMouseOffsets();
                         }
-                    if (cursorRect.Intersects(new Rectangle(z + z + 10, 535, z, 100))) //back button
+                    if (cursorRect.Intersects(new Rectangle(grid[52].X, grid[52].Y, width3, height2))) //back button
                         if (buttonPress())
                             if (cameFromMenu)
                                 currentGameState = GameStates.Menu;
@@ -1058,28 +1081,35 @@ namespace TieOrDye
                     int x = (GraphicsDevice.Viewport.Width / 8); //I use this a lot so it makes the code shorter
                     spriteBatch.Draw(optionsScreen, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White); //draws the background screen
 
-                    rectangle = new Rectangle(x, 50, x, 100); //options box
+                    int width2 = (int)(gridX * 1.5);
+                    int height2 = (int)(gridY * .9);
+                    int width3 = (int)(gridX * .9);
+
+                    rectangle = new Rectangle(grid[11].X, grid[11].Y, width2, height2); //options box
                     makeBox(rectangle, "Options", noTexture, Color.White, false, false);
 
-                    rectangle = new Rectangle(x, 175, x, 100); //resolution box
-                    makeBox(rectangle, "Resolution", noTexture, Color.White, false, false);
+                    rectangle = new Rectangle(grid[21].X, grid[21].Y, width2, height2); //resolution box
+                    if(time < 60)
+                        makeBox(rectangle, "Not While In Game", noTexture, Color.White, false, false);
+                    else
+                        makeBox(rectangle, "Resolution", noTexture, Color.White, false, false);
 
-                    rectangle = new Rectangle(x + x + 10, 175, GraphicsDevice.Viewport.Width / 6, 100); //current resolution box
+                    rectangle = new Rectangle(grid[23].X, grid[23].Y, width2, height2); //current resolution box
                     makeBox(rectangle, resolution[location], noTexture, Color.White, true, false);
 
-                    rectangle = new Rectangle(x, 295, x, 100); //Volume Box
+                    rectangle = new Rectangle(grid[31].X, grid[31].Y, width2, height2); //Volume Box
                     makeBox(rectangle, "Volume", noTexture, Color.White, false, false);
 
-                    rectangle = new Rectangle(x + x + 10, 295, GraphicsDevice.Viewport.Width / 6, 100); //change Volume Box
+                    rectangle = new Rectangle(grid[33].X, grid[33].Y, width2, height2); //change Volume Box
                     makeBox(rectangle, volumeLevel.ToString(), noTexture, Color.White, true, false);
 
-                    rectangle = new Rectangle(x, 415, x, 100); //Controls Box
+                    rectangle = new Rectangle(grid[41].X, grid[41].Y, width2, height2); //Controls Box
                     makeBox(rectangle, "Controls", noTexture, Color.White, false, false);
 
-                    rectangle = new Rectangle(x, 535, x, 100); //Apply Box
+                    rectangle = new Rectangle(grid[51].X, grid[51].Y, width3 , height2); //Apply Box
                     makeBox(rectangle, "Apply", noTexture, Color.White, false, false);
 
-                    rectangle = new Rectangle(x + x + 10, 535, x, 100); //Back Box
+                    rectangle = new Rectangle(grid[52].X, grid[52].Y, width3, height2); //Back Box
                     makeBox(rectangle, "Back", noTexture, Color.White, false, false);
 
                     spriteBatch.Draw(cursorTex, cursorRect, Color.White);
@@ -1295,7 +1325,7 @@ namespace TieOrDye
                 if (sl[i].Inverter)
                     spriteBatch.Draw(inverterImage, new Rectangle(sl[i].XPos, sl[i].YPos, WIDTH_OF_STONES, WIDTH_OF_STONES), Color.White); //draw it
                 else if (sl[i].RapidFire)
-                    spriteBatch.Draw(speedupImage, new Rectangle(sl[i].XPos, sl[i].YPos, WIDTH_OF_STONES, WIDTH_OF_STONES), Color.Yellow); //draw it
+                    spriteBatch.Draw(speedupImage, new Rectangle(sl[i].XPos, sl[i].YPos, WIDTH_OF_STONES, WIDTH_OF_STONES), Color.White); //draw it
                 else
                     spriteBatch.Draw(stonesList[i].StoneTex, new Rectangle(sl[i].XPos, sl[i].YPos, WIDTH_OF_STONES, WIDTH_OF_STONES), Color.White); //draw it
                 if (firstItemCount == 0)
@@ -1352,11 +1382,11 @@ namespace TieOrDye
             if (makearrow) //makes arrows
             {
                 if (cursorRect.Intersects(new Rectangle(rect.X + rect.Width - 80, rect.Y, 80, rect.Height))) //changes color if the mouse is in the box
-                    spriteBatch.Draw(arrowRight, null, new Rectangle(rect.Width + rect.X - 80, rect.Y, 80, rect.Height), null, null, 0, null, Color.White, SpriteEffects.None, 0);
+                    spriteBatch.Draw(arrowRight, null, new Rectangle(rect.Width + rect.X - 80, rect.Y, 80, rect.Height), null, null, 0, null, Color.Blue, SpriteEffects.None, 0);
                 else
                     spriteBatch.Draw(arrowRight, null, new Rectangle(rect.X + rect.Width - 80, rect.Y, 80, rect.Height), null, null, 0, null, color, SpriteEffects.None, 0);
                 if (cursorRect.Intersects(new Rectangle(rect.X, rect.Y, 80, rect.Height)))
-                    spriteBatch.Draw(arrowRight, null, new Rectangle(rect.X, rect.Y, 80, rect.Height), null, null, 0, null, Color.White, SpriteEffects.FlipHorizontally, 0);
+                    spriteBatch.Draw(arrowRight, null, new Rectangle(rect.X, rect.Y, 80, rect.Height), null, null, 0, null, Color.Blue, SpriteEffects.FlipHorizontally, 0);
                 else
                     spriteBatch.Draw(arrowRight, null, new Rectangle(rect.X, rect.Y, 80, rect.Height), null, null, 0, null, color, SpriteEffects.FlipHorizontally, 0);
             }
@@ -1632,6 +1662,34 @@ namespace TieOrDye
         }
         #endregion
 
+        #endregion
+
+        #region ResetGrid
+        public void ResetGrid()
+        {
+            grid.Clear();
+            gridX = graphics.PreferredBackBufferWidth / 10;
+            gridY = graphics.PreferredBackBufferHeight / 10;
+            for (int j = 0; j < graphics.PreferredBackBufferHeight; j += gridY)
+            {
+                for (int i = 0; i < graphics.PreferredBackBufferWidth; i += gridX)
+                {
+                    grid.Add(new Rectangle(i, j, gridX, gridY));
+                }
+
+            }
+            walls.Clear();
+
+            walls.Add(new Wall(wallTex, grid[22].X, grid[22].Y, gridX, gridY * 2));
+            walls.Add(new Wall(wallTex, grid[27].X, grid[27].Y, gridX, gridY * 2));
+            walls.Add(new Wall(wallTex, grid[62].X, grid[62].Y, gridX, gridY * 2));
+            walls.Add(new Wall(wallTex, grid[67].X, grid[67].Y, gridX, gridY * 2));
+            walls.Add(new Wall(wallTex, grid[44].X, grid[44].Y, gridX * 2, gridY * 2));
+            walls.Add(new Wall(wallTex, grid[0].X, grid[0].Y, gridX * 10, gridY));
+            walls.Add(new Wall(wallTex, grid[0].X, grid[0].Y, gridX, gridY * 10));
+            walls.Add(new Wall(wallTex, grid[9].X, grid[9].Y, gridX, gridY * 10));
+            walls.Add(new Wall(wallTex, grid[90].X, grid[90].Y, gridX * 10, gridY));
+        }
         #endregion
     }
 }
