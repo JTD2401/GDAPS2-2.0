@@ -137,6 +137,7 @@ namespace TieOrDye
         bool startActive;
         bool orangeShot = false;
         bool blueShot = false;
+        bool fromPauseMenu = false;
 
         Stopwatch blueStopper;
         Stopwatch orangeStopper;
@@ -190,7 +191,7 @@ namespace TieOrDye
         {
             // TODO: Add your initialization logic here
             graphics.IsFullScreen = false;
-            Window.IsBorderless = true;
+            //Window.IsBorderless = true;
             graphics.PreferredBackBufferWidth = GraphicsDevice.DisplayMode.Width;
             graphics.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height;
             Debug.WriteLine(graphics.PreferredBackBufferFormat.ToString());
@@ -766,24 +767,29 @@ namespace TieOrDye
                 case GameStates.Pause:  // options menu state
                     fromMenu = false;
                     // determines if game state is changed to InGame when player clicks on the Resume rectangle
-                    if (cursorRect.Intersects(new Rectangle(GraphicsDevice.Viewport.Width / 3, this.height / 6, GraphicsDevice.Viewport.Width / 3, 150)))
-                        if (currMState.LeftButton == ButtonState.Pressed)
+                    if (cursorRect.Intersects(new Rectangle(grid[13].X + (int)(gridX * .5), grid[13].Y, gridX * 3, gridY)))
+                        if (buttonPress())
                             currentGameState = GameStates.InGame;
                     // determines if game state is changed to Menu when player clicks on the Main Menu rectangle 
-                    if (cursorRect.Intersects(new Rectangle(GraphicsDevice.Viewport.Width / 3, (this.height / 6) * 3, GraphicsDevice.Viewport.Width / 3, 150)))
-                        if (currMState.LeftButton == ButtonState.Pressed)
-                            currentGameState = GameStates.Menu;
-                    if (cursorRect.Intersects(new Rectangle(GraphicsDevice.Viewport.Width / 3, (this.height / 6) * 2, GraphicsDevice.Viewport.Width / 3, 150)))
-                        if (currMState.LeftButton == ButtonState.Pressed)
-                            currentGameState = GameStates.Options;
-                    // determines if game is exited when player clicks on the Exit rectangle
-                    if (cursorRect.Intersects(new Rectangle(GraphicsDevice.Viewport.Width / 3, (this.height / 6) * 5, GraphicsDevice.Viewport.Width / 3, 150)))
-                        if (currMState.LeftButton == ButtonState.Pressed && prevState.LeftButton == ButtonState.Pressed)
-                            this.Exit();
-                    // determines if game state is changed to Instructions when player clicks Instructions button
-                    if (cursorRect.Intersects(new Rectangle(GraphicsDevice.Viewport.Width / 3, (this.height / 6) * 4, GraphicsDevice.Viewport.Width / 3, 150)))
+                    if (cursorRect.Intersects(new Rectangle(grid[33].X + (int)(gridX * .5), grid[33].Y, gridX * 3, gridY)))
                         if (buttonPress())
+                            currentGameState = GameStates.Menu;
+                    //determines if options is pressed
+                    if (cursorRect.Intersects(new Rectangle(grid[53].X + (int)(gridX * .5), grid[53].Y, gridX * 3, gridY)))
+                        if (buttonPress())
+                            currentGameState = GameStates.Options;
+                    // determines if game state is changed to Instructions when player clicks Instructions button
+                    if (cursorRect.Intersects(new Rectangle(grid[73].X + (int)(gridX * .5), grid[73].Y, gridX * 3, gridY)))
+                        if (buttonPress())
+                        {
                             currentGameState = GameStates.Instructions;
+                            fromPauseMenu = true;
+                        }
+                            
+                    // determines if game is exited when player clicks on the Exit rectangle
+                    if (cursorRect.Intersects(new Rectangle(grid[93].X + (int)(gridX * .5), grid[93].Y, gridX * 3, gridY)))
+                        if (buttonPress())
+                            this.Exit();
                         prevState = currMState;
                     break;
                 #endregion
@@ -791,7 +797,13 @@ namespace TieOrDye
                 case GameStates.Instructions:
                     if (prevKbState.IsKeyUp(Keys.Escape) && currKbState.IsKeyDown(Keys.Escape))
                     {
-                        currentGameState = GameStates.Menu;
+                        if(fromPauseMenu == true)
+                        {
+                            currentGameState = GameStates.Pause;
+                            fromPauseMenu = false;
+                        }
+                        else
+                            currentGameState = GameStates.Menu;
                     }
                     break;
                 #endregion
@@ -1021,46 +1033,28 @@ namespace TieOrDye
 
                     spriteBatch.Draw(pauseScreen, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);  // draws pause screen
 
-                    // draws resume button and checks if the mouse is over it
-                    spriteBatch.Draw(resumeButton, new Rectangle(grid[23].X + (int)(gridX * .5) , grid[23].Y, gridX * 3, gridY), Color.White);
-                    if (cursorRect.Intersects(new Rectangle(GraphicsDevice.Viewport.Width / 3, this.height / 6, GraphicsDevice.Viewport.Width / 3, 150)))
-                    {
-                        spriteBatch.Draw(resumeButton, new Rectangle(GraphicsDevice.Viewport.Width / 3, this.height / 6, GraphicsDevice.Viewport.Width / 3, 150), Color.Violet);  // if mouse is over button, changes color
-                    }
+                    // draws resume button 
+                    makeBox(new Rectangle(grid[13].X + (int)(gridX * .5), grid[13].Y, gridX * 3, gridY), "", resumeButton, Color.White, true);
 
-                    // draws options button and checks if the mouse is over it
-                    spriteBatch.Draw(options, new Rectangle(GraphicsDevice.Viewport.Width / 3, (this.height / 6) * 2, GraphicsDevice.Viewport.Width / 3, 150), Color.White);
-                    if (cursorRect.Intersects(new Rectangle(GraphicsDevice.Viewport.Width / 3, (this.height / 6) * 2, GraphicsDevice.Viewport.Width / 3, 150)))
-                    {
-                        spriteBatch.Draw(options, new Rectangle(GraphicsDevice.Viewport.Width / 3, (this.height / 6) * 2, GraphicsDevice.Viewport.Width / 3, 150), Color.Violet);  // if mouse is over button, changes color
-                    }
+                    // draws main menu button
+                    makeBox(new Rectangle(grid[33].X + (int)(gridX * .5), grid[33].Y, gridX * 3, gridY), "", mainMenu, Color.White, true);
 
-                    // draws Main Menu button and checks if the mouse is over it
-                    spriteBatch.Draw(mainMenu, new Rectangle(GraphicsDevice.Viewport.Width / 3, (this.height / 6) * 3, GraphicsDevice.Viewport.Width / 3, 150), Color.White);
-                    if (cursorRect.Intersects(new Rectangle(GraphicsDevice.Viewport.Width / 3, (this.height / 6) * 3, GraphicsDevice.Viewport.Width / 3, 150)))
-                    {
-                        spriteBatch.Draw(mainMenu, new Rectangle(GraphicsDevice.Viewport.Width / 3, (this.height / 6) * 3, GraphicsDevice.Viewport.Width / 3, 150), Color.Violet);  // if mouse is over button, changes color
-                    }
+                    // draws options button 
+                    makeBox(new Rectangle(grid[53].X + (int)(gridX * .5), grid[53].Y, gridX * 3, gridY), "", options, Color.White, true);
 
-                    // draws Exit button and checks if the mouse is over it
-                    spriteBatch.Draw(instructionsButton, new Rectangle(GraphicsDevice.Viewport.Width / 3, (this.height / 6) * 4, GraphicsDevice.Viewport.Width / 3, 150), Color.White);
-                    if (cursorRect.Intersects(new Rectangle(GraphicsDevice.Viewport.Width / 3, (this.height / 6) * 4, GraphicsDevice.Viewport.Width / 3, 150)))
-                    {
-                        spriteBatch.Draw(instructionsButton, new Rectangle(GraphicsDevice.Viewport.Width / 3, (this.height / 6) * 4, GraphicsDevice.Viewport.Width / 3, 150), Color.Violet);  // if mouse is over button, changes color
-                    }
-                    spriteBatch.Draw(exit, new Rectangle(GraphicsDevice.Viewport.Width / 3, (this.height / 6) * 5, GraphicsDevice.Viewport.Width / 3, 150), Color.White);
-                    if (cursorRect.Intersects(new Rectangle(GraphicsDevice.Viewport.Width / 3, (this.height / 6) * 5, GraphicsDevice.Viewport.Width / 3, 150)))
-                    {
-                        spriteBatch.Draw(exit, new Rectangle(GraphicsDevice.Viewport.Width / 3, (this.height / 6) * 5, GraphicsDevice.Viewport.Width / 3, 150), Color.Violet);  // if mouse is over button, changes color
-                    }
+                    // draws instruction button
+                    makeBox(new Rectangle(grid[73].X + (int)(gridX * .5), grid[73].Y, gridX * 3, gridY), "", instructionsButton, Color.White, true);
+
+                    //draws exit button
+                    makeBox(new Rectangle(grid[93].X + (int)(gridX * .5), grid[93].Y, gridX * 3, gridY), "", exit, Color.White, true);
 
                     // draws player models on either side of screen
-                    spriteBatch.Draw(p1Tex, new Rectangle(GraphicsDevice.Viewport.Width / 50, 300, GraphicsDevice.Viewport.Width / 4, GraphicsDevice.Viewport.Height / 2), Color.White);
-                    spriteBatch.Draw(p2Tex, new Rectangle(((GraphicsDevice.Viewport.Width / 4) + (GraphicsDevice.Viewport.Width / 2)) - 35, 300, GraphicsDevice.Viewport.Width / 4, GraphicsDevice.Viewport.Height / 2), Color.White);
+                    spriteBatch.Draw(p1Tex, new Rectangle(grid[0].X + 10, grid[10].Y + 10, gridX * 2, gridY * 7), Color.White);
+                    spriteBatch.Draw(p2Tex, new Rectangle(grid[7].X + (int)(gridX * .5), grid[17].Y + 10, gridX * 2, gridY * 7), Color.White);
 
-                    spriteBatch.DrawString(font, ""+p1Count, new Vector2(275, 110), Color.White, 0f, Vector2.Zero, 2, SpriteEffects.None, 0);
-                    spriteBatch.DrawString(font, "" + p2Count, new Vector2(1650, 110), Color.White, 0f, Vector2.Zero, 2, SpriteEffects.None, 0);
-                    spriteBatch.DrawString(font, "TIME: " + (int)time, new Vector2(850, 110), Color.White, 0f, Vector2.Zero, 2, SpriteEffects.None, 0);
+                    spriteBatch.DrawString(font, ""+p1Count, new Vector2(grid[1].X, grid[1].Y + 50), Color.White, 0f, Vector2.Zero, 2, SpriteEffects.None, 0);
+                    spriteBatch.DrawString(font, "" + p2Count, new Vector2(grid[8].X, grid[8].Y + 50), Color.White, 0f, Vector2.Zero, 2, SpriteEffects.None, 0);
+                    spriteBatch.DrawString(font, "TIME: " + (int)time, new Vector2(grid[4].X + 50, grid[5].Y + 50), Color.White, 0f, Vector2.Zero, 2, SpriteEffects.None, 0);
 
                     spriteBatch.Draw(cursorTex, cursorRect, Color.White);
                     break;
