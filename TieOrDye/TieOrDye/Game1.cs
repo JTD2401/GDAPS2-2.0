@@ -19,7 +19,6 @@ namespace TieOrDye
     /// </summary>
     public class Game1 : Game
     {
-
         #region attributes
         //Constants 
         const int NUMBER_OF_STONES = 40;
@@ -549,208 +548,19 @@ namespace TieOrDye
                     DoWallCollision();
 
                     //Creates orbs - Cooldown can be changed 
-                    if (blueShot)
-                    {
-                        if (blueStopper.ElapsedMilliseconds >= BLUE_STOPPER)
-                        {
-                            blueShot = false;
-                            blueStopper.Stop();
-                            blueStopper.Reset();
-                        }
-                        else { }
-                    }
-                    else
-                    {
-                        if ((currKbState.IsKeyUp(p1Shoot) && (prevKbState.IsKeyDown(p1Shoot)))) //P1 Shoots
-                        {
-                            if (p1.Stunned == false)
-                            {
-                                Orb o1 = new Orb(bOrbTex, 0, 0, p1, player1Animation, ORB_WIDTH, ORB_SPEED);
-                                blueOrbs.Add(o1);
-                                blueShot = true;
-
-                                laserSoundEffectInstance.Play();
-
-                                blueStopper = new Stopwatch();
-                                blueStopper.Start();
-                            }
-                        }
-                        else { }
-                    }
-                    if (orangeShot)
-                    {
-                        if (orangeStopper.ElapsedMilliseconds >= ORANGE_STOPPER)
-                        {
-                            orangeShot = false;
-                            orangeStopper.Stop();
-                            orangeStopper.Reset();
-                        }
-                    }
-                    else
-                    {
-                        if ((currKbState.IsKeyDown(p2Shoot) && (prevKbState.IsKeyDown(p2Shoot) == false))) //P2 Shoots
-                        {
-                            if (p2.Stunned == false)
-                            {
-                                Orb o2 = new Orb(oOrbTex, 0, 0, p2, player2Animation, ORB_WIDTH, ORB_SPEED);
-                                orangeOrbs.Add(o2);
-                                orangeShot = true;
-
-                                laserSoundEffectInstance.Play();
-
-                                orangeStopper = new Stopwatch();
-                                orangeStopper.Start();
-                            }
-                        }
-                    }
+                    CreateOrbs();
 
                     //Update orb locations
-                    for (int i = 0; i < blueOrbs.Count; i++)
-                    {
-                        blueOrbs[i].UpdateOrbs();
-
-                        if (blueOrbs[i].TravelToMaxDistance == true)
-                        {
-                            blueOrbs.RemoveAt(i);
-                        }
-                    }
-                    for (int i = 0; i < orangeOrbs.Count; i++)
-                    {
-                        orangeOrbs[i].UpdateOrbs();
-
-                        if (orangeOrbs[i].TravelToMaxDistance == true)
-                        {
-                            orangeOrbs.RemoveAt(i);
-                        }
-                    }
+                    UpdateOrbs();
 
                     //Stuns player when hit by opposite orb
-                    for (int h = 0; h < blueOrbs.Count; h++)
-                    {
-                        Circle blueOrbCirc = new Circle((int)blueOrbs[h].X + (ORB_WIDTH / 2), (int)blueOrbs[h].Y + (ORB_WIDTH / 2), (ORB_WIDTH / 2)); //Circle object for orb
-                        if (blueOrbCirc.Intersects(p2.PlayerRect))    //Blue orb hits orange player
-                        {
-                            blueOrbs.Remove(blueOrbs[h]);
-                            h--;
-                            p2.Stunned = true;
-                            p2StunWatch.Start();
-                        }
-                    }
-                    for (int j = 0; j < orangeOrbs.Count; j++)
-                    {
-                        Circle orangeOrbCirc = new Circle((int)orangeOrbs[j].X + (ORB_WIDTH / 2), (int)orangeOrbs[j].Y + (ORB_WIDTH / 2), (ORB_WIDTH / 2));
-                        if (orangeOrbCirc.Intersects(p1.PlayerRect)) //orange orb hits blue player
-                        {
-                            orangeOrbs.Remove(orangeOrbs[j]);
-                            j--;
-                            p1.Stunned = true;
-                            p1StunWatch.Start();
-                        }
-                    }
+                    StunPlayer();
 
-                    ///
-                    /// Orb colors  - Needs many changes
-                    /// For each stone: loops through all orbs, checks for collisions
-                    /// On collsion: changes stone texture, deletes orb and increments backwards in orb list
-                    ///
-                    for (int x = 0; x < stonesList.Count; x++)
-                    {
-                        Circle c1 = new Circle((int)stonesList[x].XPos + (WIDTH_OF_STONES / 2), (int)stonesList[x].YPos + (WIDTH_OF_STONES / 2), (WIDTH_OF_STONES / 2)); //Circle object for each stone to check for collisions
+                    //On collsion: changes stone texture, deletes orb and increments backwards in orb list
+                    OrbCollide();
 
-                        for (int i = 0; i < blueOrbs.Count; i++)
-                        {
-
-                            Circle c2 = new Circle((int)blueOrbs[i].X + (ORB_WIDTH / 2), (int)blueOrbs[i].Y + (ORB_WIDTH / 2), (ORB_WIDTH / 2)); //Circle object for orb
-                            if (c1.Intersects(c2))
-                            { 
-                                stonesList[x].StoneTex = blueStone;
-                                blueOrbs.Remove(blueOrbs[i]);
-                                i--;
-                                if (stonesList[x].RapidFire == true)
-                                {
-                                    stonesList[x].RapidFire = false;
-                                    item1 = new Item(speedupImage, stonesList[x].XPos, stonesList[x].YPos, stonesList[x].Circle.Radius, 1);
-                                    item1.ItemCheckInfo(c2, c1);
-                                    item1.changeItemLoc(stonesList, 1);
-                                }
-                                if (stonesList[x].Inverter == true)
-                                {
-                                    stonesList[x].Inverter = false;
-                                    item2 = new Item(inverterImage, stonesList[x].XPos, stonesList[x].YPos, stonesList[x].Circle.Radius, 3);
-                                    item2.ItemCheckInfo(c2, c1);
-                                    item2.changeItemLoc(stonesList, 2);
-                                }
-                            }
-                        }
-                        for (int j = 0; j < orangeOrbs.Count; j++)
-                        {
-                            Circle c3 = new Circle((int)orangeOrbs[j].X + (ORB_WIDTH / 2), (int)orangeOrbs[j].Y + (ORB_WIDTH / 2), (ORB_WIDTH / 2));
-                            if (c1.Intersects(c3))
-                            {
-                                stonesList[x].StoneTex = orangeStone;
-                                orangeOrbs.Remove(orangeOrbs[j]);
-                                j--;
-                                if (stonesList[x].RapidFire == true)
-                                {
-                                    stonesList[x].RapidFire = false;
-                                    item1 = new Item(speedupImage, stonesList[x].XPos, stonesList[x].YPos, stonesList[x].Circle.Radius, 1);
-                                    item1.ItemCheckInfo(c3, c1);
-                                    item1.changeItemLoc(stonesList, 1);
-                                }
-                                if (stonesList[x].Inverter == true)
-                                {
-                                    stonesList[x].Inverter = false;
-                                    item2 = new Item(inverterImage, stonesList[x].XPos, stonesList[x].YPos, stonesList[x].Circle.Radius, 3);
-                                    item2.ItemCheckInfo(c3, c1);
-                                    item2.changeItemLoc(stonesList, 2);
-                                }
-                            }
-                        }
-
-                        //Update Score
-                        p1Count = 0;
-                        p2Count = 0;
-                        for (int k = 0; k < stonesList.Count; k++)
-                        {
-                            if (stonesList[k].StoneTex == blueStone)
-                            {
-                                p1Count++;
-                            }
-                            if (stonesList[k].StoneTex == orangeStone)
-                            {
-                                p2Count++;
-                            }
-                        }
-                    }
-
-                    if (p1StunWatch.IsRunning)
-                    {
-                        //Unstun player 1 and make them immune
-                        if (p1StunWatch.ElapsedMilliseconds >= PLAYER_STUN_DURATION)
-                        {
-                            p1.Stunned = false;
-                            p1.Immune = true;
-                            //Unimmune player 1 and reset the stopwatch
-                            if (p1StunWatch.ElapsedMilliseconds >= PLAYER_STUN_DURATION + PLAYER_IMMUNITY_DURATION)
-                            {
-                                p1.Immune = false;
-                                p1StunWatch.Reset();
-                            }
-                        }
-                    }
-                    if (p2StunWatch.IsRunning)
-                    {
-                        if (p2StunWatch.ElapsedMilliseconds >= PLAYER_STUN_DURATION)
-                        {
-                            p2.Stunned = false;
-                            p2.Immune = true;
-                            if (p2StunWatch.ElapsedMilliseconds >= PLAYER_STUN_DURATION + PLAYER_IMMUNITY_DURATION)
-                            {
-                                p2.Immune = true;
-                                p2StunWatch.Reset();
-                            }
-                        }
-                    }
+                    //calculates stun time
+                    StunTimer();
 
                     time -= gameTime.ElapsedGameTime.TotalSeconds;
                     if (time <= 0)
@@ -759,7 +569,11 @@ namespace TieOrDye
                         endGameTimer.Start();
                     }
 
-                    if (currKbState.IsKeyDown(Keys.P) || currKbState.IsKeyDown(Keys.Escape)) { currentGameState = GameStates.Pause; cameFromMenu = false; }
+                    if (currKbState.IsKeyDown(Keys.P) || currKbState.IsKeyDown(Keys.Escape))
+                    {
+                        currentGameState = GameStates.Pause;
+                        cameFromMenu = false;
+                    }
 
                     break;
                 #endregion
@@ -1220,12 +1034,32 @@ namespace TieOrDye
                     return;
                 if (c1.Intersects(c2))
                 {
-                    stone.Direction = new Vector2(-stone.Direction.X, -stone.Direction.Y);
+                    int x = stone.XPos - obj.XPos;
+                    int y = stone.YPos - obj.YPos;//measurments used for later
+
+                    stone.Direction = new Vector2(-stone.Direction.X, -stone.Direction.Y); //since they intersect change their directions
                     obj.Direction = new Vector2(-obj.Direction.X, -obj.Direction.Y);
-                }
-                if(c1.ContainsPoint(new Point(c2.X, c2.Y)))
-                {
-                    
+                    c1.X += (int)stone.Direction.X; //psuedo code to see if applying the direction of the stones would cause them to collide again
+                    c1.Y += (int)stone.Direction.Y;
+                    c2.X += (int)obj.Direction.X;
+                    c2.Y += (int)obj.Direction.Y;
+                    if (c1.Intersects(c2)) //if they do collide again
+                    {
+                        if (stone.Direction.X == 0) { } //add the x or y value of the distance based of the direction they are going
+                        else
+                            stone.XPos += x;
+                        if(obj.Direction.X == 0) { }
+                        else
+                            obj.XPos += -x;
+                        if (stone.Direction.Y == 0) { }
+                        else
+                            stone.YPos += y;
+                        if (obj.Direction.Y == 0) { }
+                        else
+                            obj.YPos += -y;
+                    }
+                    else
+                        return; //else return
                 }
             }
         }
@@ -1614,20 +1448,40 @@ namespace TieOrDye
                 if (c1.Intersects(obj.Bounds))
                 {
                     if (Math.Abs(obj.Bounds.Top - (stone.YPos + WIDTH_OF_STONES)) < WIDTH_OF_STONES)
+                    {
+                        int yChange = obj.Bounds.Top - (stone.YPos + WIDTH_OF_STONES);
+                        stone.YPos += yChange;
                         stone.Direction = new Vector2(stone.Direction.X, -stone.Direction.Y);
+
+                    }
                     if (Math.Abs(obj.Bounds.Bottom - stone.YPos) < WIDTH_OF_STONES)
+                    {
+                        int yChange = obj.Bounds.Bottom - stone.YPos;
+                        stone.YPos += yChange;
                         stone.Direction = new Vector2(stone.Direction.X, -stone.Direction.Y);
-                    if (Math.Abs(obj.Bounds.Left - stone.XPos) < WIDTH_OF_STONES)
+                    }
+                    if (Math.Abs(obj.Bounds.Left - (stone.XPos + WIDTH_OF_STONES)) < WIDTH_OF_STONES)
+                    {
+                        int xChange = obj.Bounds.Left - (stone.XPos + WIDTH_OF_STONES);
+                        stone.XPos += xChange;
                         stone.Direction = new Vector2(-stone.Direction.X, stone.Direction.Y);
-                    if (Math.Abs(obj.Bounds.Right - (stone.XPos + WIDTH_OF_STONES)) < WIDTH_OF_STONES)
+                    }
+                    if (Math.Abs(obj.Bounds.Right - stone.XPos) < WIDTH_OF_STONES)
+                    {
+                        int xChange = obj.Bounds.Right - stone.XPos;
+                        stone.XPos += xChange;
                         stone.Direction = new Vector2(-stone.Direction.X, stone.Direction.Y);
+                    }
                 }
             }
 
             if (c1.Intersects(p1.PlayerRect))
             {
                 if (Math.Abs(p1.PlayerRect.Top - (stone.YPos + WIDTH_OF_STONES)) < WIDTH_OF_STONES)
+                {
                     stone.Direction = new Vector2(stone.Direction.X, -stone.Direction.Y);
+
+                }
                 if (Math.Abs(p1.PlayerRect.Bottom - stone.YPos) < WIDTH_OF_STONES)
                     stone.Direction = new Vector2(stone.Direction.X, -stone.Direction.Y);
                 if (Math.Abs(p1.PlayerRect.Left - stone.YPos) < WIDTH_OF_STONES)
@@ -1678,8 +1532,227 @@ namespace TieOrDye
         }
         #endregion
 
+        #region OrbCollision
+        public void OrbCollide()
+        {
+            for (int x = 0; x < stonesList.Count; x++)
+            {
+                Circle c1 = new Circle((int)stonesList[x].XPos + (WIDTH_OF_STONES / 2), (int)stonesList[x].YPos + (WIDTH_OF_STONES / 2), (WIDTH_OF_STONES / 2)); //Circle object for each stone to check for collisions
+
+                for (int i = 0; i < blueOrbs.Count; i++)
+                {
+
+                    Circle c2 = new Circle((int)blueOrbs[i].X + (ORB_WIDTH / 2), (int)blueOrbs[i].Y + (ORB_WIDTH / 2), (ORB_WIDTH / 2)); //Circle object for orb
+                    if (c1.Intersects(c2))
+                    {
+                        stonesList[x].StoneTex = blueStone;
+                        blueOrbs.Remove(blueOrbs[i]);
+                        i--;
+                        if (stonesList[x].RapidFire == true)
+                        {
+                            stonesList[x].RapidFire = false;
+                            item1 = new Item(speedupImage, stonesList[x].XPos, stonesList[x].YPos, stonesList[x].Circle.Radius, 1);
+                            item1.ItemCheckInfo(c2, c1);
+                            item1.changeItemLoc(stonesList, 1);
+                        }
+                        if (stonesList[x].Inverter == true)
+                        {
+                            stonesList[x].Inverter = false;
+                            item2 = new Item(inverterImage, stonesList[x].XPos, stonesList[x].YPos, stonesList[x].Circle.Radius, 3);
+                            item2.ItemCheckInfo(c2, c1);
+                            item2.changeItemLoc(stonesList, 2);
+                        }
+                    }
+                }
+                for (int j = 0; j < orangeOrbs.Count; j++)
+                {
+                    Circle c3 = new Circle((int)orangeOrbs[j].X + (ORB_WIDTH / 2), (int)orangeOrbs[j].Y + (ORB_WIDTH / 2), (ORB_WIDTH / 2));
+                    if (c1.Intersects(c3))
+                    {
+                        stonesList[x].StoneTex = orangeStone;
+                        orangeOrbs.Remove(orangeOrbs[j]);
+                        j--;
+                        if (stonesList[x].RapidFire == true)
+                        {
+                            stonesList[x].RapidFire = false;
+                            item1 = new Item(speedupImage, stonesList[x].XPos, stonesList[x].YPos, stonesList[x].Circle.Radius, 1);
+                            item1.ItemCheckInfo(c3, c1);
+                            item1.changeItemLoc(stonesList, 1);
+                        }
+                        if (stonesList[x].Inverter == true)
+                        {
+                            stonesList[x].Inverter = false;
+                            item2 = new Item(inverterImage, stonesList[x].XPos, stonesList[x].YPos, stonesList[x].Circle.Radius, 3);
+                            item2.ItemCheckInfo(c3, c1);
+                            item2.changeItemLoc(stonesList, 2);
+                        }
+                    }
+                }
+
+                //Update Score
+                p1Count = 0;
+                p2Count = 0;
+                for (int k = 0; k < stonesList.Count; k++)
+                {
+                    if (stonesList[k].StoneTex == blueStone)
+                    {
+                        p1Count++;
+                    }
+                    if (stonesList[k].StoneTex == orangeStone)
+                    {
+                        p2Count++;
+                    }
+                }
+            }
+        }
         #endregion
 
+        #region createOrbs
+        public void CreateOrbs()
+        {
+            if (blueShot)
+            {
+                if (blueStopper.ElapsedMilliseconds >= BLUE_STOPPER)
+                {
+                    blueShot = false;
+                    blueStopper.Stop();
+                    blueStopper.Reset();
+                }
+                else { }
+            }
+            else
+            {
+                if ((currKbState.IsKeyUp(p1Shoot) && (prevKbState.IsKeyDown(p1Shoot)))) //P1 Shoots
+                {
+                    if (p1.Stunned == false)
+                    {
+                        Orb o1 = new Orb(bOrbTex, 0, 0, p1, player1Animation, ORB_WIDTH, ORB_SPEED);
+                        blueOrbs.Add(o1);
+                        blueShot = true;
 
+                        laserSoundEffectInstance.Play();
+
+                        blueStopper = new Stopwatch();
+                        blueStopper.Start();
+                    }
+                }
+                else { }
+            }
+            if (orangeShot)
+            {
+                if (orangeStopper.ElapsedMilliseconds >= ORANGE_STOPPER)
+                {
+                    orangeShot = false;
+                    orangeStopper.Stop();
+                    orangeStopper.Reset();
+                }
+            }
+            else
+            {
+                if ((currKbState.IsKeyDown(p2Shoot) && (prevKbState.IsKeyDown(p2Shoot) == false))) //P2 Shoots
+                {
+                    if (p2.Stunned == false)
+                    {
+                        Orb o2 = new Orb(oOrbTex, 0, 0, p2, player2Animation, ORB_WIDTH, ORB_SPEED);
+                        orangeOrbs.Add(o2);
+                        orangeShot = true;
+
+                        laserSoundEffectInstance.Play();
+
+                        orangeStopper = new Stopwatch();
+                        orangeStopper.Start();
+                    }
+                }
+            }
+        }
+        #endregion
+
+        #region UpdateOrbs
+        public void UpdateOrbs()
+        {
+            for (int i = 0; i < blueOrbs.Count; i++)
+            {
+                blueOrbs[i].UpdateOrbs();
+
+                if (blueOrbs[i].TravelToMaxDistance == true)
+                {
+                    blueOrbs.RemoveAt(i);
+                }
+            }
+            for (int i = 0; i < orangeOrbs.Count; i++)
+            {
+                orangeOrbs[i].UpdateOrbs();
+
+                if (orangeOrbs[i].TravelToMaxDistance == true)
+                {
+                    orangeOrbs.RemoveAt(i);
+                }
+            }
+        }
+        #endregion
+
+        #region StunPlayer
+        public void StunPlayer()
+        {
+            for (int h = 0; h < blueOrbs.Count; h++)
+            {
+                Circle blueOrbCirc = new Circle((int)blueOrbs[h].X + (ORB_WIDTH / 2), (int)blueOrbs[h].Y + (ORB_WIDTH / 2), (ORB_WIDTH / 2)); //Circle object for orb
+                if (blueOrbCirc.Intersects(p2.PlayerRect))    //Blue orb hits orange player
+                {
+                    blueOrbs.Remove(blueOrbs[h]);
+                    h--;
+                    p2.Stunned = true;
+                    p2StunWatch.Start();
+                }
+            }
+            for (int j = 0; j < orangeOrbs.Count; j++)
+            {
+                Circle orangeOrbCirc = new Circle((int)orangeOrbs[j].X + (ORB_WIDTH / 2), (int)orangeOrbs[j].Y + (ORB_WIDTH / 2), (ORB_WIDTH / 2));
+                if (orangeOrbCirc.Intersects(p1.PlayerRect)) //orange orb hits blue player
+                {
+                    orangeOrbs.Remove(orangeOrbs[j]);
+                    j--;
+                    p1.Stunned = true;
+                    p1StunWatch.Start();
+                }
+            }
+        }
+        #endregion
+
+        #region StunTimer
+        public void StunTimer()
+        {
+            if (p1StunWatch.IsRunning)
+            {
+                //Unstun player 1 and make them immune
+                if (p1StunWatch.ElapsedMilliseconds >= PLAYER_STUN_DURATION)
+                {
+                    p1.Stunned = false;
+                    p1.Immune = true;
+                    //Unimmune player 1 and reset the stopwatch
+                    if (p1StunWatch.ElapsedMilliseconds >= PLAYER_STUN_DURATION + PLAYER_IMMUNITY_DURATION)
+                    {
+                        p1.Immune = false;
+                        p1StunWatch.Reset();
+                    }
+                }
+            }
+            if (p2StunWatch.IsRunning)
+            {
+                if (p2StunWatch.ElapsedMilliseconds >= PLAYER_STUN_DURATION)
+                {
+                    p2.Stunned = false;
+                    p2.Immune = true;
+                    if (p2StunWatch.ElapsedMilliseconds >= PLAYER_STUN_DURATION + PLAYER_IMMUNITY_DURATION)
+                    {
+                        p2.Immune = true;
+                        p2StunWatch.Reset();
+                    }
+                }
+            }
+        }
+        #endregion
+
+        #endregion
     }
 }
