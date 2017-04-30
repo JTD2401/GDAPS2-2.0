@@ -471,12 +471,15 @@ namespace TieOrDye
             //Keyboard object
             currKbState = Keyboard.GetState();
 
+            int width4 = (int)(gridX * 1.5);
+            int height2 = (int)(gridY * .9);
+            int width3 = (int)(gridX * .9);
             // improved finite state machine
             switch (currentGameState)
             {
                 #region Menu
                 case GameStates.Menu:  // start menu state
-                    if (cursorRect.Intersects(new Rectangle(this.width / 10, (this.height / 8) * 2, activeStartButtonTex.Width, activeStartButtonTex.Height)))
+                    if (cursorRect.Intersects(new Rectangle(grid[21].X, grid[21].Y, (gridX * 2), gridY)))
                     {
                         //Make the button active
                         startActive = true;
@@ -508,20 +511,19 @@ namespace TieOrDye
                     else  //When the mouse is no longer hovering over the button
                         startActive = false;//Make the button inactive
 
-                    if (cursorRect.Intersects(new Rectangle(this.width / 10, (this.height / 8) * 3, 392, 103)))
+                    if (cursorRect.Intersects(new Rectangle(grid[41].X, grid[41].Y, gridX * 2, gridY)))
                         if (buttonPress())
                         {
-                            Debug.WriteLine("Click");
                             currentGameState = GameStates.Options;
                             cameFromMenu = true;
                         }
 
 
-                    if (cursorRect.Intersects(new Rectangle(this.width / 10, (this.height / 8) * 4, 392, 103)))
+                    if (cursorRect.Intersects(new Rectangle(grid[61].X, grid[61].Y, gridX * 2, gridY)))
                         if (buttonPress())
                             currentGameState = GameStates.Instructions;
 
-                    if (cursorRect.Intersects(new Rectangle(this.width / 10, (this.height / 8) * 5, 392, 103)))
+                    if (cursorRect.Intersects(new Rectangle(grid[81].X, grid[81].Y, gridX * 2, gridY)))
                         if (buttonPress())
                             this.Exit();
                     
@@ -795,11 +797,6 @@ namespace TieOrDye
                 #endregion
                 #region options
                 case GameStates.Options:
-                    int z = (GraphicsDevice.Viewport.Width / 8);
-
-                    int width4 = (int)(gridX * 1.5);
-                    int height2 = (int)(gridY * .9);
-                    int width3 = (int)(gridX * .9);
 
                     if (cursorRect.Intersects(new Rectangle(grid[23].X + width4 - 80, grid[23].Y, 80, height2)))
                         if (buttonPress()) //resolution right
@@ -873,16 +870,14 @@ namespace TieOrDye
                 #endregion
                 #region control options
                 case GameStates.ControlOptions:
-                    z = GraphicsDevice.Viewport.Width / 18;
-                    int width2 = GraphicsDevice.Viewport.Width / 8;
-                    if (cursorRect.Intersects(new Rectangle(z, 175, 80, 100)))
+                    if (cursorRect.Intersects(new Rectangle(grid[21].X, grid[21].Y, 80, height2)))
                         if (buttonPress())
                         {
                             if (playernumber == 1)
                                 return;
                             playernumber -= 1;
                         }
-                    if (cursorRect.Intersects(new Rectangle((z + width2 + GraphicsDevice.Viewport.Width / 8) - 80, 175, 80, 100)))
+                    if (cursorRect.Intersects(new Rectangle(grid[21].X + width4 * 2 - 80, grid[21].Y, 80, height2)))
                         if(buttonPress())
                         {
                             if (playernumber == 2)
@@ -891,41 +886,41 @@ namespace TieOrDye
                         }
                     if(playernumber == 1)
                     {
-                        if (cursorRect.Intersects(new Rectangle(z + width2 + 10, 295, width2, 100)))
+                        if (cursorRect.Intersects(new Rectangle(grid[32].X, grid[32].Y, width3, height2)))
                             if (buttonPressForCfg()) //changes up button
                                 checkButtonPress(p1Up, "p1Up");
-                        if (cursorRect.Intersects(new Rectangle(z + width2 + 10, 415, width2, 100)))
+                        if (cursorRect.Intersects(new Rectangle(grid[42].X, grid[42].Y, width3, height2)))
                             if (buttonPressForCfg()) //changes left button
                                 checkButtonPress(p1Down, "p1Down");
-                        if (cursorRect.Intersects(new Rectangle(z + width2 + 10, 535, width2, 100)))
+                        if (cursorRect.Intersects(new Rectangle(grid[52].X, grid[52].Y, width3, height2)))
                             if (buttonPressForCfg()) //changes left button
                                 checkButtonPress(p1Left, "p1Left");
-                        if (cursorRect.Intersects(new Rectangle(z + width2 + 10, 655, width2, 100)))
+                        if (cursorRect.Intersects(new Rectangle(grid[62].X, grid[62].Y, width3, height2)))
                             if (buttonPressForCfg()) //changes right button
                                 checkButtonPress(p1Right, "p1Right");
-                        if(cursorRect.Intersects(new Rectangle(z + width2 + 10, 775, width2, 100)))
-                            if(buttonPressForCfg()) //changes shoot button
+                        if(cursorRect.Intersects(new Rectangle(grid[72].X, grid[72].Y, width3, height2)))
+                            if (buttonPressForCfg()) //changes shoot button
                                 checkButtonPress(p1Shoot, "p1Shoot");
                     }
                     else //player 2
                     {
-                        if (cursorRect.Intersects(new Rectangle(z + width2 + 10, 295, width2, 100)))
+                        if (cursorRect.Intersects(new Rectangle(grid[32].X, grid[32].Y, width3, height2)))
                             if (buttonPressForCfg()) //changes up button
                                 checkButtonPress(p2Up, "p2Up");
-                        if (cursorRect.Intersects(new Rectangle(z + width2 + 10, 415, width2, 100)))
+                        if (cursorRect.Intersects(new Rectangle(grid[42].X, grid[42].Y, width3, height2)))
                             if (buttonPressForCfg()) //changes down button
                                 checkButtonPress(p2Down, "p2Down");
-                        if (cursorRect.Intersects(new Rectangle(z + width2 + 10, 535, width2, 100)))
+                        if (cursorRect.Intersects(new Rectangle(grid[52].X, grid[52].Y, width3, height2)))
                             if (buttonPressForCfg()) //changes left button
                                 checkButtonPress(p2Left, "p2Left");
-                        if (cursorRect.Intersects(new Rectangle(z + width2 + 10, 655, width2, 100)))
+                        if (cursorRect.Intersects(new Rectangle(grid[62].X, grid[62].Y, width3, height2)))
                             if (buttonPressForCfg()) //changes right button
                                 checkButtonPress(p2Right, "p2Right");
-                        if (cursorRect.Intersects(new Rectangle(z + width2 + 10, 775, width2, 100)))
+                        if (cursorRect.Intersects(new Rectangle(grid[72].X, grid[72].Y, width3, height2)))
                             if (buttonPressForCfg()) //changes shoot button
                                 checkButtonPress(p2Shoot, "p2Shoot");
                     }
-                    if (cursorRect.Intersects(new Rectangle(z, 850, width2, 100)))
+                    if (cursorRect.Intersects(new Rectangle(grid[81].X, grid[81].Y, width3, height2)))
                         if (buttonPress())
                             currentGameState = GameStates.Options;
                     prevState = currMState;
@@ -970,6 +965,9 @@ namespace TieOrDye
             var mouse = Mouse.GetState();
             var mousePos = GetMousePosition();
             cursorRect = new Rectangle((int)mousePos.X, (int)mousePos.Y, 20, 20);
+            int width2 = (int)(gridX * 1.5);
+            int height2 = (int)(gridY * .9);
+            int width3 = (int)(gridX * .9);
 
             switch (currentGameState)
             {
@@ -978,13 +976,13 @@ namespace TieOrDye
                     //Draw gameboard
                     spriteBatch.Draw(gameBoard, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);
 
-                    makeBox(new Rectangle(this.width / 10, (this.height / 8) * 2, 392, 103), "", start, Color.White, true); //start button
+                    makeBox(new Rectangle(grid[21].X, grid[21].Y, (gridX * 2), gridY), "", start, Color.White, true); //start button
 
-                    makeBox(new Rectangle(this.width / 10, (this.height / 8) * 3, 392, 103), "", options, Color.White, true); // options button
+                    makeBox(new Rectangle(grid[41].X, grid[41].Y, gridX * 2, gridY), "", options, Color.White, true); // options button
 
-                    makeBox(new Rectangle(this.width / 10, (this.height / 8) * 4, 392, 103), "", instructionsButton, Color.White, true); //instructions button
+                    makeBox(new Rectangle(grid[61].X, grid[61].Y, gridX * 2, gridY), "", instructionsButton, Color.Gray, true); //instructions button
 
-                    makeBox(new Rectangle(this.width / 10, (this.height / 8) * 5, 392, 103), "", exit, Color.White, true); //exit button
+                    makeBox(new Rectangle(grid[81].X, grid[81].Y, gridX * 2, gridY), "", exit, Color.White, true); //exit button
                     //Draw cursor
                     spriteBatch.Draw(cursorTex, cursorRect, Color.White);  // draws cursor
                     break;
@@ -1013,9 +1011,9 @@ namespace TieOrDye
                         orangeOrbs[i].DrawOrbs(spriteBatch);
                     }
 
-                    spriteBatch.DrawString(font, "TIME: " + (int)time, new Vector2(890, 45), Color.White);
-                    spriteBatch.DrawString(font, "P1 Score: " + p1Count, new Vector2(120, 45), Color.White);
-                    spriteBatch.DrawString(font, "P2 Score: " + p2Count, new Vector2(1650, 45), Color.White);
+                    spriteBatch.DrawString(font, "TIME: " + (int)time, new Vector2(grid[4].X + 50, grid[5].Y + 50), Color.White);
+                    spriteBatch.DrawString(font, "P1 Score: " + p1Count, new Vector2(grid[1].X, grid[1].Y + 50), Color.White);
+                    spriteBatch.DrawString(font, "P2 Score: " + p2Count, new Vector2(grid[8].X, grid[8].Y + 50), Color.White);
                     break;
                 #endregion
                 #region pause
@@ -1024,7 +1022,7 @@ namespace TieOrDye
                     spriteBatch.Draw(pauseScreen, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);  // draws pause screen
 
                     // draws resume button and checks if the mouse is over it
-                    spriteBatch.Draw(resumeButton, new Rectangle(GraphicsDevice.Viewport.Width / 3, this.height / 6, GraphicsDevice.Viewport.Width / 3, 150), Color.White);
+                    spriteBatch.Draw(resumeButton, new Rectangle(grid[23].X + (int)(gridX * .5) , grid[23].Y, gridX * 3, gridY), Color.White);
                     if (cursorRect.Intersects(new Rectangle(GraphicsDevice.Viewport.Width / 3, this.height / 6, GraphicsDevice.Viewport.Width / 3, 150)))
                     {
                         spriteBatch.Draw(resumeButton, new Rectangle(GraphicsDevice.Viewport.Width / 3, this.height / 6, GraphicsDevice.Viewport.Width / 3, 150), Color.Violet);  // if mouse is over button, changes color
@@ -1078,12 +1076,7 @@ namespace TieOrDye
                 #region options
                 case GameStates.Options:
                     Rectangle rectangle;
-                    int x = (GraphicsDevice.Viewport.Width / 8); //I use this a lot so it makes the code shorter
                     spriteBatch.Draw(optionsScreen, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White); //draws the background screen
-
-                    int width2 = (int)(gridX * 1.5);
-                    int height2 = (int)(gridY * .9);
-                    int width3 = (int)(gridX * .9);
 
                     rectangle = new Rectangle(grid[11].X, grid[11].Y, width2, height2); //options box
                     makeBox(rectangle, "Options", noTexture, Color.White, false, false);
@@ -1119,65 +1112,66 @@ namespace TieOrDye
                 case GameStates.ControlOptions:
 
                     spriteBatch.Draw(optionsScreen, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);
-                    x = GraphicsDevice.Viewport.Width / 18;
-                    int width = GraphicsDevice.Viewport.Width / 8;
+                    width2 = (int)(gridX * 1.5);
+                    height2 = (int)(gridY * .9);
+                    width3 = (int)(gridX * .9);
 
-                    rectangle = new Rectangle(x, 50, width, 100); //keyboard box
+                    rectangle = new Rectangle(grid[11].X, grid[11].Y, width2, height2); //keyboard box
                     makeBox(rectangle, "Keyboard", noTexture, Color.White, false, false);
 
-                    rectangle = new Rectangle(x, 175, width * 2, 100); //player box
+                    rectangle = new Rectangle(grid[21].X, grid[21].Y, width2 * 2, height2); //player box
                     makeBox(rectangle, "Player" + playernumber.ToString(), noTexture, Color.White, true, false);
 
-                    rectangle = new Rectangle(x, 295, width, 100); //up box
+                    rectangle = new Rectangle(grid[31].X, grid[31].Y, width3, height2); //up box
                     makeBox(rectangle, "Up", noTexture, Color.White, false, false);
 
-                    rectangle = new Rectangle(x, 415, width, 100); //down box
+                    rectangle = new Rectangle(grid[41].X, grid[41].Y, width3, height2); //down box
                     makeBox(rectangle, "Down", noTexture, Color.White, false, false);
 
-                    rectangle = new Rectangle(x, 535, width, 100); //left box
+                    rectangle = new Rectangle(grid[51].X, grid[51].Y, width3, height2); //left box
                     makeBox(rectangle, "Left", noTexture, Color.White, false, false);
 
-                    rectangle = new Rectangle(x, 655, width, 100); //right box
+                    rectangle = new Rectangle(grid[61].X, grid[61].Y, width3, height2); //right box
                     makeBox(rectangle, "Right", noTexture, Color.White, false, false);
 
-                    rectangle = new Rectangle(x, 775, width, 100); //shoot box
+                    rectangle = new Rectangle(grid[71].X, grid[71].Y, width3, height2); //shoot box
                     makeBox(rectangle, "Shoot", noTexture, Color.White, false, false);
 
                     if (playernumber == 1)
                     {
-                        rectangle = new Rectangle(x + width + 10, 295, width, 100); //p1UpBox
+                        rectangle = new Rectangle(grid[32].X, grid[32].Y, width3, height2); //p1UpBox
                         makeBox(rectangle, p1Up.ToString(), noTexture, Color.White, false, true);
 
-                        rectangle = new Rectangle(x + width + 10, 415, width, 100); //p1DownBox
+                        rectangle = new Rectangle(grid[42].X, grid[42].Y, width3, height2); //p1DownBox
                         makeBox(rectangle, p1Down.ToString(), noTexture, Color.White, false, true);
 
-                        rectangle = new Rectangle(x + width + 10, 535, width, 100); //p1LeftBox
+                        rectangle = new Rectangle(grid[52].X, grid[52].Y, width3, height2); //p1LeftBox
                         makeBox(rectangle, p1Left.ToString(), noTexture, Color.White, false, true);
 
-                        rectangle = new Rectangle(x + width + 10, 655, width, 100); //p1RightBox
+                        rectangle = new Rectangle(grid[62].X, grid[62].Y, width3, height2); //p1RightBox
                         makeBox(rectangle, p1Right.ToString(), noTexture, Color.White, false, true);
 
-                        rectangle = new Rectangle(x + width + 10, 775, width, 100); //p1ShootBox
+                        rectangle = new Rectangle(grid[72].X, grid[72].Y, width3, height2); //p1ShootBox
                         makeBox(rectangle, p1Shoot.ToString(), noTexture, Color.White, false, true);
                     }
                     else
                     {
-                        rectangle = new Rectangle(x + width + 10, 295, width, 100); //p2UpBox
+                        rectangle = new Rectangle(grid[32].X, grid[32].Y, width3, height2); //p2UpBox
                         makeBox(rectangle, p2Up.ToString(), noTexture, Color.White, false, true);
 
-                        rectangle = new Rectangle(x + width + 10, 415, width, 100); //p2DownBox
+                        rectangle = new Rectangle(grid[42].X, grid[42].Y, width3, height2); //p2DownBox
                         makeBox(rectangle, p2Down.ToString(), noTexture, Color.White, false, true);
 
-                        rectangle = new Rectangle(x + width + 10, 535, width, 100); //p2LeftBox
+                        rectangle = new Rectangle(grid[52].X, grid[52].Y, width3, height2); //p2LeftBox
                         makeBox(rectangle, p2Left.ToString(), noTexture, Color.White, false, true);
 
-                        rectangle = new Rectangle(x + width + 10, 655, width, 100); //p2RightBox
+                        rectangle = new Rectangle(grid[62].X, grid[62].Y, width3, height2); //p2RightBox
                         makeBox(rectangle, p2Right.ToString(), noTexture, Color.White, false, true);
 
-                        rectangle = new Rectangle(x + width + 10, 775, width, 100);
+                        rectangle = new Rectangle(grid[72].X, grid[72].Y, width3, height2);//p2ShootBox
                         makeBox(rectangle, p2Shoot.ToString(), noTexture, Color.White, false, true);
                     }
-                    rectangle = new Rectangle(x, 895, width, 100);
+                    rectangle = new Rectangle(grid[81].X, grid[81].Y, width3, height2);
                     makeBox(rectangle, "Back", noTexture, Color.White, false, false);
                     spriteBatch.Draw(cursorTex, cursorRect, Color.White);
                     break;
@@ -1662,8 +1656,6 @@ namespace TieOrDye
         }
         #endregion
 
-        #endregion
-
         #region ResetGrid
         public void ResetGrid()
         {
@@ -1691,5 +1683,9 @@ namespace TieOrDye
             walls.Add(new Wall(wallTex, grid[90].X, grid[90].Y, gridX * 10, gridY));
         }
         #endregion
+
+        #endregion
+
+
     }
 }
