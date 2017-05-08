@@ -208,34 +208,87 @@ namespace TieOrDye
             }
         }
 
-        public void drawAnimation(SpriteBatch spriteBatch)
+        public void drawAnimation(SpriteBatch spriteBatch, Player pl, int playerNum)
         {
+            Color stunTint = new Color();
+            Color immuneTint = new Color();
+
+            if(playerNum == 1)
+            {
+                stunTint = Color.Yellow;
+                immuneTint = Color.MediumSeaGreen;
+            }
+            if(playerNum == 2)
+            {
+                stunTint = Color.ForestGreen;
+                immuneTint = Color.LightSeaGreen;
+            }
             //According to the enum we draw different sprite
             switch (look)
             {
                 case PlayerState.Up:
-                    spriteBatch.Draw(playerSprites[0], playerPositionRectangle, Color.White);
+                    if (pl.Stunned == true)
+                        spriteBatch.Draw(playerSprites[0], playerPositionRectangle, stunTint);
+                    else if(pl.Immune == true)
+                        spriteBatch.Draw(playerSprites[0], playerPositionRectangle, immuneTint);
+                    else
+                        spriteBatch.Draw(playerSprites[0], playerPositionRectangle, Color.White);
                     break;
                 case PlayerState.Down:
-                    spriteBatch.Draw(playerSprites[1], playerPositionRectangle, Color.White);
+                    if(pl.Stunned == true)
+                        spriteBatch.Draw(playerSprites[1], playerPositionRectangle, stunTint);
+                    else if (pl.Immune == true)
+                        spriteBatch.Draw(playerSprites[1], playerPositionRectangle, immuneTint);
+                    else
+                        spriteBatch.Draw(playerSprites[1], playerPositionRectangle, Color.White);
                     break;
                 case PlayerState.Left:
-                    spriteBatch.Draw(playerSprites[2], playerPositionRectangle, Color.White);
+                    if (pl.Stunned == true)
+                        spriteBatch.Draw(playerSprites[2], playerPositionRectangle, stunTint);
+                    else if (pl.Immune == true)
+                        spriteBatch.Draw(playerSprites[2], playerPositionRectangle, immuneTint);
+                    else
+                        spriteBatch.Draw(playerSprites[2], playerPositionRectangle, Color.White);
                     break;
                 case PlayerState.Right:
-                    spriteBatch.Draw(playerSprites[3], playerPositionRectangle, Color.White);
+                    if (pl.Stunned == true)
+                        spriteBatch.Draw(playerSprites[3], playerPositionRectangle, stunTint);
+                    else if (pl.Immune == true)
+                        spriteBatch.Draw(playerSprites[3], playerPositionRectangle, immuneTint);
+                    else
+                        spriteBatch.Draw(playerSprites[3], playerPositionRectangle, Color.White);
                     break;
                 case PlayerState.UpLeft:
-                    spriteBatch.Draw(playerSprites[4], playerPositionRectangle, Color.White);
+                    if (pl.Stunned == true)
+                        spriteBatch.Draw(playerSprites[4], playerPositionRectangle, stunTint);
+                    else if (pl.Immune == true)
+                        spriteBatch.Draw(playerSprites[4], playerPositionRectangle, immuneTint);
+                    else
+                        spriteBatch.Draw(playerSprites[4], playerPositionRectangle, Color.White);
                     break;
                 case PlayerState.UpRight:
-                    spriteBatch.Draw(playerSprites[5], playerPositionRectangle, Color.White);
+                    if (pl.Stunned == true)
+                        spriteBatch.Draw(playerSprites[5], playerPositionRectangle, stunTint);
+                    else if (pl.Immune == true)
+                        spriteBatch.Draw(playerSprites[5], playerPositionRectangle, immuneTint);
+                    else
+                        spriteBatch.Draw(playerSprites[5], playerPositionRectangle, Color.White);
                     break;
                 case PlayerState.DownLeft:
-                    spriteBatch.Draw(playerSprites[6], playerPositionRectangle, Color.White);
+                    if (pl.Stunned == true)
+                        spriteBatch.Draw(playerSprites[6], playerPositionRectangle, stunTint);
+                    else if (pl.Immune == true)
+                        spriteBatch.Draw(playerSprites[6], playerPositionRectangle, immuneTint);
+                    else
+                        spriteBatch.Draw(playerSprites[6], playerPositionRectangle, Color.White);
                     break;
                 case PlayerState.Downright:
-                    spriteBatch.Draw(playerSprites[7], playerPositionRectangle, Color.White);
+                    if (pl.Stunned == true)
+                        spriteBatch.Draw(playerSprites[7], playerPositionRectangle, stunTint);
+                    else if (pl.Immune == true)
+                        spriteBatch.Draw(playerSprites[7], playerPositionRectangle, immuneTint);
+                    else
+                        spriteBatch.Draw(playerSprites[7], playerPositionRectangle, Color.White);
                     break;
             }
         }

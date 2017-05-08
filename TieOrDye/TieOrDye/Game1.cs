@@ -819,8 +819,8 @@ namespace TieOrDye
                     spriteBatch.Draw(Level1, new Rectangle(0, 0, this.width, this.height), Color.White);
                     DrawStones(stonesList);
 
-                    player1Animation.drawAnimation(spriteBatch);
-                    player2Animation.drawAnimation(spriteBatch);
+                    player1Animation.drawAnimation(spriteBatch, p1, 1);
+                    player2Animation.drawAnimation(spriteBatch, p2, 2);
 
                     checkItemIntersects(item1, gameTime);
                     checkItemIntersects(item2, gameTime);
@@ -1745,7 +1745,7 @@ namespace TieOrDye
                     p2.Immune = true;
                     if (p2StunWatch.ElapsedMilliseconds >= PLAYER_STUN_DURATION + PLAYER_IMMUNITY_DURATION)
                     {
-                        p2.Immune = true;
+                        p2.Immune = false;
                         p2StunWatch.Reset();
                     }
                 }
