@@ -1553,14 +1553,14 @@ namespace TieOrDye
                             stonesList[x].RapidFire = false;
                             item1 = new Item(speedupImage, stonesList[x].XPos, stonesList[x].YPos, stonesList[x].Circle.Radius, 1);
                             item1.ItemCheckInfo(c2, c1);
-                            item1.changeItemLoc(stonesList, 1);
+                            item1.changeItemLoc(stonesList, 1, stoneTex);
                         }
                         if (stonesList[x].Inverter == true)
                         {
                             stonesList[x].Inverter = false;
                             item2 = new Item(inverterImage, stonesList[x].XPos, stonesList[x].YPos, stonesList[x].Circle.Radius, 3);
                             item2.ItemCheckInfo(c2, c1);
-                            item2.changeItemLoc(stonesList, 2);
+                            item2.changeItemLoc(stonesList, 2, stoneTex);
                         }
                     }
                 }
@@ -1577,14 +1577,14 @@ namespace TieOrDye
                             stonesList[x].RapidFire = false;
                             item1 = new Item(speedupImage, stonesList[x].XPos, stonesList[x].YPos, stonesList[x].Circle.Radius, 1);
                             item1.ItemCheckInfo(c3, c1);
-                            item1.changeItemLoc(stonesList, 1);
+                            item1.changeItemLoc(stonesList, 1, stoneTex);
                         }
                         if (stonesList[x].Inverter == true)
                         {
                             stonesList[x].Inverter = false;
                             item2 = new Item(inverterImage, stonesList[x].XPos, stonesList[x].YPos, stonesList[x].Circle.Radius, 3);
                             item2.ItemCheckInfo(c3, c1);
-                            item2.changeItemLoc(stonesList, 2);
+                            item2.changeItemLoc(stonesList, 2, stoneTex);
                         }
                     }
                 }

@@ -21,6 +21,7 @@ namespace TieOrDye
 
         int counter = 0;
         int type;
+        private bool noMoreGray;
 
         Random gen = new Random();
 
@@ -30,6 +31,7 @@ namespace TieOrDye
             itemTex = tex;
             itemCirc = new Circle(x, y, rad);
             type = t;
+            noMoreGray = false;
         }
 
         // property for type
@@ -105,6 +107,7 @@ namespace TieOrDye
         }
 
         // randomly changes which stone item is in when called
+        /*
         public void changeItemLoc(List<Stone> stonesList, int count)
         {
             int num = gen.Next(0, stonesList.Count);
@@ -124,5 +127,55 @@ namespace TieOrDye
             }
            
         }
+        */
+
+        // randomly changes which stone item is in when called
+        public void changeItemLoc(List<Stone> stonesList, int count, Texture2D stoneTex)
+        {
+            int num = gen.Next(0, stonesList.Count);
+            
+            while (noMoreGray == false)
+            {
+                if (stonesList[num].StoneTex == stoneTex)
+                {
+                    break;
+                }
+                else
+                {
+                    num = gen.Next(0, stonesList.Count);
+                }
+                int counting = 0;
+                for (int x = 0; x < stonesList.Count; x++)
+                {
+                    if (stonesList[x].StoneTex != stoneTex)
+                    {
+                        counting++;
+                    }
+                    if (counting == stonesList.Count - 1)
+                    {
+                        noMoreGray = true;
+                    }
+                }
+            }
+
+
+            if (count == 1)
+            {
+                if (stonesList[num].Inverter == true)
+                    changeItemLoc(stonesList, count, stoneTex);
+                else
+                    stonesList[num].RapidFire = true;
+            }
+            if (count == 2)
+            {
+                if (stonesList[num].RapidFire == true) //&& stonesList[num].StoneTex == stoneTex)
+                    changeItemLoc(stonesList, count, stoneTex);
+                else
+                    stonesList[num].Inverter = true;
+            }
+
+        }
+
+
     }
 }
