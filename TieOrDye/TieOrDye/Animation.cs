@@ -215,13 +215,13 @@ namespace TieOrDye
 
             if(playerNum == 1)
             {
-                stunTint = Color.Yellow;
-                immuneTint = Color.MediumSeaGreen;
+                stunTint = Color.Gray;
+                immuneTint = Color.Yellow;
             }
             if(playerNum == 2)
             {
-                stunTint = Color.ForestGreen;
-                immuneTint = Color.LightSeaGreen;
+                stunTint = Color.Gray;
+                immuneTint = Color.ForestGreen;
             }
             //According to the enum we draw different sprite
             switch (look)
