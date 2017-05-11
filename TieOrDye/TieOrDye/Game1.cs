@@ -1406,6 +1406,22 @@ namespace TieOrDye
                 }
             }
 
+            for (int x = 0; x < orangeOrbs.Count; x++)
+            {
+                if (orangeOrbs[x].OrbSpeed == 0)
+                {
+                    orangeOrbs.Remove(orangeOrbs[x]);
+                }
+            }
+
+            for (int x = 0; x < blueOrbs.Count; x++)
+            {
+                if (blueOrbs[x].OrbSpeed == 0)
+                {
+                    blueOrbs.Remove(blueOrbs[x]);
+                }
+            }
+
         }
 
         #endregion
