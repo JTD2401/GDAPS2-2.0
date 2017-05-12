@@ -147,7 +147,8 @@ namespace TieOrDye
 
         Keys p1Up, p1Down, p1Left, p1Right, p1Shoot, p2Up, p2Down, p2Left, p2Right, p2Shoot;
 
-
+        int playerBox1;
+        int playerBox2;
         int mouseOffsetX;
         int mouseOffsetY;
 
@@ -265,8 +266,12 @@ namespace TieOrDye
 
             playerSpeed1 = read.ReadDouble();
 
-            player1InitialX = read.ReadInt32();
-            player1InitialY = read.ReadInt32();
+            playerBox1 = read.ReadInt32();
+
+            player1InitialX = grid[playerBox1].X;
+            player1InitialY = grid[playerBox1].Y;
+
+            
 
             //P1 Object initialized at 0,0
             p1 = new Player(p1Tex, player1InitialX, player1InitialY, read.ReadInt32(), read.ReadInt32());
@@ -274,8 +279,10 @@ namespace TieOrDye
 
             playerSpeed2 = read.ReadDouble();
 
-            player2InitialX = read.ReadInt32();
-            player2InitialY = read.ReadInt32();
+            playerBox2 = read.ReadInt32();
+
+            player2InitialX = grid[playerBox2].X;
+            player2InitialY = grid[playerBox2].Y;
 
             //P2 Object initialized at 900,0
             p2 = new Player(p2Tex, player2InitialX, player2InitialY, read.ReadInt32(), read.ReadInt32());
@@ -682,6 +689,10 @@ namespace TieOrDye
                             graphics.PreferredBackBufferHeight = height;
                             graphics.ApplyChanges(); //applys the change
                             ResetGrid();
+                            player1InitialX = grid[playerBox1].X;
+                            player1InitialY = grid[playerBox1].Y;
+                            player2InitialX = grid[playerBox2].X;
+                            player2InitialY = grid[playerBox2].Y;
                             ResetMouseOffsets();
                         }
                     if (cursorRect.Intersects(new Rectangle(grid[52].X, grid[52].Y, width3, height2))) //back button
